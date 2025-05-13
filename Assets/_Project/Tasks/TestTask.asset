@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: TestTask
   m_EditorClassIdentifier: 
   mTaskType: 0
-  secondsToComplete: 10
+  secondsToComplete: 300
