@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e0bfaf5291d635429c9c44d56ffd560, type: 3}
   m_Name: TestTask
   m_EditorClassIdentifier: 
-  mTaskType: 0
+  mTaskType: 2
   secondsToComplete: 300
+  targetMoney: 150
