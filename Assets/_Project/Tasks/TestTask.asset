@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e0bfaf5291d635429c9c44d56ffd560, type: 3}
   m_Name: TestTask
   m_EditorClassIdentifier: 
-  mTaskType: 0
-  secondsToComplete: 300
+  mTaskType: 2
+  taskName: "\u0420\u0430\u0437\u0434\u043E\u0431\u044B\u0442\u044C 150$"
+  nameFontSize: 0.19
+  taskDescription: "\u041C\u0438\u0445\u0430\u043B\u044B\u0447 \u0434\u043E\u043B\u0436\u0435\u043D
+    \u0437\u0430 \u043A\u0440\u044B\u0448\u0443"
+  descriptionFontSize: 0.1
+  targetMoney: 150
