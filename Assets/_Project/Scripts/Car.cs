@@ -38,7 +38,7 @@ public class Car : MonoBehaviour
     public void PlayerGetClose(){
         animator.SetTrigger("WindowDown");
 
-        if (waitingForPlayer){
+        if (waitingForPlayer && !dialogueWithPlayer){
             taskManager.RemoveTasks();
             taskManager.TakeMoneyForTask();
             dialogueWithPlayer = true;
@@ -57,6 +57,7 @@ public class Car : MonoBehaviour
             item.SetMoney((int)Random.Range(moneyPerTask.x, moneyPerTask.y));
             item.ThrowMe(moneySpawn.forward * throwForce, moneySpawn.position);
         }
+        animator.SetTrigger("ShowCase");
     }
 
     public void PlayerLeaved(){
@@ -67,6 +68,16 @@ public class Car : MonoBehaviour
             taskManager.SetNewTask(taskBack);
             taskManager.SetTime(5);
         }
+    }
+
+    public void HideEverythingAndGetAJob(){
+        dialogueWithPlayer = false;
+        waitingForPlayer = false;
+        
+        animator.SetTrigger("HideCase");
+        taskManager.RemoveTasks();
+        amountOfTasks = taskManager.LoadNextTask();
+        taskManager.ForceOpenTablet();
     }
 
     public void PlayerCompletedTasks(bool real){

@@ -50,6 +50,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Tips tips;
     [SerializeField] private Camera cam;
     [SerializeField] private VisualEffect windVFX;
+    [SerializeField] private PlayerStats playerStats;
+    [SerializeField] private Inventory inventory;
 
     private InputAction moveAction;
     private InputAction jumpAction;
@@ -89,6 +91,14 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
 
         currentStamina = maxStamina;
+    }
+
+    public PlayerStats GetPlayerStats(){
+        return playerStats;
+    }
+
+    public Inventory GetInventory(){
+        return inventory;
     }
 
     void OnEnable()

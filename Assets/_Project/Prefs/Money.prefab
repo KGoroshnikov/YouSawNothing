@@ -97,11 +97,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e473a874c56aea45bffb84f28cd02a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  renderer: {fileID: 0}
+  renderer: {fileID: 5330503639540070593}
   animator: {fileID: 6926077436030024598}
   vfxTip: {fileID: 7786929297381489635}
-  I_Name: "\u041F\u0440\u0435\u0434\u043C\u0435\u0442\u0438\u043A"
-  I_Action: "\u041F\u043E\u0434\u043E\u0431\u0440\u0430\u0442\u044C"
+  I_Name: "\u0411\u0430\u0431\u043B\u043E"
+  I_Action: "\u041F\u043E\u0434\u043D\u044F\u0442\u044C"
   NeedTip: 1
   myData:
     id: 2
