@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 // 0 - nothing
 // 1 - test item
+// 2 - money
 
 public class Inventory : MonoBehaviour
 {
@@ -23,13 +24,17 @@ public class Inventory : MonoBehaviour
         [HideInInspector] public GameObject obj;
         [HideInInspector] public Item item;
         public Sprite uiSprite;
+        [HideInInspector] public bool stackable;
     }
     private List<itemData> currentItems = new List<itemData>();
 
     private int currentSelected;
 
+    [SerializeField] private int moneyAmount;
+
     [SerializeField] private Tips tips;
     [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private TaskManager taskManager;
     private InputAction scrollAction, dropAction;
     [SerializeField] private float scrollCooldown = 0.25f;
     private float lastScrollTime = 0f;
@@ -71,6 +76,13 @@ public class Inventory : MonoBehaviour
         Vector3 vel = throwForce * Camera.main.transform.forward;
         currentItems[currentSelected].item.ThrowMe(vel, transform.position);
 
+        if (currentItems[currentSelected].id == 2)
+        {
+            currentItems[currentSelected].item.SetMoney(moneyAmount);
+            moneyAmount = 0;
+            taskManager.UpdateMoney();
+        }
+
         currentItems[currentSelected].id = 0;
         currentItems[currentSelected].obj = null;
         currentItems[currentSelected].item = null;
@@ -79,15 +91,55 @@ public class Inventory : MonoBehaviour
         tips.SetDropTip(false);
     }
 
+    public void RemoveMoney(int amout){
+        moneyAmount -= amout;
+        taskManager.UpdateMoney();
+        if (moneyAmount <= 0){
+            int moneySlot = findSlotWithId(2);
+
+            if (currentSelected == moneySlot){
+                tips.DisableMainHand();
+                tips.SetDropTip(false);
+            }
+
+            Destroy(currentItems[moneySlot].obj);
+            currentItems[moneySlot].id = 0;
+            currentItems[moneySlot].obj = null;
+            currentItems[moneySlot].item = null;
+            spriteSlots[moneySlot].gameObject.SetActive(false);
+        }
+    }
+
+    int findSlotWithId(int id){
+        for(int i = 0; i < currentItems.Count; i++){
+            if (currentItems[i].id == id){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int GetMoney(){
+        return moneyAmount;
+    }
+
     public bool AddItem(itemData item){
         int freeSlot = -1;
         for(int i = 0; i < currentItems.Count; i++){
-            if (currentItems[i].id == 0){
+            if (currentItems[i].id == 0 || (item.stackable && currentItems[i].id == item.id)){
                 freeSlot = i;
                 break;
             }
         }
         if (freeSlot == -1) return false;
+
+        if (item.stackable){
+            moneyAmount += item.item.GetMoney();
+            taskManager.UpdateMoney();
+            if (currentItems[freeSlot].id == item.id)
+                Destroy(currentItems[freeSlot].obj);
+        }
+        
 
         currentItems[freeSlot].id = item.id;
         currentItems[freeSlot].obj = item.obj;
