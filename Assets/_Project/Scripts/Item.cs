@@ -66,7 +66,7 @@ public class Item : IInteractable
         bool wasInWall = false;
         foreach (Collider col in overlaps)
         {
-            if (col.gameObject == gameObject) continue;
+            if (col.gameObject == gameObject || col.isTrigger) continue;
             transform.position = player;
             wasInWall = true;
             break;

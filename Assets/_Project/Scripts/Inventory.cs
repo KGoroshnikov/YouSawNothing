@@ -91,6 +91,34 @@ public class Inventory : MonoBehaviour
         tips.SetDropTip(false);
     }
 
+    public void RemoveMoney(int amout){
+        moneyAmount -= amout;
+        taskManager.UpdateMoney();
+        if (moneyAmount <= 0){
+            int moneySlot = findSlotWithId(2);
+
+            if (currentSelected == moneySlot){
+                tips.DisableMainHand();
+                tips.SetDropTip(false);
+            }
+
+            Destroy(currentItems[moneySlot].obj);
+            currentItems[moneySlot].id = 0;
+            currentItems[moneySlot].obj = null;
+            currentItems[moneySlot].item = null;
+            spriteSlots[moneySlot].gameObject.SetActive(false);
+        }
+    }
+
+    int findSlotWithId(int id){
+        for(int i = 0; i < currentItems.Count; i++){
+            if (currentItems[i].id == id){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public int GetMoney(){
         return moneyAmount;
     }

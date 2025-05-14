@@ -8,7 +8,10 @@ public class Task : ScriptableObject
     }
     [Header("General")]
     public taskType mTaskType;
-    public int secondsToComplete;
+    public string taskName;
+    public float nameFontSize;
+    public string taskDescription;
+    public float descriptionFontSize;
 
     [Header("Earn Money")]
     public int targetMoney;
