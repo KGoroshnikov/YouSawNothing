@@ -9,11 +9,16 @@ public class Item : IInteractable
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Transform itemContainer;
 
+    [Header("Money")]
+    [SerializeField] private bool isMoney;
+    [SerializeField] private int amountMoney;
+
     protected override void Start()
     {
         base.Start();
         myData.obj = gameObject;
         myData.item = this;
+        myData.stackable = isMoney;
         if (vfxTip != null) vfxTip.Play();
     }
 
@@ -36,6 +41,14 @@ public class Item : IInteractable
         }
     }
 
+    public int GetMoney(){
+        return amountMoney;
+    }
+    
+    public void SetMoney(int amount){
+        amountMoney = amount;
+    }
+
     public void ThrowMe(Vector3 force, Vector3 player){
         transform.localEulerAngles = Vector3.zero;
         collider.enabled = true;
@@ -53,7 +66,7 @@ public class Item : IInteractable
         bool wasInWall = false;
         foreach (Collider col in overlaps)
         {
-            if (col.gameObject == gameObject) continue;
+            if (col.gameObject == gameObject || col.isTrigger) continue;
             transform.position = player;
             wasInWall = true;
             break;

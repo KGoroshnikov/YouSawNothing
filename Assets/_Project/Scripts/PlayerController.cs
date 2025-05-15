@@ -31,6 +31,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float sprintFOV;
     [SerializeField] private float speedChangeFOV;
 
+    [Header("Push")]
+    [SerializeField] private float pushMultiplierMe;
+    [SerializeField] private float pushMultiplierNPC;
+    [SerializeField] private Vector3 pushVector;
+    [SerializeField] private float pushDamping;
+    [SerializeField] private float pushSlowMultiplier;
+
     [Header("UI")]
     [SerializeField] private Image fillSprint;
     [SerializeField] private Animator staminaAnim;
@@ -43,6 +50,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Tips tips;
     [SerializeField] private Camera cam;
     [SerializeField] private VisualEffect windVFX;
+    [SerializeField] private PlayerStats playerStats;
+    [SerializeField] private Inventory inventory;
 
     private InputAction moveAction;
     private InputAction jumpAction;
@@ -52,7 +61,7 @@ public class PlayerController : MonoBehaviour
 
     private float additiveFOV;
 
-    private Vector2 moveInput;
+    private Vector3 moveInput;
     private Vector2 lookInput;
     private float cameraPitch;
     private bool isGrounded;
@@ -84,6 +93,14 @@ public class PlayerController : MonoBehaviour
         currentStamina = maxStamina;
     }
 
+    public PlayerStats GetPlayerStats(){
+        return playerStats;
+    }
+
+    public Inventory GetInventory(){
+        return inventory;
+    }
+
     void OnEnable()
     {
         moveAction.Enable();
@@ -104,13 +121,20 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        moveInput = moveAction.ReadValue<Vector2>();
+        moveInput = new Vector3(moveAction.ReadValue<Vector2>().x, 0, moveAction.ReadValue<Vector2>().y);
         lookInput = lookAction.ReadValue<Vector2>() * mouseSensitivity;
 
         HandleLook();
         CheckGround();
         HandleStamina();
         HandleFOV();
+
+        
+        Debug.DrawRay(transform.position, Vector3.up, Color.blue);
+        Debug.DrawRay(transform.position, lastRight, Color.red);
+        Debug.DrawRay(transform.position, lastDir.normalized, Color.green);
+
+        Debug.DrawRay(transform.position,  transform.TransformDirection(moveInput), Color.magenta);
     }
 
     void FixedUpdate()
@@ -129,7 +153,9 @@ public class PlayerController : MonoBehaviour
     {
         if (mState == state.onWehicle) return;
 
-        Vector3 direction = transform.right * moveInput.x + transform.forward * moveInput.y;
+        pushVector *= pushDamping;
+
+        Vector3 direction = transform.right * moveInput.x + transform.forward * moveInput.z;
         float speed = moveSpeed;
 
         if (isCrouching)
@@ -142,7 +168,9 @@ public class PlayerController : MonoBehaviour
         else if (mState != state.idle && moveInput.magnitude == 0)
             SetState(state.idle);
 
-        Vector3 vel = direction * speed;
+        float pushMag = pushVector.magnitude;
+        float slowFactor = Mathf.Clamp01(1f - pushMag * pushSlowMultiplier);
+        Vector3 vel = direction * speed * slowFactor + pushVector;
         vel.y = rb.linearVelocity.y;
         rb.linearVelocity = vel;
     }
@@ -279,5 +307,32 @@ public class PlayerController : MonoBehaviour
     public void SetWind(bool a){
         if (a) windVFX.Play();
         else windVFX.Stop();
+    }
+
+
+    private Vector3 lastDir = Vector3.zero, lastRight = Vector3.zero;
+    void OnCollisionEnter(Collision collision)
+    {
+        if (!collision.gameObject.CompareTag("NPC")) return;
+
+        Vector3 dirMove = transform.TransformDirection(moveInput);
+
+        Vector3 right = Vector3.Cross(Vector3.up, dirMove.normalized);
+
+        lastDir = dirMove.normalized;
+        lastRight = right;
+
+        Vector3 toNPC = collision.transform.position - transform.position;
+        toNPC.y = 0;
+        float side = Vector3.Dot(toNPC.normalized, right) >= 0 ? 1f : -1f;
+        camAnim.SetTrigger(side == 1 ? "PushLeft" : "PushRight");
+        Vector3 lateralDir = right * side;
+        float pushStrength = dirMove.magnitude * pushMultiplierMe;
+        pushVector = -lateralDir * pushStrength;
+        NPC npc = collision.gameObject.GetComponent<NPC>();
+        if (npc != null)
+        {
+            npc.PushMe(lateralDir * dirMove.magnitude * pushMultiplierNPC);
+        }
     }
 }

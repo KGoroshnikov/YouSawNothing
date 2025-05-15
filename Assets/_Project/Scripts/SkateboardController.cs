@@ -20,7 +20,7 @@ public class SkateboardController : MonoBehaviour
     private PlayerController playerController;
     private EscManager escManager;
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private PlayerInput playerInput;
+    private PlayerInput playerInput;
     [SerializeField] private Transform skateMain;
     [SerializeField] private Transform playerPos;
     [SerializeField] private Animator animator;
@@ -37,23 +37,18 @@ public class SkateboardController : MonoBehaviour
 
     private bool doNotRegisterPlayer;
     private bool windIsOn;
-
-    void Awake()
-    {
-        moveAction = playerInput.actions["Move"];
-        jumpAction = playerInput.actions["Jump"];
-
-        jumpAction.performed += _ => HandleJump();
-    }
-
     void Start()
     {
         playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         escManager = GameObject.Find("EscManager").GetComponent<EscManager>();
-    }
 
-    void OnEnable()
-    {
+        playerInput = GameObject.Find("PlayerInput").GetComponent<PlayerInput>();
+
+        moveAction = playerInput.actions["Move"];
+        jumpAction = playerInput.actions["Jump"];
+
+        jumpAction.performed += _ => HandleJump();
+
         moveAction.Enable();
         jumpAction.Enable();
     }

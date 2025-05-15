@@ -20,6 +20,12 @@ public class IInteractable : MonoBehaviour
 
     protected void SetInteracted(float value) {
         if (renderer == null) return;
+
+        if (propBlock == null){
+            renderer.material = new Material(renderer.sharedMaterial);
+            propBlock = new MaterialPropertyBlock();
+        }
+
         renderer.GetPropertyBlock(propBlock);
         propBlock.SetFloat("_Interacted", value);
         renderer.SetPropertyBlock(propBlock);
