@@ -99,8 +99,7 @@ namespace Editor.DialogueSystem
 
         private void CreateOutputPorts()
         {
-            Outputs = new[]
-            {
+            Outputs = new[] {
                 InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, node.GetType())
             };
             if (node.GetType().HasAttribute(typeof(OutputPort)))

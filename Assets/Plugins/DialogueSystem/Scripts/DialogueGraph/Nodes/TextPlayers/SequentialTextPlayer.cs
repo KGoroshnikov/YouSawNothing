@@ -1,12 +1,11 @@
 ﻿using Plugins.DialogueSystem.Scripts.DialogueGraph.Attributes;
 using UnityEngine;
 
-namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.DrawerNodes
+namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.TextPlayers
 {
-    [EditorPath("Drawers")]
+    [EditorPath("Text Players")]
     public class SequentialTextPlayer : TextPlayer
     {
-        [SerializeField] private string narrator;
         [SerializeField] private float time = 1;
 
         private string _currentText;
@@ -15,7 +14,6 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.DrawerNodes
         public override AbstractNode Clone()
         {
             var node = Instantiate(this);
-            node.narrator = narrator;
             node.time = time;
             return node;
         }

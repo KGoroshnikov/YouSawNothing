@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Attributes;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes;
 using Unity.VisualScripting;
@@ -9,7 +8,7 @@ using UnityEngine;
 
 namespace Plugins.DialogueSystem.Scripts.DialogueGraph
 {
-    [CreateAssetMenu(fileName = "Dialogue Graph")]
+    [CreateAssetMenu(fileName = "Storyline Graph")]
     public class StorylineGraph : ScriptableObject
     {
         [HideInInspector] public List<StorylineStart> roots = new();

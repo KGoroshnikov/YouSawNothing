@@ -13,8 +13,8 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes
         public AudioContainer audioContainer;
 
         public abstract void OnDraw(StorylinePlayer storylinePlayer);
-        public abstract bool IsCompleted();
-        public abstract void PauseAudio(StorylinePlayer storylinePlayer);
+        public abstract bool IsCompleted(StorylinePlayer storylinePlayer);
+        public abstract void StopAudio(StorylinePlayer storylinePlayer);
         public abstract void PlayAudio(StorylinePlayer storylinePlayer);
     }
 }

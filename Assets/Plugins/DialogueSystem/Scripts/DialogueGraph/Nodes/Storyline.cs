@@ -24,9 +24,6 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes
         
         
         public string tag;
-        public Action OnCompleted;
-        
-        public void Complete() => OnCompleted?.Invoke();
         public Storyline GetNext() => next;
     }
 }

@@ -152,7 +152,6 @@ namespace Editor.DialogueSystem
         private NodeView FindNodeView(AbstractNode sentence)
         {
             return GetNodeByGuid(sentence.guid) as NodeView;
-            
         }
 
         public void PopulateView(Plugins.DialogueSystem.Scripts.DialogueGraph.StorylineGraph graph)
@@ -172,7 +171,8 @@ namespace Editor.DialogueSystem
                 switch (n)
                 {
                     case Storyline storyline:
-                        AddElement(view.Outputs[0].ConnectTo(FindNodeView(storyline.next).Inputs[0]));
+                        if (storyline.next != null)
+                            AddElement(view.Outputs[0].ConnectTo(FindNodeView(storyline.next).Inputs[0]));
                         ConnectCustomPorts(view, n);
                         return;
                     default:
@@ -180,7 +180,6 @@ namespace Editor.DialogueSystem
                         return;
                 }
             });
-            
         }
 
         private void ConnectCustomPorts(NodeView view, AbstractNode n)
@@ -254,8 +253,8 @@ namespace Editor.DialogueSystem
                     case Storyline fromStoryline:
                         switch (to.node)
                         {
-                            case Storyline toDialogue:
-                                AddLink(fromStoryline, toDialogue);
+                            case Storyline toStoryline:
+                                AddLink(fromStoryline, toStoryline);
                                 return;
                             default:
                                 Debug.LogError("To node strange type!");

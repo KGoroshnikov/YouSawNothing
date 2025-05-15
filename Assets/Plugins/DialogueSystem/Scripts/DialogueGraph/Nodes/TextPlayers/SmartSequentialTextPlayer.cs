@@ -1,14 +1,12 @@
 ﻿using Plugins.DialogueSystem.Scripts.DialogueGraph.Attributes;
-using Plugins.DialogueSystem.Scripts.Utils;
 using UnityEngine;
 
-namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.DrawerNodes
+namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.TextPlayers
 {
-    [EditorPath("Drawers")]
+    [EditorPath("Text Players")]
     public class SmartSequentialTextPlayer : TextPlayer
     {
-        [SerializeField] private string narrator;
-        [SerializeField] private UDictionary<char, float> symbolTime;
+        [SerializeField] private UDictionary<string, float> symbolTime;
         [SerializeField] private float defaultSymbolTime;
 
         private string _currentText;
@@ -18,8 +16,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.DrawerNodes
         public override AbstractNode Clone()
         {
             var node = Instantiate(this);
-            node.narrator = narrator;
-            node.symbolTime = new UDictionary<char, float>();
+            node.symbolTime = new UDictionary<string, float>();
             foreach (var pair in symbolTime) 
                 node.symbolTime.Add(pair.Key, pair.Value);
             node.defaultSymbolTime = defaultSymbolTime;
@@ -42,7 +39,10 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.DrawerNodes
                 return;
             }
             var key = _currentText[_index];
-            _timeLimit = symbolTime.TryGetValue(key, out var value) ? value : defaultSymbolTime;
+            _timeLimit = defaultSymbolTime;
+            foreach (var pair in symbolTime)
+                if (pair.Key.Contains(key))
+                    _timeLimit = pair.Value;
         }
 
         public override void Draw(StorylinePlayer storylinePlayer)

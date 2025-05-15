@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.AudioContainers
 {
-    [EditorPath("AudioContainers")]
+    [EditorPath("Audio Containers")]
     public class SimpleAudioContainer : AudioContainer
     {
         [SerializeField] private AudioClip audio;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.TextContainers
 {
-    [EditorPath("TextContainers")]
+    [EditorPath("Text Containers")]
     public class SimpleTextContainer : TextContainer
     {
         [SerializeField] private string text;

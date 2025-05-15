@@ -53,7 +53,6 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
         public void TryGoToNext(InputAction.CallbackContext callbackContext)
         {
             if (!IsCanSkip && !IsCanContinue) return;
-            _current.OnCompleted -= GoToNext;
             // _current.OnDrawEnd(this);
             // _current.OnDelayStart(this);
             GoToNext();
@@ -84,17 +83,20 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
             IsPlaying = true;
             _current.textPlayer?.PlayDraw(this);
             _current.audioPlayer?.PlayAudio(this);
+            IsTextPlaying = true;
         }
         public void PauseDialogue()
         {
             if (!IsPlaying) return;
             IsPlaying = false;
+            IsTextPlaying = false;
             _current.textPlayer?.PauseDraw(this);
-            _current.audioPlayer?.PauseAudio(this);
+            _current.audioPlayer?.StopAudio(this);
         }
 
         public void StopDialogue()
         {
+            IsTextPlaying = false;
             _current = null;
         }
         public void ClearFastSwap()
@@ -116,8 +118,18 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
         public void ToNext()
         {
             if (_current.waitCondition)
-                _current.OnCompleted += GoToNext;
+            {
+                _current.waitCondition.StartWait(this, _current);
+                InvokeRepeating(nameof(CheckCompletionCondition), 0.1f, 0.1f);
+            }
             else GoToNext();
+        }
+
+        private void CheckCompletionCondition()
+        {
+            if (!_current.waitCondition.IsCompleted(this, _current)) return;
+            GoToNext();
+            CancelInvoke(nameof(CheckCompletionCondition));
         }
 
         private void Update()
@@ -137,6 +149,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
             _current.audioPlayer?.OnDraw(this);
 
             if (_current.textPlayer.IsCompleted()) return;
+            IsTextPlaying = false;
             // _current.OnDrawEnd(this);
             if (!manual) ToNext();
             _wait = true;
@@ -144,11 +157,10 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
 
         private void GoToNext()
         {
-            _current.OnCompleted -= GoToNext;
             // _current.OnDelayEnd(this);
             onSentenceEnd.Invoke(_current.tag);
             _current.textPlayer?.PauseDraw(this);
-            _current.audioPlayer?.PauseAudio(this);
+            _current.audioPlayer?.StopAudio(this);
             if (_fastSwap.TryDequeue(out var root))
             {
                 StartDialogueNow(root);
@@ -208,31 +220,26 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
         }
         private void SwitchUpdate()
         {
-            if (_current.IsUnityNull())
+            if (!_current)
             {
                 onStorylineEnd.Invoke(currentName);
-                
+
                 if (_fastSwap.TryDequeue(out var fastRoot))
-                {
                     StartDialogueNow(fastRoot);
-                    return;
-                }
-                if (_queue.TryDequeue(out var root))
-                {
+                else if (_queue.TryDequeue(out var root))
                     StartDialogueNow(root);
-                    return;
-                }
-                
-                if (lazy) _cloneBuffer.Clear();
+                else if (lazy) _cloneBuffer.Clear();
                 return;
             }
             // _current.OnDrawStart(this);
             _wait = false;
+            IsTextPlaying = true;
             onSentenceStart.Invoke(_current.tag);
         }
 
         public void ShowText(string str) => text.text = str;
         public void ClearText() => text.text = "";
+        public bool IsTextPlaying { get; private set; }
 
         public void PlayAudio(AudioClip clip, float pitch, float volume = 1)
         {
@@ -241,7 +248,9 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
             audioSource.volume = volume;
             audioSource.Play();
         }
-        public bool IsAudioPlaying => audioSource.isPlaying;
         public void StopAudio() => audioSource.Stop();
+        public void PauseAudio() => audioSource.Pause();
+        public void UnPauseAudio() => audioSource.UnPause();
+        public bool IsAudioPlaying => audioSource.isPlaying;
     }
 }
