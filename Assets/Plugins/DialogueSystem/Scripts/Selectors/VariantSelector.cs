@@ -27,11 +27,15 @@ namespace Plugins.DialogueSystem.Scripts.Selectors
             foreach (var variant in variants) 
                 variant.Hide();
         }
+
+        public void EnableVariant(int variant) => variants[variant].Active = true;
+        public void DisableVariant(int variant) => variants[variant].Active = false;
     }
 
     [Serializable]
     public class Variant
     {
+        public bool Active = true;
         [SerializeField] private string text;
         [SerializeField] private UnityEvent onSelected;
         [SerializeField] private Button button;
@@ -41,6 +45,7 @@ namespace Plugins.DialogueSystem.Scripts.Selectors
 
         public void Show(VariantSelector parent)
         {
+            if (!Active) return;
             Debug.Log($"Showed variant: {text}");
             button.gameObject.SetActive(true);
             button.interactable = true;
@@ -52,6 +57,7 @@ namespace Plugins.DialogueSystem.Scripts.Selectors
 
         public void Hide()
         {
+            if (!Active) return;
             Debug.Log($"Hided variant: {text}");
             button.interactable = false;
             button.gameObject.SetActive(false);
