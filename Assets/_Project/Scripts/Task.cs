@@ -12,7 +12,8 @@ public class Task : ScriptableObject
     public float nameFontSize;
     public string taskDescription;
     public float descriptionFontSize;
-
+    public string dialogueRoot;
+    
     [Header("Earn Money")]
     public int targetMoney;
 }

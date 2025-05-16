@@ -5,6 +5,7 @@ using System.Reflection;
 using Plugins.DialogueSystem.Scripts.DialogueGraph;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Attributes;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes;
+using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.Storyline;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
