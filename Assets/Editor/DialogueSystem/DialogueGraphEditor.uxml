@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Plugins/DialogueSystem/Editor/DialogueGraph/DialogueGraphEditor.uss?fileID=7433441132597879392&amp;guid=6bda3e6335d5455e9b59ba0949042ebe&amp;type=3#DialogueGraphEditor" />
+    <uie:Toolbar>
+        <uie:ToolbarButton text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="save" />
+    </uie:Toolbar>
+    <Editor.DialogueSystem.SplitView fixed-pane-initial-dimension="300">
+        <ui:VisualElement name="left" style="flex-grow: 1;">
+            <Editor.DialogueSystem.InspectorView />
+        </ui:VisualElement>
+        <ui:VisualElement name="right" style="flex-grow: 1;">
+            <Editor.DialogueSystem.DialogueGraphView focusable="true" style="flex-grow: 1;" />
+        </ui:VisualElement>
+    </Editor.DialogueSystem.SplitView>
+</ui:UXML>

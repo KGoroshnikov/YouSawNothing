@@ -1,0 +1,153 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8748230477623846935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad84465e128f45c9a2b8120b5d4d3fa3, type: 3}
+  m_Name: StorylineStart
+  m_EditorClassIdentifier: 
+  guid: 38a5ee1826a923b4288bd5d7c0da8c31
+  nodePos: {x: 550.08655, y: 627.2}
+  next: {fileID: 5787587678969009898}
+  textPlayer: {fileID: 0}
+  audioPlayer: {fileID: 0}
+  waitCondition: {fileID: 0}
+  tag: 
+  rootName: root
+--- !u!114 &-8639793498545589394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
+  m_Name: SmartSequentialTextPlayer
+  m_EditorClassIdentifier: 
+  guid: 4b549cc0da3ffd74aa67a5f6959227b2
+  nodePos: {x: 869.6, y: 550.4}
+  textContainer: {fileID: -3710326870322349997}
+  symbolTime:
+    keys:
+    - .,
+    - ;:!?
+    values:
+    - 0.5
+    - 0.7
+  defaultSymbolTime: 0.2
+--- !u!114 &-7990816273917179946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a9d43ac6c1245af939881e92f25151a, type: 3}
+  m_Name: UndertaleAudioPlayer
+  m_EditorClassIdentifier: 
+  guid: b844a6a6a06ec5242b87edbd1cf8550d
+  nodePos: {x: 899.2001, y: 776}
+  audioContainer: {fileID: -2472521034162980267}
+  minPitch: 1
+  maxPitch: 1
+  volume: 1
+--- !u!114 &-3710326870322349997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed4ea27954cd4d6689d3c0583d229408, type: 3}
+  m_Name: SimpleTextContainer
+  m_EditorClassIdentifier: 
+  guid: 09168cf891698a045a6ef4144ca66ef3
+  nodePos: {x: 904.80005, y: 473.60004}
+  text: 1234
+--- !u!114 &-2472521034162980267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad8df9118df4ce7a51893db9c574b61, type: 3}
+  m_Name: SimpleAudioContainer
+  m_EditorClassIdentifier: 
+  guid: aa41e039a1e02ac44b30679584c7ad87
+  nodePos: {x: 899.19995, y: 852.79987}
+  audio: {fileID: 0}
+--- !u!114 &-1982710376068146779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc8867b2af034842b874de30232a275a, type: 3}
+  m_Name: Storyline
+  m_EditorClassIdentifier: 
+  guid: 59ad13ad64af9664c954ce932bc2b078
+  nodePos: {x: 1199.2001, y: 626.752}
+  next: {fileID: 0}
+  textPlayer: {fileID: -8639793498545589394}
+  audioPlayer: {fileID: -7990816273917179946}
+  waitCondition: {fileID: 0}
+  tag: 
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc910af0e3446b0bda39e5ae3bb19ca, type: 3}
+  m_Name: Test
+  m_EditorClassIdentifier: 
+  roots:
+  - {fileID: -8748230477623846935}
+  nodes:
+  - {fileID: -1982710376068146779}
+  - {fileID: 5787587678969009898}
+  - {fileID: -8748230477623846935}
+  - {fileID: -8639793498545589394}
+  - {fileID: -7990816273917179946}
+  - {fileID: -2472521034162980267}
+  - {fileID: -3710326870322349997}
+--- !u!114 &5787587678969009898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc8867b2af034842b874de30232a275a, type: 3}
+  m_Name: Storyline
+  m_EditorClassIdentifier: 
+  guid: 86cb7f35ef11c674c8b067b17e0b7cbf
+  nodePos: {x: 878.4, y: 627.2}
+  next: {fileID: -1982710376068146779}
+  textPlayer: {fileID: -8639793498545589394}
+  audioPlayer: {fileID: -7990816273917179946}
+  waitCondition: {fileID: 0}
+  tag: 
