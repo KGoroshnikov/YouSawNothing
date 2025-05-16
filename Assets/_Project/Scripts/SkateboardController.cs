@@ -17,6 +17,8 @@ public class SkateboardController : MonoBehaviour
     [SerializeField] private float maxTiltAngle;
     [SerializeField] private float tiltSpeed;
 
+    [SerializeField] private float forcePushNPC;
+
     private PlayerController playerController;
     private EscManager escManager;
     [SerializeField] private Rigidbody rb;
@@ -168,6 +170,14 @@ public class SkateboardController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        Debug.Log(collision.gameObject);
+        if (collision.gameObject.CompareTag("NPC")){
+            if (collision.gameObject.TryGetComponent<NPC>(out NPC bone)){
+                Vector3 dir = collision.transform.position - new Vector3(transform.position.x, collision.transform.position.y, transform.position.z);
+                bone.EnableRagdoll(rb.linearVelocity.magnitude * dir * forcePushNPC);
+            }
+            //collision.gameObject.GetComponent<NPC>().EnableRagdoll();
+        }
         foreach (ContactPoint contact in collision.contacts)
         {
             Vector3 normal = contact.normal.normalized;
