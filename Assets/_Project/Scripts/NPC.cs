@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class NPC : MonoBehaviour
 {
     [Header("NavMesh")]
-    [SerializeField] private NavMeshAgent agent;
+    [SerializeField] protected NavMeshAgent agent;
     [SerializeField] private float wanderRadius;
-    [SerializeField] private Vector2 idleTime;
+    [SerializeField] protected Vector2 idleTime;
 
     [Header("Group")]
     [SerializeField] private float groupChance;
@@ -19,12 +19,21 @@ public class NPC : MonoBehaviour
     [SerializeField] private Vector3 pushVector;
     [SerializeField] private float pushDamping;
 
-    private enum State{
-        idle, walk
-    }
-    [SerializeField] private State mState;
-    private Vector3 walkTarget;
+    [Header("Other")]
+    [SerializeField] protected Animator animator;
+    [SerializeField] private List<Rigidbody> ragdollRBs;
+    private List<Collider> ragdollColliders;
+    [SerializeField] private Collider mainCollider;
 
+    [SerializeField] private Renderer renderer;
+    [SerializeField] private Material[] randMats;
+
+    protected enum State{
+        idle, walk, none
+    }
+    [SerializeField] protected State mState;
+    private Vector3 walkTarget;
+    
     private bool isGrouping;
     private Vector3 groupCenter;
     private static List<NPC> allNPCs = new List<NPC>();
@@ -34,9 +43,24 @@ public class NPC : MonoBehaviour
         if (agent == null)
             agent = GetComponent<NavMeshAgent>();
         allNPCs.Add(this);
+
+        ragdollColliders = new List<Collider>();
+        for (int i = 0; i < ragdollRBs.Count; i++)
+        {
+            ragdollRBs[i].isKinematic = true;
+            ragdollColliders.Add(ragdollRBs[i].GetComponent<Collider>());
+            ragdollColliders[ragdollColliders.Count - 1].enabled = false;
+        }
+
+        SetRandMat();
     }
 
-    void Start()
+    protected virtual void SetRandMat()
+    {
+        renderer.material = randMats[Random.Range(0, randMats.Length)];
+    }
+
+    protected virtual void Start()
     {
         Invoke("MakeDecision", Random.Range(idleTime.x, idleTime.y));
     }
@@ -65,6 +89,7 @@ public class NPC : MonoBehaviour
                 WanderRandom();
         }
         mState = State.walk;
+        animator.SetTrigger("Walk");
     }
 
     void Update()
@@ -76,12 +101,21 @@ public class NPC : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
-        if (mState == State.walk && !agent.pathPending && agent.remainingDistance <= 0.5f){
+        if (mState == State.none) return;
+
+        CheckWalkTarget();
+    }
+
+    protected virtual void CheckWalkTarget()
+    {
+        if (mState == State.walk && !agent.pathPending && agent.remainingDistance <= 0.5f)
+        {
             agent.ResetPath();
             Invoke("MakeDecision", Random.Range(idleTime.x, idleTime.y));
             mState = State.idle;
+            animator.SetTrigger("Idle");
         }
     }
 
@@ -141,7 +175,24 @@ public class NPC : MonoBehaviour
         pushVector += push;
     }
 
-    void OnDrawGizmosSelected()
+    public void EnableRagdoll(Vector3 push){
+        mState = State.none;
+        CancelInvoke();
+        agent.ResetPath();
+        
+        animator.enabled = false;
+        mainCollider.enabled = false;
+        for (int i = 0; i < ragdollRBs.Count; i++)
+        {
+            ragdollColliders[i].enabled = true;
+            ragdollRBs[i].isKinematic = false;
+            ragdollRBs[i].gameObject.layer = LayerMask.NameToLayer("Water");
+            ragdollRBs[i].AddForce(push, ForceMode.Impulse);
+        }
+
+    }
+
+    protected virtual void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.gray;
         Gizmos.DrawWireSphere(transform.position, wanderRadius);

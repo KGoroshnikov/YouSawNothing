@@ -68,7 +68,10 @@ public class PlayerController : MonoBehaviour
     private bool isCrouching;
     private float currentStamina;
 
-    private enum state{
+    private bool lookIsLocked;
+
+    private enum state
+    {
         idle, walk, run, onWehicle
     }
     [SerializeField] private state mState;
@@ -273,6 +276,8 @@ public class PlayerController : MonoBehaviour
 
     void HandleLook()
     {
+        if (lookIsLocked) return;
+
         transform.Rotate(Vector3.up * lookInput.x);
         cameraPitch -= lookInput.y;
         cameraPitch = Mathf.Clamp(cameraPitch, -maxLookAngle, maxLookAngle);
@@ -300,7 +305,13 @@ public class PlayerController : MonoBehaviour
         SetState(state.idle);
     }
 
-    public Tips GetTips(){
+    public void SetLockLook(bool a)
+    {
+        lookIsLocked = a;
+    }
+
+    public Tips GetTips()
+    {
         return tips;
     }
 
