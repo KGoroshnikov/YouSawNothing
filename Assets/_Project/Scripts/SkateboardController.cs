@@ -17,10 +17,12 @@ public class SkateboardController : MonoBehaviour
     [SerializeField] private float maxTiltAngle;
     [SerializeField] private float tiltSpeed;
 
+    [SerializeField] private float forcePushNPC;
+
     private PlayerController playerController;
     private EscManager escManager;
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private PlayerInput playerInput;
+    private PlayerInput playerInput;
     [SerializeField] private Transform skateMain;
     [SerializeField] private Transform playerPos;
     [SerializeField] private Animator animator;
@@ -37,23 +39,18 @@ public class SkateboardController : MonoBehaviour
 
     private bool doNotRegisterPlayer;
     private bool windIsOn;
-
-    void Awake()
-    {
-        moveAction = playerInput.actions["Move"];
-        jumpAction = playerInput.actions["Jump"];
-
-        jumpAction.performed += _ => HandleJump();
-    }
-
     void Start()
     {
         playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         escManager = GameObject.Find("EscManager").GetComponent<EscManager>();
-    }
 
-    void OnEnable()
-    {
+        playerInput = GameObject.Find("PlayerInput").GetComponent<PlayerInput>();
+
+        moveAction = playerInput.actions["Move"];
+        jumpAction = playerInput.actions["Jump"];
+
+        jumpAction.performed += _ => HandleJump();
+
         moveAction.Enable();
         jumpAction.Enable();
     }
@@ -173,6 +170,13 @@ public class SkateboardController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.CompareTag("NPC")){
+            if (collision.gameObject.TryGetComponent<NPC>(out NPC bone)){
+                Vector3 dir = collision.transform.position - new Vector3(transform.position.x, collision.transform.position.y, transform.position.z);
+                bone.EnableRagdoll(rb.linearVelocity.magnitude * dir * forcePushNPC);
+            }
+            //collision.gameObject.GetComponent<NPC>().EnableRagdoll();
+        }
         foreach (ContactPoint contact in collision.contacts)
         {
             Vector3 normal = contact.normal.normalized;

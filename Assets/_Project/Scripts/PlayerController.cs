@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float crouchSpeed;
     [SerializeField] private float standingHeight;
     [SerializeField] private float crouchHeight;
-    
+
     [Header("Look")]
     [SerializeField] private float mouseSensitivity;
     [SerializeField] private Transform cameraTransform;
@@ -43,6 +43,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator staminaAnim;
     private bool uiIsOn;
 
+    [Header("Attack")]
+    [SerializeField] private float attackDist;
+    [SerializeField] private float attackThic;
+    [SerializeField] private int baseballDamage;
+    [SerializeField] private float baseballPush;
+    [SerializeField] private VisualEffect gunMuzzle;
+    [SerializeField] private VisualEffect bulletTrail;
+    [SerializeField] private int pistolDamage;
+    [SerializeField] private LayerMask lm;
+
     [Header("Other")]
     [SerializeField] private Rigidbody rb;
     [SerializeField] private PlayerInput playerInput;
@@ -50,12 +60,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Tips tips;
     [SerializeField] private Camera cam;
     [SerializeField] private VisualEffect windVFX;
+    [SerializeField] private PlayerStats playerStats;
+    [SerializeField] private Inventory inventory;
+    [SerializeField] private HP hp;
+    private GameManager gameManager;
 
     private InputAction moveAction;
     private InputAction jumpAction;
     private InputAction crouchAction;
     private InputAction lookAction;
     private InputAction sprintAction;
+    private InputAction lmbAction;
 
     private float additiveFOV;
 
@@ -66,10 +81,17 @@ public class PlayerController : MonoBehaviour
     private bool isCrouching;
     private float currentStamina;
 
-    private enum state{
+    private bool lookIsLocked;
+
+    private enum state
+    {
         idle, walk, run, onWehicle
     }
     [SerializeField] private state mState;
+
+    private bool died;
+
+    private bool canAttack = true;
 
     void Awake()
     {
@@ -78,17 +100,87 @@ public class PlayerController : MonoBehaviour
         crouchAction = playerInput.actions["Crouch"];
         lookAction = playerInput.actions["Look"];
         sprintAction = playerInput.actions["Sprint"];
+        lmbAction = playerInput.actions["LMB"];
 
         jumpAction.performed += _ => HandleJump();
         crouchAction.performed += _ => SetCrouch(true);
         crouchAction.canceled += _ => SetCrouch(false);
         sprintAction.performed += _ => SetSprint(true);
         sprintAction.canceled += _ => SetSprint(false);
+        lmbAction.performed += _ => OnLMB();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         currentStamina = maxStamina;
+    }
+
+    void Start()
+    {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
+
+    void OnLMB()
+    {
+        if (!canAttack) return;
+        if (inventory.currentHoldingId() == 4)
+            camAnim.SetTrigger("Baseball");
+        else if (inventory.currentHoldingId() == 5)
+            camAnim.SetTrigger("Gun");
+        else return;
+
+        canAttack = false;
+        CancelInvoke("ResetAttackColldown");
+        Invoke("ResetAttackColldown", 5); // not a real cooldown
+    }
+
+    public void ResetAttackColldown() // from anim
+    {
+        CancelInvoke("ResetAttackColldown");
+        canAttack = true;
+    }
+
+    public void DealBaseballDamage() // from anim
+    {
+        RaycastHit[] hit = Physics.SphereCastAll(cam.transform.position, attackThic, cam.transform.forward, attackDist);
+        for (int i = 0; i < hit.Length; i++)
+        {
+            if (hit[i].collider.CompareTag("NPC"))
+            {
+                NPC npc = hit[i].collider.GetComponent<NPC>();
+                Vector3 dir = hit[i].transform.position - transform.position;
+                dir.y = 0;
+                npc.RagdollDamaged(dir.normalized * baseballPush, baseballDamage);
+            }
+            else if (hit[i].collider.gameObject != gameObject) break;
+        }
+    }
+
+    public void GunShoot()
+    {
+        gunMuzzle.Play();
+        bulletTrail.Play();
+        RaycastHit hit;
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 100, lm))
+        {
+            if (hit.collider.CompareTag("NPC"))
+            {
+                NPC npc = hit.collider.GetComponent<NPC>();
+                Vector3 dir = hit.transform.position - transform.position;
+                dir.y = 0;
+                npc.RagdollDamaged(dir.normalized * baseballPush, pistolDamage);
+            }
+        }
+    }
+
+    public PlayerStats GetPlayerStats()
+    {
+        return playerStats;
+    }
+
+    public Inventory GetInventory()
+    {
+        return inventory;
     }
 
     void OnEnable()
@@ -98,6 +190,7 @@ public class PlayerController : MonoBehaviour
         crouchAction.Enable();
         lookAction.Enable();
         sprintAction.Enable();
+        lmbAction.Enable();
     }
 
     void OnDisable()
@@ -107,6 +200,7 @@ public class PlayerController : MonoBehaviour
         crouchAction.Disable();
         lookAction.Disable();
         sprintAction.Disable();
+        lmbAction.Disable();
     }
 
     void Update()
@@ -119,12 +213,12 @@ public class PlayerController : MonoBehaviour
         HandleStamina();
         HandleFOV();
 
-        
+
         Debug.DrawRay(transform.position, Vector3.up, Color.blue);
         Debug.DrawRay(transform.position, lastRight, Color.red);
         Debug.DrawRay(transform.position, lastDir.normalized, Color.green);
 
-        Debug.DrawRay(transform.position,  transform.TransformDirection(moveInput), Color.magenta);
+        Debug.DrawRay(transform.position, transform.TransformDirection(moveInput), Color.magenta);
     }
 
     void FixedUpdate()
@@ -132,7 +226,8 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
     }
 
-    void HandleFOV(){
+    void HandleFOV()
+    {
         if (mState == state.run)
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, sprintFOV, speedChangeFOV * Time.deltaTime);
         else
@@ -152,7 +247,7 @@ public class PlayerController : MonoBehaviour
             speed = crouchSpeed;
         else if (mState == state.run && moveInput.magnitude > 0 && currentStamina > 0)
             speed = sprintSpeed;
-        
+
         if (mState == state.idle && speed == moveSpeed && moveInput.magnitude > 0)
             SetState(state.walk);
         else if (mState != state.idle && moveInput.magnitude == 0)
@@ -224,10 +319,13 @@ public class PlayerController : MonoBehaviour
                 camAnim.ResetTrigger(param.name);
     }
 
-    void SetState(state newState){
+    void SetState(state newState)
+    {
+        if (died) return;
         mState = newState;
         ResetAllTriggers();
-        switch (mState){
+        switch (mState)
+        {
             case state.idle:
                 camAnim.SetTrigger("Idle");
                 SetWind(false);
@@ -247,13 +345,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void UpdateStamina(){
-        if (!uiIsOn && currentStamina != maxStamina){
+    void UpdateStamina()
+    {
+        if (!uiIsOn && currentStamina != maxStamina)
+        {
             staminaAnim.ResetTrigger("Hide");
             staminaAnim.SetTrigger("Show");
             uiIsOn = true;
         }
-        else if (uiIsOn && currentStamina == maxStamina){
+        else if (uiIsOn && currentStamina == maxStamina)
+        {
             staminaAnim.ResetTrigger("Show");
             staminaAnim.SetTrigger("Hide");
             uiIsOn = false;
@@ -263,13 +364,16 @@ public class PlayerController : MonoBehaviour
 
     void HandleLook()
     {
+        if (lookIsLocked) return;
+
         transform.Rotate(Vector3.up * lookInput.x);
         cameraPitch -= lookInput.y;
         cameraPitch = Mathf.Clamp(cameraPitch, -maxLookAngle, maxLookAngle);
         cameraTransform.localEulerAngles = Vector3.right * cameraPitch;
     }
 
-    public void SetAdditiveFOV(float fov){
+    public void SetAdditiveFOV(float fov)
+    {
         additiveFOV = fov;
     }
 
@@ -278,23 +382,53 @@ public class PlayerController : MonoBehaviour
         isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
     }
 
-    public bool isPlayerOnWehicle(){
+    public bool isPlayerOnWehicle()
+    {
         return mState == state.onWehicle;
     }
 
-    public void SetWehicle(){
+    public void SetWehicle()
+    {
         SetState(state.onWehicle);
     }
-    public void LeaveWehicle(){
+    public void LeaveWehicle()
+    {
         rb.isKinematic = false;
         SetState(state.idle);
     }
 
-    public Tips GetTips(){
+    public void Die()
+    {
+        if (died) return;
+        died = true;
+        camAnim.SetTrigger("Death");
+        SetWehicle();
+        SetLockLook(true);
+    }
+
+    public void CloseEyes()
+    {
+        gameManager.PlayerDied();
+    }
+
+    public void TakeDamage(int dmg)
+    {
+        camAnim.SetTrigger("Damaged");
+        hp.TakeDamage(dmg);
+    }
+
+    public void SetLockLook(bool a)
+    {
+        lookIsLocked = a;
+    }
+
+    public Tips GetTips()
+    {
         return tips;
     }
 
-    public void SetWind(bool a){
+    public void SetWind(bool a)
+    {
         if (a) windVFX.Play();
         else windVFX.Stop();
     }
@@ -303,7 +437,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 lastDir = Vector3.zero, lastRight = Vector3.zero;
     void OnCollisionEnter(Collision collision)
     {
-        if (!collision.gameObject.CompareTag("NPC")) return;
+        if (!collision.gameObject.CompareTag("NPC") || died) return;
 
         Vector3 dirMove = transform.TransformDirection(moveInput);
 
@@ -324,5 +458,19 @@ public class PlayerController : MonoBehaviour
         {
             npc.PushMe(lateralDir * dirMove.magnitude * pushMultiplierNPC);
         }
+    }
+
+    public Vector3 GetVelocity()
+    {
+        return rb.linearVelocity;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(cam.transform.position, attackThic);
+        Vector3 pos2 = cam.transform.position + cam.transform.forward * (attackDist - attackThic / 2);
+        Gizmos.DrawWireSphere(pos2, attackThic);
+        Gizmos.DrawLine(cam.transform.position, pos2);
     }
 }

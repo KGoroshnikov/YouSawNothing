@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,9 +7,14 @@ using UnityEngine.UI;
 // 0 - nothing
 // 1 - test item
 // 2 - money
+// 3 - paketik
+// 4 - baseball
+// 5 - gun
 
 public class Inventory : MonoBehaviour
 {
+    public static event Action OnSussyPicked;
+
     private MoveObjects moveObjects;
     [SerializeField] private Animator[] slotAnims;
     [SerializeField] private Image[] spriteSlots;
@@ -16,7 +22,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private float pickTime;
     [SerializeField] private float throwForce;
     [SerializeField] private Transform[] itemPoses;
-    
+
     [System.Serializable]
     public class itemData
     {
@@ -25,6 +31,8 @@ public class Inventory : MonoBehaviour
         [HideInInspector] public Item item;
         public Sprite uiSprite;
         [HideInInspector] public bool stackable;
+        public Vector2 offsetHand = Vector2.zero;
+        public bool isSussyItem;
     }
     private List<itemData> currentItems = new List<itemData>();
 
@@ -50,7 +58,8 @@ public class Inventory : MonoBehaviour
     void Start()
     {
         moveObjects = GameObject.Find("MoveObjects").GetComponent<MoveObjects>();
-        for(int i = 0; i < 4; i++){
+        for (int i = 0; i < 4; i++)
+        {
             currentItems.Add(new itemData());
         }
 
@@ -69,7 +78,13 @@ public class Inventory : MonoBehaviour
         dropAction.Disable();
     }
 
-    void OnDrop(){
+    public List<itemData> GetCurrentItems()
+    {
+        return currentItems;
+    }
+
+    void OnDrop()
+    {
         if (currentItems[currentSelected].id == 0) return;
 
         currentItems[currentSelected].obj.transform.SetParent(null);
@@ -91,13 +106,16 @@ public class Inventory : MonoBehaviour
         tips.SetDropTip(false);
     }
 
-    public void RemoveMoney(int amout){
+    public void RemoveMoney(int amout)
+    {
         moneyAmount -= amout;
         taskManager.UpdateMoney();
-        if (moneyAmount <= 0){
+        if (moneyAmount <= 0)
+        {
             int moneySlot = findSlotWithId(2);
 
-            if (currentSelected == moneySlot){
+            if (currentSelected == moneySlot)
+            {
                 tips.DisableMainHand();
                 tips.SetDropTip(false);
             }
@@ -110,40 +128,61 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    int findSlotWithId(int id){
-        for(int i = 0; i < currentItems.Count; i++){
-            if (currentItems[i].id == id){
+    public int findSlotWithId(int id)
+    {
+        for (int i = 0; i < currentItems.Count; i++)
+        {
+            if (currentItems[i].id == id)
+            {
                 return i;
             }
         }
         return -1;
     }
 
-    public int GetMoney(){
+    public int currentHoldingId()
+    {
+        return currentItems[currentSelected].id;
+    }
+
+    public int GetMoney()
+    {
         return moneyAmount;
     }
 
-    public bool AddItem(itemData item){
+    public bool AddItem(itemData item)
+    {
         int freeSlot = -1;
-        for(int i = 0; i < currentItems.Count; i++){
-            if (currentItems[i].id == 0 || (item.stackable && currentItems[i].id == item.id)){
+        for (int i = 0; i < currentItems.Count; i++)
+        {
+            if (currentItems[i].id == 0 || (item.stackable && currentItems[i].id == item.id))
+            {
                 freeSlot = i;
                 break;
             }
         }
         if (freeSlot == -1) return false;
 
-        if (item.stackable){
+        if (item.stackable)
+        {
             moneyAmount += item.item.GetMoney();
             taskManager.UpdateMoney();
             if (currentItems[freeSlot].id == item.id)
                 Destroy(currentItems[freeSlot].obj);
         }
-        
+
 
         currentItems[freeSlot].id = item.id;
         currentItems[freeSlot].obj = item.obj;
         currentItems[freeSlot].item = item.item;
+        currentItems[freeSlot].isSussyItem = item.isSussyItem;
+        currentItems[freeSlot].uiSprite = item.uiSprite;
+        currentItems[freeSlot].offsetHand = item.offsetHand;
+
+        if (item.isSussyItem)
+        {
+            OnSussyPicked.Invoke();
+        }
 
         spriteSlots[freeSlot].gameObject.SetActive(true);
         spriteSlots[freeSlot].sprite = item.uiSprite;
@@ -152,7 +191,7 @@ public class Inventory : MonoBehaviour
 
         if (currentSelected == freeSlot)
         {
-            tips.EnableMainHand(currentItems[currentSelected].obj.transform, Vector2.zero);
+            tips.EnableMainHand(currentItems[currentSelected].obj.transform, currentItems[currentSelected].offsetHand);
             tips.SetDropTip(true);
         }
 
@@ -182,17 +221,20 @@ public class Inventory : MonoBehaviour
         if (currentItems[currentSelected].id != 0)
         {
             currentItems[currentSelected].obj.SetActive(true);
-            tips.EnableMainHand(currentItems[currentSelected].obj.transform, Vector2.zero);
+            tips.EnableMainHand(currentItems[currentSelected].obj.transform, currentItems[currentSelected].offsetHand);
             tips.SetDropTip(true);
         }
-        else{
+        else
+        {
             tips.DisableMainHand();
             tips.SetDropTip(false);
         }
     }
 
-    void ItemPicked(){
-        for(int i = 0; i < currentItems.Count; i++){
+    void ItemPicked()
+    {
+        for (int i = 0; i < currentItems.Count; i++)
+        {
             if (currentItems[i].id == 0) continue;
             if (currentSelected != i) currentItems[i].obj.SetActive(false);
             currentItems[i].obj.transform.localPosition = Vector3.zero;

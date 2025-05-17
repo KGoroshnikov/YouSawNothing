@@ -42,6 +42,11 @@ public class Tablet : MonoBehaviour
         animator.SetTrigger(isOpened ? "OpenTablet" : "CloseTablet");
     }
 
+    public void ForceOpenTablet(){
+        if (isOpened) return;
+        TabPressed();
+    }
+
     public void SetTasks(List<Task> newTasks){
         for(int i = 0; i < newTasks.Count; i++){
             taskNotes[i].obj.SetActive(true);

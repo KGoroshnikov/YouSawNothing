@@ -8,6 +8,8 @@ public class TaskManager : MonoBehaviour
 
     [SerializeField] private TMP_Text moneyText;
 
+    [SerializeField] private List<Task> defaultTasks;
+
     [SerializeField] private List<Task> currentTasks;
     [SerializeField] private float timeToComplete;
 
@@ -23,8 +25,12 @@ public class TaskManager : MonoBehaviour
     private bool[] taskCompleted;
 
     public int LoadNextTask(){
-        SetNewTask(currentTasks);
+        SetNewTask(defaultTasks);
         return currentTasks.Count;
+    }
+
+    public void ForceOpenTablet(){
+        tablet.ForceOpenTablet();
     }
 
     public void SetNewTask(List<Task> newTasks){
