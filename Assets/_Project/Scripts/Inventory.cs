@@ -8,6 +8,8 @@ using UnityEngine.UI;
 // 1 - test item
 // 2 - money
 // 3 - paketik
+// 4 - baseball
+// 5 - gun
 
 public class Inventory : MonoBehaviour
 {
@@ -29,6 +31,7 @@ public class Inventory : MonoBehaviour
         [HideInInspector] public Item item;
         public Sprite uiSprite;
         [HideInInspector] public bool stackable;
+        public Vector2 offsetHand = Vector2.zero;
         public bool isSussyItem;
     }
     private List<itemData> currentItems = new List<itemData>();
@@ -125,7 +128,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    int findSlotWithId(int id)
+    public int findSlotWithId(int id)
     {
         for (int i = 0; i < currentItems.Count; i++)
         {
@@ -135,6 +138,11 @@ public class Inventory : MonoBehaviour
             }
         }
         return -1;
+    }
+
+    public int currentHoldingId()
+    {
+        return currentItems[currentSelected].id;
     }
 
     public int GetMoney()
@@ -169,6 +177,7 @@ public class Inventory : MonoBehaviour
         currentItems[freeSlot].item = item.item;
         currentItems[freeSlot].isSussyItem = item.isSussyItem;
         currentItems[freeSlot].uiSprite = item.uiSprite;
+        currentItems[freeSlot].offsetHand = item.offsetHand;
 
         if (item.isSussyItem)
         {
@@ -182,7 +191,7 @@ public class Inventory : MonoBehaviour
 
         if (currentSelected == freeSlot)
         {
-            tips.EnableMainHand(currentItems[currentSelected].obj.transform, Vector2.zero);
+            tips.EnableMainHand(currentItems[currentSelected].obj.transform, currentItems[currentSelected].offsetHand);
             tips.SetDropTip(true);
         }
 
@@ -212,7 +221,7 @@ public class Inventory : MonoBehaviour
         if (currentItems[currentSelected].id != 0)
         {
             currentItems[currentSelected].obj.SetActive(true);
-            tips.EnableMainHand(currentItems[currentSelected].obj.transform, Vector2.zero);
+            tips.EnableMainHand(currentItems[currentSelected].obj.transform, currentItems[currentSelected].offsetHand);
             tips.SetDropTip(true);
         }
         else

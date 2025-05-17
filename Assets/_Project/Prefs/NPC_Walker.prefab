@@ -557,6 +557,7 @@ GameObject:
   - component: {fileID: 3983441920169969741}
   - component: {fileID: 5961805124887796161}
   - component: {fileID: 4200666887105751456}
+  - component: {fileID: 5984984933904414697}
   m_Layer: 0
   m_Name: NPC_Walker
   m_TagString: NPC
@@ -638,11 +639,15 @@ MonoBehaviour:
   - {fileID: 2874649251302008504}
   - {fileID: 7242075852363726981}
   mainCollider: {fileID: 5961805124887796161}
+  standUpClip: {fileID: 7400000, guid: d5f26e36ce3fcea47b9fa91503378b1d, type: 2}
+  blendDuration: 0.5
   renderer: {fileID: 6798102700976607728}
   randMats:
   - {fileID: 2100000, guid: ebd855b5847341b4191db64fb6d1f01a, type: 2}
   - {fileID: 2100000, guid: 20248b27e5b553248935863f5106d591, type: 2}
   - {fileID: 2100000, guid: 066a166a43dab05489826a36e2c08949, type: 2}
+  rootBone: {fileID: 2198992282411061475}
+  mHP: {fileID: 5984984933904414697}
   mState: 0
 --- !u!136 &5961805124887796161
 CapsuleCollider:
@@ -689,6 +694,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5984984933904414697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579841991274833339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e6bbfa55b0f1734ca02058cc0e37855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mHP: 100
+  playerController: {fileID: 0}
 --- !u!1 &1855212825032151779
 GameObject:
   m_ObjectHideFlags: 0
@@ -1410,7 +1429,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 65
   m_IsActive: 1
 --- !u!4 &8138505409423932778
 Transform:
