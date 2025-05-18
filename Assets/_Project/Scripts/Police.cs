@@ -58,12 +58,16 @@ public class Police : NPC
     {
         base.OnEnable();
         Inventory.OnSussyPicked += PlayerDidSussyThing;
+        Inventory.OnSussyInHand += PlayerDidSussyThing;
+        NPC.OnDamaged += PlayerDidIllegal;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
         Inventory.OnSussyPicked -= PlayerDidSussyThing;
+        Inventory.OnSussyInHand -= PlayerDidSussyThing;
+        NPC.OnDamaged -= PlayerDidIllegal;
     }
 
     void PlayerDidSussyThing()
@@ -75,10 +79,20 @@ public class Police : NPC
         animator.SetTrigger("Walk");
     }
 
+    void PlayerDidIllegal()
+    {
+        if (!fov.isMeVisible(playerController.gameObject) || mState == State.none) return;
+        chasingPlayer = true;
+        wantToKill = true;
+        CancelInvoke();
+        mState = State.walk;
+        animator.SetTrigger("Walk");
+    }
+
     void LateUpdate()
     {
         base.Update();
-        if (mState == State.none)
+        if (mState == State.none && !laying)
         {
             if (wantToKill)
             {
@@ -90,7 +104,7 @@ public class Police : NPC
 
     protected override void FixedUpdate()
     {
-        if (mState == State.none)
+        if (mState == State.none && !laying)
         {
             if (wantToKill)
             {
@@ -103,6 +117,29 @@ public class Police : NPC
         else if (mState == State.walk && !chasingPlayer) CheckWalkTarget();
         else if (mState == State.walk && chasingPlayer) CheckPlayerDuringChase();
     }
+
+    public override void RagdollDamaged(Vector3 push, int damage)
+    {
+        base.RagdollDamaged(push, damage);
+    }
+
+    public override void StandupFinish()
+    {
+        CancelInvoke();
+        animator.enabled = true;
+        mainCollider.enabled = true;
+        laying = false;
+
+        if (chasingPlayer || wantToKill)
+        {
+            WantToKillPlayer();
+        }
+        else
+        {
+            ForgetPlayer();
+        }
+    }
+
 
     void CheckPlayerDuringChase()
     {
@@ -237,6 +274,17 @@ public class Police : NPC
         CancelInvoke();
         mState = State.walk;
         animator.SetTrigger("Walk");
+    }
+
+    protected override void OnDie()
+    {
+        base.OnDie();
+        wantToKill = false;
+        chasingPlayer = false;
+        lostPlayer = false;
+        CancelInvoke();
+        agent.ResetPath();
+        mState = State.none;
     }
 
     public void FinishCheck(bool isPlayerSussy)

@@ -7,6 +7,9 @@ using Random = UnityEngine.Random;
 
 public class NPC : MonoBehaviour
 {
+    public static event Action OnDamaged;
+    private Func.CallbackFunc onDeath;
+
     [Header("NavMesh")]
     [SerializeField] protected NavMeshAgent agent;
     [SerializeField] private float wanderRadius;
@@ -26,13 +29,19 @@ public class NPC : MonoBehaviour
     [SerializeField] protected Animator animator;
     [SerializeField] private List<Rigidbody> ragdollRBs;
     private List<Collider> ragdollColliders;
-    [SerializeField] private Collider mainCollider;
+    [SerializeField] protected Collider mainCollider;
     [SerializeField] private AnimationClip standUpClip;
     [SerializeField] private float blendDuration;
 
     [SerializeField] private Renderer renderer;
-    [SerializeField] private Material[] randMats;
 
+    [System.Serializable]
+    public class skins
+    {
+        public Material matDefault, matDead, matSpeak;
+    }
+    private int currentSkin;
+    [SerializeField] private skins[] randSkin;
     [SerializeField] private Transform rootBone;
 
     [SerializeField] private HP mHP;
@@ -57,6 +66,8 @@ public class NPC : MonoBehaviour
 
     private Action parentSetupCallback;
 
+    protected bool laying;
+
     void Awake()
     {
         if (agent == null)
@@ -76,7 +87,8 @@ public class NPC : MonoBehaviour
 
     protected virtual void SetRandMat()
     {
-        renderer.material = randMats[Random.Range(0, randMats.Length)];
+        currentSkin = Random.Range(0, randSkin.Length);
+        renderer.material = randSkin[currentSkin].matDefault;
     }
 
     protected virtual void Start()
@@ -280,13 +292,14 @@ public class NPC : MonoBehaviour
         targetLocalRot = new Quaternion[bones.Length];
     }
 
-    public void StandupFinish() // called from anim
+    public virtual void StandupFinish() // called from anim
     {
         mState = State.idle;
         animator.SetTrigger("Idle");
         CancelInvoke();
         animator.enabled = true;
         mainCollider.enabled = true;
+        laying = false;
         Invoke("MakeDecision", Random.Range(idleTime.x, idleTime.y));
     }
 
@@ -294,19 +307,48 @@ public class NPC : MonoBehaviour
         StartCoroutine(BlendToAnimation());
     }
 
-    public void RagdollDamaged(Vector3 push, int damage)
+    public virtual void RagdollDamaged(Vector3 push, int damage)
     {
+        OnDamaged.Invoke();
         mHP.TakeDamage(damage);
         EnableRagdoll(push);
+    }
+
+    void ResetAllTriggers()
+    {
+        foreach (var param in animator.parameters)
+        {
+            if (param.type == AnimatorControllerParameterType.Trigger)
+            {
+                animator.ResetTrigger(param.name);
+            }
+        }
+    }
+
+    public void SubscribeToDeath(Func.CallbackFunc callback)
+    {
+        onDeath = callback;
+    }
+
+    protected virtual void OnDie()
+    {
+        renderer.material = randSkin[currentSkin].matDead;
+        onDeath();
     }
 
     public void EnableRagdoll(Vector3 push)
     {
         mState = State.none;
+        ResetAllTriggers();
         CancelInvoke();
         agent.ResetPath();
+        laying = true;
 
         if (mHP.GetHP() > 0) Invoke("StandUp", 2);
+        else
+        {
+            OnDie();
+        }
 
         animator.enabled = false;
         mainCollider.enabled = false;
