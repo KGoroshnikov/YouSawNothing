@@ -30,8 +30,16 @@ public class TaskManager : MonoBehaviour
 
     [Header("Kill")]
     [SerializeField] private SpawnNPC spawnNPC;
-    private List<NPC> targetsToKill;
+    private List<NPC> targetsToKill = new List<NPC>();
+    private List<int> taskIdKill = new List<int>();
     public delegate void DeathCallback(NPC npc);
+    public DeathCallback onDeathNPC;
+
+    [Header("Paint")]
+    [SerializeField] private PaintHolder[] paintHolders;
+    private int targetPainted;
+    private int currentPainted;
+    private List<int> taskIdPaint = new List<int>();
 
     private bool[] taskCompleted;
 
@@ -60,6 +68,17 @@ public class TaskManager : MonoBehaviour
         delivered.Clear();
         taskIdDeliver.Clear();
 
+        taskIdKill.Clear();
+        for (int i = 0; i < targetsToKill.Count; i++)
+            if (targetsToKill != null) targetsToKill[i].SetTragetArrow(false);
+        targetsToKill.Clear();
+
+        for (int i = 0; i < paintHolders.Length; i++)
+            paintHolders[i].GetPainted(false);
+        taskIdPaint.Clear();
+        currentPainted = 0;
+        targetPainted = 0;
+
         for (int i = 0; i < currentTasks.Count; i++)
         {
             if (currentTasks[i].mTaskType == Task.taskType.deliver)
@@ -72,8 +91,14 @@ public class TaskManager : MonoBehaviour
             }
             else if (currentTasks[i].mTaskType == Task.taskType.kill)
             {
-                ChooseTargetToKill();
+                ChooseTargetToKill(i);
             }
+            else if (currentTasks[i].mTaskType == Task.taskType.paint && currentTasks[i].targetPaint > targetPainted)
+            {
+                targetPainted = currentTasks[i].targetPaint;
+                taskIdPaint.Add(i);
+            }
+
         }
 
         SetDeliversTrigger();
@@ -208,16 +233,19 @@ public class TaskManager : MonoBehaviour
         }
     }
 
-    void ChooseTargetToKill()
+    void ChooseTargetToKill(int taskId)
     {
         NPC rand = null;
         for (int i = 0; i < 100; i++)
         {
             rand = spawnNPC.GetRandomNPC();
-            if (!targetsToKill.Contains(rand))
+            if (!targetsToKill.Contains(rand) && !rand.GetIsDead())
             {
-                //rand.SubscribeToDeath(NPCKilled);
+                onDeathNPC = NPCKilled;
+                rand.SetTragetArrow(true);
+                rand.SubscribeToDeath(onDeathNPC);
                 targetsToKill.Add(rand);
+                taskIdKill.Add(taskId);
                 break;
             }
         }
@@ -225,6 +253,27 @@ public class TaskManager : MonoBehaviour
 
     public void NPCKilled(NPC npc)
     {
-        
+        for (int i = 0; i < targetsToKill.Count; i++)
+        {
+            if (targetsToKill[i] == npc)
+            {
+                npc.SetTragetArrow(false);
+                UpdateStateTask(taskIdKill[i], true);
+                break;
+            }
+        }
+    }
+
+    public void UpdatePainted()
+    {
+        currentPainted = 0;
+        for (int i = 0; i < paintHolders.Length; i++)
+            currentPainted += paintHolders[i].IsPainted() ? 1 : 0;
+
+        if (currentPainted >= targetPainted)
+        {
+            for (int i = 0; i < taskIdPaint.Count; i++)
+                UpdateStateTask(taskIdPaint[i], true);
+        }
     }
 }

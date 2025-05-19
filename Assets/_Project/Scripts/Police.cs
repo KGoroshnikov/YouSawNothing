@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.VFX;
@@ -8,8 +9,10 @@ public class Police : NPC
     [SerializeField] private float radiusPossibleSearch;
     [SerializeField] private float chanceSearch;
     [SerializeField] private float checkPlayerTime;
-
     [SerializeField] private bool imWithGun;
+
+    [Header("Patrol")]
+    [SerializeField] private Transform patrolObject;
 
     [Header("Gun")]
     [SerializeField] private float gunAttackRadius;
@@ -59,6 +62,7 @@ public class Police : NPC
         base.OnEnable();
         Inventory.OnSussyPicked += PlayerDidSussyThing;
         Inventory.OnSussyInHand += PlayerDidSussyThing;
+        SkateboardController.OnStolenWehicle += PlayerDidIllegal;
         NPC.OnDamaged += PlayerDidIllegal;
     }
 
@@ -67,6 +71,7 @@ public class Police : NPC
         base.OnDisable();
         Inventory.OnSussyPicked -= PlayerDidSussyThing;
         Inventory.OnSussyInHand -= PlayerDidSussyThing;
+        SkateboardController.OnStolenWehicle -= PlayerDidIllegal;
         NPC.OnDamaged -= PlayerDidIllegal;
     }
 
@@ -285,6 +290,7 @@ public class Police : NPC
         CancelInvoke();
         agent.ResetPath();
         mState = State.none;
+        laying = false;
     }
 
     public void FinishCheck(bool isPlayerSussy)
@@ -299,6 +305,29 @@ public class Police : NPC
             Invoke("MakeDecision", Random.Range(idleTime.x, idleTime.y));
             InvokeRepeating("CheckPlayer", checkPlayerTime * 3, checkPlayerTime);
         }
+    }
+    protected override void MakeDecision(){
+        if (isGrouping && patrolObject == null)
+        {
+            WanderAround(groupCenter);
+        }
+        else{
+            if (Random.value < groupChance && patrolObject == null)
+            {
+                List<NPC> nearest = findNearest();
+                if (nearest.Count > 0){
+                    StartGrouping(nearest);
+                    WanderAround(groupCenter);
+                }
+                else WanderRandom();
+            }
+            else if (patrolObject != null)
+                WanderAround(patrolObject.position);
+            else
+                WanderRandom();
+        }
+        mState = State.walk;
+        animator.SetTrigger("Walk");
     }
 
     protected override void OnDrawGizmosSelected()
