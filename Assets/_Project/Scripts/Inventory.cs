@@ -8,10 +8,15 @@ using UnityEngine.UI;
 // 1 - test item
 // 2 - money
 // 3 - paketik
+// 4 - baseball
+// 5 - gun
+// 6 - graple
+// 7 - spray paint
 
 public class Inventory : MonoBehaviour
 {
     public static event Action OnSussyPicked;
+    public static event Action OnSussyInHand;
 
     private MoveObjects moveObjects;
     [SerializeField] private Animator[] slotAnims;
@@ -29,6 +34,7 @@ public class Inventory : MonoBehaviour
         [HideInInspector] public Item item;
         public Sprite uiSprite;
         [HideInInspector] public bool stackable;
+        public Vector2 offsetHand = Vector2.zero;
         public bool isSussyItem;
     }
     private List<itemData> currentItems = new List<itemData>();
@@ -43,6 +49,9 @@ public class Inventory : MonoBehaviour
     private InputAction scrollAction, dropAction;
     [SerializeField] private float scrollCooldown = 0.25f;
     private float lastScrollTime = 0f;
+
+    private Graple graple;
+    private SprayPaint sprayPaint;
 
     void Awake()
     {
@@ -125,7 +134,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    int findSlotWithId(int id)
+    public int findSlotWithId(int id)
     {
         for (int i = 0; i < currentItems.Count; i++)
         {
@@ -137,9 +146,23 @@ public class Inventory : MonoBehaviour
         return -1;
     }
 
+    public int currentHoldingId()
+    {
+        return currentItems[currentSelected].id;
+    }
+
     public int GetMoney()
     {
         return moneyAmount;
+    }
+
+    public Graple GetGraple()
+    {
+        return graple;
+    }
+    public SprayPaint GetSprayPaint()
+    {
+        return sprayPaint;
     }
 
     public bool AddItem(itemData item)
@@ -169,11 +192,17 @@ public class Inventory : MonoBehaviour
         currentItems[freeSlot].item = item.item;
         currentItems[freeSlot].isSussyItem = item.isSussyItem;
         currentItems[freeSlot].uiSprite = item.uiSprite;
+        currentItems[freeSlot].offsetHand = item.offsetHand;
 
         if (item.isSussyItem)
         {
             OnSussyPicked.Invoke();
         }
+
+        if (currentItems[freeSlot].id == 6)
+            graple = item.obj.GetComponent<Graple>();
+        else if (currentItems[freeSlot].id == 7)
+            sprayPaint = item.obj.GetComponent<SprayPaint>();
 
         spriteSlots[freeSlot].gameObject.SetActive(true);
         spriteSlots[freeSlot].sprite = item.uiSprite;
@@ -182,7 +211,7 @@ public class Inventory : MonoBehaviour
 
         if (currentSelected == freeSlot)
         {
-            tips.EnableMainHand(currentItems[currentSelected].obj.transform, Vector2.zero);
+            tips.EnableMainHand(currentItems[currentSelected].obj.transform, currentItems[currentSelected].offsetHand);
             tips.SetDropTip(true);
         }
 
@@ -212,7 +241,9 @@ public class Inventory : MonoBehaviour
         if (currentItems[currentSelected].id != 0)
         {
             currentItems[currentSelected].obj.SetActive(true);
-            tips.EnableMainHand(currentItems[currentSelected].obj.transform, Vector2.zero);
+            CancelInvoke("CheckItemInHand");
+            Invoke("CheckItemInHand", 0.5f);
+            tips.EnableMainHand(currentItems[currentSelected].obj.transform, currentItems[currentSelected].offsetHand);
             tips.SetDropTip(true);
         }
         else
@@ -220,6 +251,11 @@ public class Inventory : MonoBehaviour
             tips.DisableMainHand();
             tips.SetDropTip(false);
         }
+    }
+
+    void CheckItemInHand()
+    {
+        if (currentItems[currentSelected].isSussyItem) OnSussyInHand.Invoke();
     }
 
     void ItemPicked()

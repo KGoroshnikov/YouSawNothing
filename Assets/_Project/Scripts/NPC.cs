@@ -1,9 +1,15 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using System.Collections;
+using System;
+using Random = UnityEngine.Random;
 
 public class NPC : MonoBehaviour
 {
+    public static event Action OnDamaged;
+    private Func.CallbackFunc onDeath;
+
     [Header("NavMesh")]
     [SerializeField] protected NavMeshAgent agent;
     [SerializeField] private float wanderRadius;
@@ -23,12 +29,25 @@ public class NPC : MonoBehaviour
     [SerializeField] protected Animator animator;
     [SerializeField] private List<Rigidbody> ragdollRBs;
     private List<Collider> ragdollColliders;
-    [SerializeField] private Collider mainCollider;
+    [SerializeField] protected Collider mainCollider;
+    [SerializeField] private AnimationClip standUpClip;
+    [SerializeField] private float blendDuration;
 
     [SerializeField] private Renderer renderer;
-    [SerializeField] private Material[] randMats;
 
-    protected enum State{
+    [System.Serializable]
+    public class skins
+    {
+        public Material matDefault, matDead, matSpeak;
+    }
+    private int currentSkin;
+    [SerializeField] private skins[] randSkin;
+    [SerializeField] private Transform rootBone;
+
+    [SerializeField] private HP mHP;
+
+    protected enum State
+    {
         idle, walk, none
     }
     [SerializeField] protected State mState;
@@ -37,6 +56,17 @@ public class NPC : MonoBehaviour
     private bool isGrouping;
     private Vector3 groupCenter;
     private static List<NPC> allNPCs = new List<NPC>();
+
+    private Vector3 relativeOffset;
+    private Quaternion relativeRotation;
+
+    private Transform[] bones;
+    private Vector3[] targetLocalPos;
+    private Quaternion[] targetLocalRot;
+
+    private Action parentSetupCallback;
+
+    protected bool laying;
 
     void Awake()
     {
@@ -57,12 +87,25 @@ public class NPC : MonoBehaviour
 
     protected virtual void SetRandMat()
     {
-        renderer.material = randMats[Random.Range(0, randMats.Length)];
+        currentSkin = Random.Range(0, randSkin.Length);
+        renderer.material = randSkin[currentSkin].matDefault;
     }
 
     protected virtual void Start()
     {
+        relativeOffset = transform.position - rootBone.position;
+        relativeRotation = Quaternion.Inverse(rootBone.rotation) * transform.rotation;
+
         Invoke("MakeDecision", Random.Range(idleTime.x, idleTime.y));
+    }
+
+    protected virtual void OnEnable()
+    {
+        parentSetupCallback += StartBlendAnim;
+    }
+    protected virtual void OnDisable()
+    {
+        parentSetupCallback -= StartBlendAnim;
     }
 
     void OnDestroy()
@@ -92,7 +135,7 @@ public class NPC : MonoBehaviour
         animator.SetTrigger("Walk");
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (pushVector.sqrMagnitude > 0.0001f)
         {
@@ -175,11 +218,138 @@ public class NPC : MonoBehaviour
         pushVector += push;
     }
 
-    public void EnableRagdoll(Vector3 push){
+    IEnumerator AdjustParent(Action callback)
+    {
+        Vector3 bonePos = rootBone.position;
+        Quaternion boneRot = rootBone.rotation;
+
+        transform.position = relativeOffset + rootBone.position;
+        transform.rotation = boneRot * relativeRotation;
+
+        rootBone.position = bonePos;
+        rootBone.rotation = boneRot;
+        yield return null;
+        rootBone.position = bonePos;
+        rootBone.rotation = boneRot;
+
+        callback.Invoke();
+    }
+
+    IEnumerator BlendToAnimation()
+    {
+        Vector3[] startLocalPos = new Vector3[bones.Length];
+        Quaternion[] startLocalRot = new Quaternion[bones.Length];
+        for (int i = 0; i < bones.Length; i++)
+        {
+            startLocalPos[i] = bones[i].localPosition;
+            startLocalRot[i] = bones[i].localRotation;
+        }
+
+        standUpClip.SampleAnimation(gameObject, 0);
+
+        for (int i = 0; i < bones.Length; i++)
+        {
+            targetLocalPos[i] = bones[i].localPosition;
+            targetLocalRot[i] = bones[i].localRotation;
+        }
+        
+        
+        float elapsed = 0f;
+        while (elapsed < blendDuration)
+        {
+            float t = elapsed / blendDuration;
+            for (int i = 0; i < bones.Length; i++)
+            {
+                bones[i].localPosition = Vector3.Lerp(startLocalPos[i], targetLocalPos[i], t);
+                bones[i].localRotation = Quaternion.Slerp(startLocalRot[i], targetLocalRot[i], t);
+            }
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        for (int i = 0; i < bones.Length; i++)
+        {
+            bones[i].localPosition = targetLocalPos[i];
+            bones[i].localRotation = targetLocalRot[i];
+        }
+
+        animator.enabled = true;
+        animator.Play(standUpClip.name, 0, 0);
+    }
+
+    void StandUp()
+    {
+        for (int i = 0; i < ragdollRBs.Count; i++)
+        {
+            ragdollColliders[i].enabled = false;
+            ragdollRBs[i].isKinematic = true;
+        }
+        StartCoroutine(AdjustParent(parentSetupCallback));
+
+        bones = GetComponentsInChildren<Transform>();
+        targetLocalPos = new Vector3[bones.Length];
+        targetLocalRot = new Quaternion[bones.Length];
+    }
+
+    public virtual void StandupFinish() // called from anim
+    {
+        mState = State.idle;
+        animator.SetTrigger("Idle");
+        CancelInvoke();
+        animator.enabled = true;
+        mainCollider.enabled = true;
+        laying = false;
+        Invoke("MakeDecision", Random.Range(idleTime.x, idleTime.y));
+    }
+
+    void StartBlendAnim() {
+        StartCoroutine(BlendToAnimation());
+    }
+
+    public virtual void RagdollDamaged(Vector3 push, int damage)
+    {
+        OnDamaged.Invoke();
+        mHP.TakeDamage(damage);
+        EnableRagdoll(push);
+    }
+
+    void ResetAllTriggers()
+    {
+        foreach (var param in animator.parameters)
+        {
+            if (param.type == AnimatorControllerParameterType.Trigger)
+            {
+                animator.ResetTrigger(param.name);
+            }
+        }
+    }
+
+    public void SubscribeToDeath(Func.CallbackFunc callback)
+    {
+        onDeath = callback;
+    }
+
+    protected virtual void OnDie()
+    {
+        renderer.material = randSkin[currentSkin].matDead;
+        onDeath();
+    }
+
+    public void EnableRagdoll(Vector3 push)
+    {
         mState = State.none;
+        ResetAllTriggers();
         CancelInvoke();
         agent.ResetPath();
-        
+        laying = true;
+
+        if (mHP.GetHP() > 0) Invoke("StandUp", 2);
+        else
+        {
+            OnDie();
+        }
+
         animator.enabled = false;
         mainCollider.enabled = false;
         for (int i = 0; i < ragdollRBs.Count; i++)

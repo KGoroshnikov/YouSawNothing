@@ -170,7 +170,6 @@ public class SkateboardController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject);
         if (collision.gameObject.CompareTag("NPC")){
             if (collision.gameObject.TryGetComponent<NPC>(out NPC bone)){
                 Vector3 dir = collision.transform.position - new Vector3(transform.position.x, collision.transform.position.y, transform.position.z);

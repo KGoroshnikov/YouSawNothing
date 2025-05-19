@@ -16,9 +16,9 @@ MonoBehaviour:
   - title: Minimal
     position:
       serializedVersion: 2
-      x: 463
+      x: 450
       y: -582
-      width: 474
+      width: 487
       height: 2093
     contents:
     - model: {fileID: 8926484042661614541}
@@ -1632,7 +1632,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614594}
   - {fileID: 8926484042661614597}
   - {fileID: 8926484042661614604}
-  m_UIPosition: {x: 488, y: 441}
+  m_UIPosition: {x: 475, y: 566}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots: []
