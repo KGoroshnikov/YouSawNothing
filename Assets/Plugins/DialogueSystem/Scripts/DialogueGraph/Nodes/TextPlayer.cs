@@ -12,7 +12,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes
         [HideInInspector]
         public TextContainer textContainer;
 
-        public abstract void OnDrawStart(StorylinePlayer storylinePlayer, Storyline storyline);
+        public abstract void OnDrawStart(StorylinePlayer storylinePlayer, Storyline.Storyline storyline);
         public abstract void Draw(StorylinePlayer storylinePlayer);
         public abstract bool IsCompleted();
         public abstract void PauseDraw(StorylinePlayer storylinePlayer);

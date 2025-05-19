@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Attributes;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes;
+using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.Storyline;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -43,7 +44,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
                 }
                 
                 if (n is not Storyline dialogueNode) continue;
-                queue.Enqueue(dialogueNode.next);
+                queue.Enqueue(dialogueNode.GetNext());
             }
             
             var completed = new List<AbstractNode>();
@@ -55,7 +56,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
                 completed.Add(n);
 
                 var clone = clones[n];
-                if (clone.IsUnityNull()) continue;
+                if (!clone) continue;
 
                 foreach (var field in n.GetType().GetFields())
                 {
@@ -67,23 +68,20 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
                         var list =  (IList) Activator.CreateInstance(field.FieldType);
                         foreach (var value in values)
                             if (value is AbstractNode abstractNode) 
-                                list.Add(abstractNode.IsUnityNull() ? null : clones[abstractNode]);
+                                list.Add(abstractNode ? clones[abstractNode] : null);
                         field.SetValue(clone, list);
                     }
                     else
                     {
                         var value = field.GetValue(n) as AbstractNode;
-                        field.SetValue(clone, value.IsUnityNull() ? null : clones[value]);
+                        field.SetValue(clone, value ? clones[value] : null);
                     }
                 }
 
                 if (n is not Storyline storyline) continue;
                 var storylineClone = clone as Storyline;
-                
-                storylineClone!.next = storyline.next.IsUnityNull()
-                    ? null : clones[storyline.next] as Storyline;
-                if (storyline.next.IsUnityNull()) continue;
-                queue.Enqueue(storyline.next);
+                storylineClone?.SetNext(storyline.GetNext() ? clones[storyline.GetNext()] as Storyline : null);
+                if (storyline.GetNext()) queue.Enqueue(storyline.GetNext());
             }
 
             return clones[node] as Storyline;

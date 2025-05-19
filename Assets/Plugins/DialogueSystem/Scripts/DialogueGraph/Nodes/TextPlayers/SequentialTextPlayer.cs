@@ -18,7 +18,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.TextPlayers
             return node;
         }
 
-        public override void OnDrawStart(StorylinePlayer storylinePlayer, Storyline storyline)
+        public override void OnDrawStart(StorylinePlayer storylinePlayer, Storyline.Storyline storyline)
         {
             _currentText = textContainer.Text;
             _time = 0;
