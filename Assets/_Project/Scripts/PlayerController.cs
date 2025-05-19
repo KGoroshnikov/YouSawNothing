@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
     [Header("Other")]
     [SerializeField] private Rigidbody rb;
     [SerializeField] private PlayerInput playerInput;
-    [SerializeField] private Animator camAnim;
+    [SerializeField] private Animator camAnim, itemAnim;
     [SerializeField] private Tips tips;
     [SerializeField] private Camera cam;
     [SerializeField] private VisualEffect windVFX;
@@ -127,6 +127,20 @@ public class PlayerController : MonoBehaviour
             camAnim.SetTrigger("Baseball");
         else if (inventory.currentHoldingId() == 5)
             camAnim.SetTrigger("Gun");
+        else if (inventory.currentHoldingId() == 6)
+        {
+            inventory.GetGraple().Shoot();
+            return;
+        }
+        else if (inventory.currentHoldingId() == 7)
+        {
+            inventory.GetSprayPaint().SpawnPaint();
+            canAttack = false;
+            itemAnim.SetTrigger("Paint");
+            CancelInvoke("ResetAttackColldown");
+            Invoke("ResetAttackColldown", 1.5f);
+            return;
+        }
         else return;
 
         canAttack = false;

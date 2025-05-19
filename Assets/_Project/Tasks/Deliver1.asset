@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e0bfaf5291d635429c9c44d56ffd560, type: 3}
+  m_Name: Deliver1
+  m_EditorClassIdentifier: 
+  mTaskType: 0
+  taskName: "\u0414\u043E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u043F\u0430\u043A\u0435\u0442\u0438\u043A"
+  nameFontSize: 0.19
+  taskDescription: "\u041C\u0438\u0445\u0430\u043B\u044B\u0447\u0443"
+  descriptionFontSize: 0.1
+  targetMoney: 0
+  possibleObjectsToDeliver:
+  - {fileID: 7123807928846711332, guid: 82317e685fbe2d04695cb6bccf590e25, type: 3}
+  - {fileID: 2040253244522661796, guid: 9a4ad71410edbbc4692804c1a9f9a115, type: 3}

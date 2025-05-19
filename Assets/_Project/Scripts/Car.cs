@@ -60,11 +60,20 @@ public class Car : MonoBehaviour
         animator.SetTrigger("ShowCase");
     }
 
-    public void PlayerLeaved(){
+    public Item SpawnObject(GameObject pref)
+    {
+        Item item = Instantiate(pref, moneySpawn.position, Quaternion.Euler(Vector3.zero)).GetComponent<Item>();
+        item.ThrowMe(moneySpawn.forward * throwForce, moneySpawn.position);
+        return item;
+    }
+
+    public void PlayerLeaved()
+    {
         animator.SetTrigger("WindowUp");
 
-        if (dialogueWithPlayer){
-            List<Task> taskBack = new List<Task>(){getBackTask};
+        if (dialogueWithPlayer)
+        {
+            List<Task> taskBack = new List<Task>() { getBackTask };
             taskManager.SetNewTask(taskBack);
             taskManager.SetTime(5);
         }

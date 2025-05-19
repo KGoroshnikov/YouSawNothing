@@ -10,10 +10,13 @@ using UnityEngine.UI;
 // 3 - paketik
 // 4 - baseball
 // 5 - gun
+// 6 - graple
+// 7 - spray paint
 
 public class Inventory : MonoBehaviour
 {
     public static event Action OnSussyPicked;
+    public static event Action OnSussyInHand;
 
     private MoveObjects moveObjects;
     [SerializeField] private Animator[] slotAnims;
@@ -46,6 +49,9 @@ public class Inventory : MonoBehaviour
     private InputAction scrollAction, dropAction;
     [SerializeField] private float scrollCooldown = 0.25f;
     private float lastScrollTime = 0f;
+
+    private Graple graple;
+    private SprayPaint sprayPaint;
 
     void Awake()
     {
@@ -150,6 +156,15 @@ public class Inventory : MonoBehaviour
         return moneyAmount;
     }
 
+    public Graple GetGraple()
+    {
+        return graple;
+    }
+    public SprayPaint GetSprayPaint()
+    {
+        return sprayPaint;
+    }
+
     public bool AddItem(itemData item)
     {
         int freeSlot = -1;
@@ -183,6 +198,11 @@ public class Inventory : MonoBehaviour
         {
             OnSussyPicked.Invoke();
         }
+
+        if (currentItems[freeSlot].id == 6)
+            graple = item.obj.GetComponent<Graple>();
+        else if (currentItems[freeSlot].id == 7)
+            sprayPaint = item.obj.GetComponent<SprayPaint>();
 
         spriteSlots[freeSlot].gameObject.SetActive(true);
         spriteSlots[freeSlot].sprite = item.uiSprite;
@@ -221,6 +241,8 @@ public class Inventory : MonoBehaviour
         if (currentItems[currentSelected].id != 0)
         {
             currentItems[currentSelected].obj.SetActive(true);
+            CancelInvoke("CheckItemInHand");
+            Invoke("CheckItemInHand", 0.5f);
             tips.EnableMainHand(currentItems[currentSelected].obj.transform, currentItems[currentSelected].offsetHand);
             tips.SetDropTip(true);
         }
@@ -229,6 +251,11 @@ public class Inventory : MonoBehaviour
             tips.DisableMainHand();
             tips.SetDropTip(false);
         }
+    }
+
+    void CheckItemInHand()
+    {
+        if (currentItems[currentSelected].isSussyItem) OnSussyInHand.Invoke();
     }
 
     void ItemPicked()
