@@ -1,8 +1,12 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class SkateboardController : MonoBehaviour
 {
+    public static event Action OnStolenWehicle;
+    [SerializeField] private bool isIllegalToRide;
+    
     [SerializeField] private float maxSpeed;
     [SerializeField] private float accelerationRate;
     [SerializeField] private float stoppingRate;
@@ -29,6 +33,8 @@ public class SkateboardController : MonoBehaviour
     private InputAction moveAction;
     private InputAction jumpAction;
 
+    [SerializeField] private bool isBicycle;
+
     private Vector2 moveInput;
     private float currentSpeed;
     private float currentTilt;
@@ -53,6 +59,8 @@ public class SkateboardController : MonoBehaviour
 
         moveAction.Enable();
         jumpAction.Enable();
+
+        if (isBicycle) animator.SetTrigger("BRide");
     }
 
     void OnDisable()
@@ -110,15 +118,23 @@ public class SkateboardController : MonoBehaviour
         Quaternion targetRotation = Quaternion.Euler(0f, yaw, 0f);
         rb.rotation = targetRotation;
         rb.angularVelocity = Vector3.zero;
+
+        if (isBicycle)
+        {
+            float tspeed = Mathf.Abs(currentSpeed) / maxSpeed;
+            animator.speed = tspeed;
+        }
         
         if (imEnabled)
         {
             playerController.SetAdditiveFOV(maxFOV * (Mathf.Abs(currentSpeed) / maxSpeed));
-            if ((Mathf.Abs(currentSpeed) / maxSpeed) >= 0.5f && !windIsOn){
+            if ((Mathf.Abs(currentSpeed) / maxSpeed) >= 0.5f && !windIsOn)
+            {
                 playerController.SetWind(true);
                 windIsOn = true;
             }
-            else if ((Mathf.Abs(currentSpeed) / maxSpeed) < 0.5f && windIsOn){
+            else if ((Mathf.Abs(currentSpeed) / maxSpeed) < 0.5f && windIsOn)
+            {
                 playerController.SetWind(false);
                 windIsOn = false;
             }
@@ -139,6 +155,8 @@ public class SkateboardController : MonoBehaviour
 
     public void PlayerEntered(){
         if (doNotRegisterPlayer || playerController.isPlayerOnWehicle()) return;
+        if (isIllegalToRide)
+            OnStolenWehicle.Invoke();
         imEnabled = true;
         playerController.SetWehicle();
         playerController.transform.SetParent(playerPos);
