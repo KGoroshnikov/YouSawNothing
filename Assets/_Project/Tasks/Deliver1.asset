@@ -20,4 +20,6 @@ MonoBehaviour:
   targetMoney: 0
   possibleObjectsToDeliver:
   - {fileID: 7123807928846711332, guid: 82317e685fbe2d04695cb6bccf590e25, type: 3}
-  - {fileID: 2040253244522661796, guid: 9a4ad71410edbbc4692804c1a9f9a115, type: 3}
+  killTarget: {fileID: 0}
+  justRandom: 0
+  targetPaint: 0

@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class NPC : MonoBehaviour
 {
     public static event Action OnDamaged;
-    private Func.CallbackFunc onDeath;
+    private TaskManager.DeathCallback onDeath;
 
     [Header("NavMesh")]
     [SerializeField] protected NavMeshAgent agent;
@@ -16,7 +16,7 @@ public class NPC : MonoBehaviour
     [SerializeField] protected Vector2 idleTime;
 
     [Header("Group")]
-    [SerializeField] private float groupChance;
+    [SerializeField] protected float groupChance;
     [SerializeField] private float groupRadius;
     [SerializeField] private float lookingForGroupRadius;
     [SerializeField] private Vector2 groupDuration;
@@ -32,6 +32,7 @@ public class NPC : MonoBehaviour
     [SerializeField] protected Collider mainCollider;
     [SerializeField] private AnimationClip standUpClip;
     [SerializeField] private float blendDuration;
+    [SerializeField] private GameObject targetArrow;
 
     [SerializeField] private Renderer renderer;
 
@@ -53,8 +54,8 @@ public class NPC : MonoBehaviour
     [SerializeField] protected State mState;
     private Vector3 walkTarget;
     
-    private bool isGrouping;
-    private Vector3 groupCenter;
+    protected bool isGrouping;
+    protected Vector3 groupCenter;
     private static List<NPC> allNPCs = new List<NPC>();
 
     private Vector3 relativeOffset;
@@ -67,6 +68,7 @@ public class NPC : MonoBehaviour
     private Action parentSetupCallback;
 
     protected bool laying;
+    private bool isDead;
 
     void Awake()
     {
@@ -113,7 +115,7 @@ public class NPC : MonoBehaviour
         allNPCs.Remove(this);
     }
 
-    void MakeDecision(){
+    protected virtual void MakeDecision(){
         if (isGrouping)
         {
             WanderAround(groupCenter);
@@ -162,13 +164,13 @@ public class NPC : MonoBehaviour
         }
     }
 
-    void WanderRandom()
+    protected void WanderRandom()
     {
         Vector3 randomPos = RandomPos(transform.position, wanderRadius);
         agent.SetDestination(randomPos);
     }
 
-    List<NPC> findNearest(){
+    protected List<NPC> findNearest(){
         List<NPC> nearest = new List<NPC>();
         for(int i = 0; i < allNPCs.Count; i++){
             if (Vector3.Distance(transform.position, allNPCs[i].transform.position) <= lookingForGroupRadius)
@@ -177,7 +179,7 @@ public class NPC : MonoBehaviour
         return nearest;
     }
 
-    void StartGrouping(List<NPC> nearest)
+    protected void StartGrouping(List<NPC> nearest)
     {
         isGrouping = true;
         Invoke("StopGrouping", Random.Range(groupDuration.x, groupDuration.y));
@@ -191,7 +193,7 @@ public class NPC : MonoBehaviour
         WanderRandom();
     }
 
-    void WanderAround(Vector3 center)
+    protected void WanderAround(Vector3 center)
     {
         Vector3 randomPoint = center + Random.insideUnitSphere * groupRadius;
         randomPoint.y = transform.position.y;
@@ -325,7 +327,12 @@ public class NPC : MonoBehaviour
         }
     }
 
-    public void SubscribeToDeath(Func.CallbackFunc callback)
+    public void SetTragetArrow(bool a)
+    {
+        targetArrow.SetActive(a);
+    }
+
+    public void SubscribeToDeath(TaskManager.DeathCallback callback)
     {
         onDeath = callback;
     }
@@ -333,7 +340,13 @@ public class NPC : MonoBehaviour
     protected virtual void OnDie()
     {
         renderer.material = randSkin[currentSkin].matDead;
-        onDeath();
+        if (onDeath != null) onDeath(this);
+        isDead = true;
+    }
+
+    public bool GetIsDead()
+    {
+        return isDead;
     }
 
     public void EnableRagdoll(Vector3 push)

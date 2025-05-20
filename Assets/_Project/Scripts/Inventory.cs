@@ -112,6 +112,23 @@ public class Inventory : MonoBehaviour
         tips.SetDropTip(false);
     }
 
+    public void DropSlot(int slot, GameObject me)
+    {
+        if (currentItems[slot].obj != me) return;
+
+        if (currentSelected == slot)
+        {
+            tips.DisableMainHand();
+            tips.SetDropTip(false);
+        }
+
+        Destroy(currentItems[slot].obj);
+        currentItems[slot].id = 0;
+        currentItems[slot].obj = null;
+        currentItems[slot].item = null;
+        spriteSlots[slot].gameObject.SetActive(false);
+    }
+
     public void RemoveMoney(int amout)
     {
         moneyAmount -= amout;

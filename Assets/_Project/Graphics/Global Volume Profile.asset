@@ -1,5 +1,33 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8431332956644980030
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5e1dc532bcb41949b58bc4f2abfbb7e, type: 3}
+  m_Name: LensDistortion
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: -0.248
+  xMultiplier:
+    m_OverrideState: 0
+    m_Value: 1
+  yMultiplier:
+    m_OverrideState: 0
+    m_Value: 1
+  center:
+    m_OverrideState: 0
+    m_Value: {x: 0.5, y: 0.5}
+  scale:
+    m_OverrideState: 0
+    m_Value: 1
 --- !u!114 &-5669235814685311910
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -40,6 +68,25 @@ MonoBehaviour:
   maxNits:
     m_OverrideState: 0
     m_Value: 1000
+--- !u!114 &-2156403692406843626
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb60a22f311433c4c962b888d1393f88, type: 3}
+  m_Name: PaniniProjection
+  m_EditorClassIdentifier: 
+  active: 1
+  distance:
+    m_OverrideState: 1
+    m_Value: 1
+  cropToFit:
+    m_OverrideState: 1
+    m_Value: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,6 +106,8 @@ MonoBehaviour:
   - {fileID: 2491742335178014168}
   - {fileID: 2337104317200323427}
   - {fileID: 1539481635087403157}
+  - {fileID: -8431332956644980030}
+  - {fileID: -2156403692406843626}
 --- !u!114 &223551912597127818
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -102,13 +151,13 @@ MonoBehaviour:
   active: 1
   shadows:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 0.9980619, z: 0.9922473, w: 0.31413615}
+    m_Value: {x: 0.655432, y: 0.868826, z: 1, w: 0.39350402}
   midtones:
     m_OverrideState: 0
-    m_Value: {x: 1, y: 1, z: 1, w: -0.018083185}
+    m_Value: {x: 0.9488029, y: 0.96160173, z: 1, w: 0.08185436}
   highlights:
     m_OverrideState: 0
-    m_Value: {x: 1, y: 1, z: 1, w: 0}
+    m_Value: {x: 1, y: 1, z: 1, w: 1}
   shadowsStart:
     m_OverrideState: 0
     m_Value: 0
@@ -136,7 +185,7 @@ MonoBehaviour:
   active: 1
   postExposure:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: -0.7
   contrast:
     m_OverrideState: 0
     m_Value: 16
@@ -148,7 +197,7 @@ MonoBehaviour:
     m_Value: 0
   saturation:
     m_OverrideState: 1
-    m_Value: 37
+    m_Value: 48.2
 --- !u!114 &2491742335178014168
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -175,26 +224,26 @@ MonoBehaviour:
         - serializedVersion: 3
           time: 0
           value: 0
-          inSlope: 1
-          outSlope: 1
+          inSlope: 1.1728506
+          outSlope: 1.1728506
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.3547558
-          value: 0.39130437
-          inSlope: 0.39130428
-          outSlope: 0.39130428
+          time: 0.36507937
+          value: 0.5347985
+          inSlope: 0.42032963
+          outSlope: 0.42032963
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.58354753
-          value: 0.7880435
-          inSlope: 0.8369565
-          outSlope: 0.8369565
+          time: 0.5767196
+          value: 0.82051283
+          inSlope: 0.44505483
+          outSlope: 0.44505483
           tangentMode: 0
           weightedMode: 0
           inWeight: 0

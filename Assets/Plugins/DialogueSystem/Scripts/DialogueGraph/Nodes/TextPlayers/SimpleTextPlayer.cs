@@ -8,7 +8,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.TextPlayers
     {
 
         public override AbstractNode Clone() => Object.Instantiate(this);
-        public override void OnDrawStart(StorylinePlayer storylinePlayer, Storyline storyline) {}
+        public override void OnDrawStart(StorylinePlayer storylinePlayer, Storyline.Storyline storyline) {}
         public override void Draw(StorylinePlayer storylinePlayer) => storylinePlayer.ShowText(textContainer.Text);
         public override void PauseDraw(StorylinePlayer storylinePlayer) => storylinePlayer.ClearText();
         public override void PlayDraw(StorylinePlayer storylinePlayer) => Draw(storylinePlayer);
