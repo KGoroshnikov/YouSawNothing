@@ -41,6 +41,18 @@ public class TaskManager : MonoBehaviour
     private int currentPainted;
     private List<int> taskIdPaint = new List<int>();
 
+    [Header("Steal")]
+    [SerializeField] private DeliverTrigger mDeliverTrigger;
+    [System.Serializable]
+    public class targetToSteal
+    {
+        public GameObject target;
+        public GameObject destroyThis;
+    }
+    [SerializeField] private List<targetToSteal> stealTargets;
+    private List<targetToSteal> currentTargetsToSteal = new List<targetToSteal>();
+    private List<int> taskIdSteal = new List<int>();
+
     private bool[] taskCompleted;
 
     public int LoadNextTask()
@@ -79,6 +91,12 @@ public class TaskManager : MonoBehaviour
         currentPainted = 0;
         targetPainted = 0;
 
+        for (int i = 0; i < currentTargetsToSteal.Count; i++)
+            if (currentTargetsToSteal[i].destroyThis != null) Destroy(currentTargetsToSteal[i].destroyThis);
+        currentTargetsToSteal.Clear();
+        taskIdSteal.Clear();
+        mDeliverTrigger.gameObject.SetActive(false);
+
         for (int i = 0; i < currentTasks.Count; i++)
         {
             if (currentTasks[i].mTaskType == Task.taskType.deliver)
@@ -98,12 +116,18 @@ public class TaskManager : MonoBehaviour
                 targetPainted = currentTasks[i].targetPaint;
                 taskIdPaint.Add(i);
             }
+            else if (currentTasks[i].mTaskType == Task.taskType.steal)
+            {
+                ChooseTargetToSteal(i, currentTasks[i].stealIdItem);
+            }
 
         }
 
         SetDeliversTrigger();
 
         tablet.SetTasks(currentTasks);
+
+        CheckStealTasks();
     }
 
     public void SetTime(float newTime)
@@ -222,12 +246,24 @@ public class TaskManager : MonoBehaviour
 
     public void SomethingDelivered(GameObject obj, bool state)
     {
+        bool ok = false;
         for (int i = 0; i < objectsToDeliver.Count; i++)
         {
             if (objectsToDeliver[i] == obj)
             {
+                ok = true;
                 delivered[i] = state;
                 UpdateStateTask(taskIdDeliver[i], delivered[i]);
+                break;
+            }
+        }
+        if (ok) return;
+
+        for (int i = 0; i < currentTargetsToSteal.Count; i++)
+        {
+            if (currentTargetsToSteal[i].target == obj)
+            {
+                UpdateStateTask(taskIdSteal[i], state);
                 break;
             }
         }
@@ -275,5 +311,34 @@ public class TaskManager : MonoBehaviour
             for (int i = 0; i < taskIdPaint.Count; i++)
                 UpdateStateTask(taskIdPaint[i], true);
         }
+    }
+
+    void CheckStealTasks()
+    {
+        for (int i = 0; i < currentTasks.Count; i++)
+        {
+            if (currentTasks[i].mTaskType == Task.taskType.steal && !taskIdSteal.Contains(i))
+            {
+                UpdateStateTask(i, true);
+            }
+        }
+    }
+
+    void ChooseTargetToSteal(int taskId, int idSteal)
+    {
+        if (idSteal >= stealTargets.Count || stealTargets[idSteal].destroyThis == null)
+        {
+            return;
+        }
+        currentTargetsToSteal.Add(stealTargets[idSteal]);
+        taskIdSteal.Add(taskId);
+        stealTargets[idSteal] = null;
+
+        if (!mDeliverTrigger.gameObject.activeSelf)
+        {
+            mDeliverTrigger.gameObject.SetActive(true);
+            mDeliverTrigger.InitMe(currentTargetsToSteal[currentTargetsToSteal.Count - 1].target, this);
+        }
+        else mDeliverTrigger.AddNewTarget(currentTargetsToSteal[currentTargetsToSteal.Count - 1].target);
     }
 }
