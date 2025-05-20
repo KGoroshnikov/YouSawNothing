@@ -65,8 +65,7 @@ public class SkateboardController : MonoBehaviour
 
     void OnDisable()
     {
-        moveAction.Disable();
-        jumpAction.Disable();
+        PlayerExited();
     }
 
     void Update()

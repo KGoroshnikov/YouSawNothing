@@ -5,7 +5,7 @@ public class Task : ScriptableObject
 {
     public enum taskType
     {
-        deliver, kill, getMoney, getBack, paint
+        deliver, kill, getMoney, getBack, paint, steal
     }
     [Header("General")]
     public taskType mTaskType;
@@ -27,4 +27,7 @@ public class Task : ScriptableObject
 
     [Header("Paint")]
     public int targetPaint;
+
+    [Header("Steal")]
+    public int stealIdItem; // IN ARRAY IN TASK MANAGER
 }

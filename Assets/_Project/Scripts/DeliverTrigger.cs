@@ -3,14 +3,21 @@ using UnityEngine;
 
 public class DeliverTrigger : MonoBehaviour
 {
-    private GameObject targetItem;
+    private List<GameObject> targetItems = new List<GameObject>();
     private TaskManager taskManager;
     private List<Collider> _inside = new List<Collider>();
 
+    [SerializeField] private GameObject redArrow;
+
     public void InitMe(GameObject item, TaskManager tm)
     {
-        targetItem = item;
+        targetItems.Add(item);
         taskManager = tm;
+    }
+
+    public void AddNewTarget(GameObject item)
+    {
+        targetItems.Add(item);
     }
 
     void Update()
@@ -28,22 +35,32 @@ public class DeliverTrigger : MonoBehaviour
         }
     }
 
+    void CheckArrow()
+    {
+        if (_inside.Count == targetItems.Count)
+        {
+            redArrow.SetActive(false);
+        }
+        else redArrow.SetActive(true);
+    }
+
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == targetItem)
+        if (targetItems.Contains(other.gameObject))
         {
             _inside.Add(other);
-            taskManager.SomethingDelivered(targetItem, true);
+            taskManager.SomethingDelivered(other.gameObject, true);
+            CheckArrow();
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        Debug.Log(other.gameObject);
-        if (other.gameObject == targetItem)
+        if (targetItems.Contains(other.gameObject))
         {
             _inside.Remove(other);
-            taskManager.SomethingDelivered(targetItem, false);
+            taskManager.SomethingDelivered(other.gameObject, false);
+            CheckArrow();
         }
     }
 }

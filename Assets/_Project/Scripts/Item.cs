@@ -41,7 +41,16 @@ public class Item : IInteractable
         }
     }
 
-    public int GetMoney(){
+    void OnDestroy()
+    {
+        if (inventory == null) return;
+        int mSlot = inventory.findSlotWithId(myData.id);
+        if (mSlot == -1) return;
+        inventory.DropSlot(mSlot, myData.obj);
+    }
+
+    public int GetMoney()
+    {
         return amountMoney;
     }
     
