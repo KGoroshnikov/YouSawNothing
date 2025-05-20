@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Attributes;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes;
+using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.Storyline;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -188,7 +189,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
                                 foreach (var value in values)
                                     if (value is AbstractNode abstractNode)
                                     {
-                                        if (abstractNode.IsUnityNull())
+                                        if (!abstractNode)
                                         {
                                             list.Add(null);
                                             return;
@@ -203,7 +204,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
                             }
                             else if (field.GetValue(clone) is AbstractNode abstractNode)
                             {
-                                if (abstractNode.IsUnityNull()) return;
+                                if (!abstractNode) return;
                                 if (!_cloneBuffer.ContainsKey(abstractNode))
                                     _cloneBuffer[abstractNode] = abstractNode.Clone();
                                 _cloningQueue.Enqueue(_cloneBuffer[abstractNode]);

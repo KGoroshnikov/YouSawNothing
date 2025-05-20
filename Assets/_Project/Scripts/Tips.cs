@@ -68,6 +68,11 @@ public class Tips : MonoBehaviour
             UpdateUI(mainHandTarget.position, mainHandOffset, mainHand);
         }
         if (!active) return;
+        if (targetPos == null)
+        {
+            DisableMe();
+            return;
+        }
         UpdateUI(targetPos.position, Vector2.zero, pointerHand);
         pointerHand.localScale = Vector3.one * (1 / Vector3.Distance(transform.position, targetPos.position)) * distanceOverScale;
     }

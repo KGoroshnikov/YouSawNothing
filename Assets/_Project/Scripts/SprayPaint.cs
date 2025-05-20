@@ -11,7 +11,7 @@ public class SprayPaint : MonoBehaviour
     [SerializeField] private float spawnTime;
 
     [SerializeField] private Material[] paints;
-    
+
     public void SpawnPaint()
     {
         RaycastHit hit;
@@ -21,6 +21,11 @@ public class SprayPaint : MonoBehaviour
             DecalProjector decalProjector = Instantiate(decalPref, hit.point + surf * surfaceOffset, Quaternion.Euler(Vector3.zero))
                         .GetComponent<DecalProjector>();
             decalProjector.transform.forward = -surf;
+
+            if (hit.collider.TryGetComponent<PaintHolder>(out PaintHolder paintHolder))
+            {
+                paintHolder.GetPainted(true);
+            }
 
             var mat = Instantiate(paints[Random.Range(0, paints.Length)]);
 

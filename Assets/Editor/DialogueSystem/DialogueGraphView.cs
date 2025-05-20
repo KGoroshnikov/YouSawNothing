@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Attributes;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes;
+using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.Storyline;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -118,9 +119,12 @@ namespace Editor.DialogueSystem
                 
                 if (node is not Storyline storyline) continue;
                 var storylineClone = clone as Storyline;
-                
-                storylineClone!.next = storyline.next == null ? null : 
-                    clones.GetValueOrDefault(storyline.next, storyline.next) as Storyline;
+                storylineClone?.SetNext(
+                    storyline.GetNext() ? clones.GetValueOrDefault(
+                        storyline.GetNext(), 
+                        storyline.GetNext()
+                    ) as Storyline : null
+                );
             }
 
             PopulateView(_graph);
@@ -171,8 +175,8 @@ namespace Editor.DialogueSystem
                 switch (n)
                 {
                     case Storyline storyline:
-                        if (storyline.next != null)
-                            AddElement(view.Outputs[0].ConnectTo(FindNodeView(storyline.next).Inputs[0]));
+                        if (storyline.GetNext())
+                            AddElement(view.Outputs[0].ConnectTo(FindNodeView(storyline.GetNext()).Inputs[0]));
                         ConnectCustomPorts(view, n);
                         return;
                     default:
@@ -341,9 +345,9 @@ namespace Editor.DialogueSystem
             AssetDatabase.SaveAssets();
         }
 
-        private static void AddLink(Storyline from, Storyline to) => from.next = to;
+        private static void AddLink(Storyline from, Storyline to) => from.SetNext(to);
 
-        private static void RemoveLink(Storyline from) => from.next = null;
+        private static void RemoveLink(Storyline from) => from.SetNext(null);
         private static void Add(AbstractNode from, NodeView to, int index)
         {
             if (index < 0 || index >= to.InputFields.Length)

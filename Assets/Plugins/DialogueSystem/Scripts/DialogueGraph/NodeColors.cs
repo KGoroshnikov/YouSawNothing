@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes;
+using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.Storyline;
 using UnityEngine;
 
 namespace Plugins.DialogueSystem.Scripts.DialogueGraph

@@ -21,22 +21,34 @@ public class PlayerStats : MonoBehaviour
         return stats;
     }
 
-    public int GetPriceOf(int id){
-        if (id == 0){
-            return staminaLevel < staminaPrices.Length ? staminaPrices[staminaLevel] : 0;
-        }
-        else if (id == 1){
-            return convictionLevel < convictionPrices.Length ? convictionPrices[convictionLevel] : 0;
-        }
-        else if (id == 2){
-            return timeLevel < timePrices.Length ? timePrices[timeLevel] : 0;
-        }
-        return 0;
+    public int GetPriceOf(int id)
+    {
+        return id switch
+        {
+            0 => staminaLevel < staminaPrices.Length ? staminaPrices[staminaLevel] : 0,
+            1 => convictionLevel < convictionPrices.Length ? convictionPrices[convictionLevel] : 0,
+            2 => timeLevel < timePrices.Length ? timePrices[timeLevel] : 0,
+            _ => 0
+        };
     }
 
-    public void Upgrade(int id){
-        if (id == 0) staminaLevel++;
-        else if (id == 1) convictionLevel++;
-        else if (id == 2) timeLevel++;
+    public void Upgrade(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                staminaLevel++;
+                break;
+            case 1:
+                convictionLevel++;
+                break;
+            case 2:
+                timeLevel++;
+                break;
+        }
     }
+    
+    public float Stamina => stamina[staminaLevel];
+    public float Conviction => conviction[convictionLevel];
+    public float Time => time[timeLevel];
 }

@@ -12,9 +12,9 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.Waits
             return clone;
         }
         
-        public override void StartWait(StorylinePlayer player, Storyline storyline) {}
+        public override void StartWait(StorylinePlayer player, Storyline.Storyline storyline) {}
 
-        public override bool IsCompleted(StorylinePlayer player, Storyline storyline) =>
+        public override bool IsCompleted(StorylinePlayer player, Storyline.Storyline storyline) =>
             !player.IsAudioPlaying && !player.IsTextPlaying;
     }
 }

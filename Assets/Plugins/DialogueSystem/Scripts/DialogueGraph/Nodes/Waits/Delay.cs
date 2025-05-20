@@ -15,9 +15,9 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.Waits
         }
         
         private DateTime StartTime;
-        public override void StartWait(StorylinePlayer player, Storyline storyline) => StartTime = DateTime.Now;
+        public override void StartWait(StorylinePlayer player, Storyline.Storyline storyline) => StartTime = DateTime.Now;
 
-        public override bool IsCompleted(StorylinePlayer player, Storyline storyline) =>
+        public override bool IsCompleted(StorylinePlayer player, Storyline.Storyline storyline) =>
             DateTime.Now.Subtract(StartTime).TotalSeconds > delay;
     }
 }
