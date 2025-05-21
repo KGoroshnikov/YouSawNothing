@@ -3,6 +3,9 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using Plugins.DialogueSystem.Scripts.DialogueGraph;
+using UnityEngine.Events;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class NPC : MonoBehaviour
@@ -35,7 +38,32 @@ public class NPC : MonoBehaviour
     [SerializeField] private GameObject targetArrow;
 
     [SerializeField] private Renderer renderer;
+    
+    [FormerlySerializedAs("player")]
+    [Header("Text Player")]
+    [SerializeField] private StorylinePlayer storylinePlayer;
+    [SerializeField] private string[] smallTalkRoots;
+    [SerializeField] private TaskManager taskManager;
+    
+    [Header("Trust")] 
+    [SerializeField] private int trustThreshold = 10;
+    [SerializeField] private int trust;
+    [SerializeField] private int trustGain = 2;
+    [SerializeField] private int trustLoss = 1;
+    
+    [SerializeField] private UnityEvent onThrust;
+    [SerializeField] private UnityEvent onNotThrust;
+    [SerializeField] private UnityEvent onIncreaseThrust;
+    [SerializeField] private UnityEvent onDecreaseThrust;
+    
+    [Header("Sell Task")] 
+    [SerializeField] private bool canSell = true;
+    [SerializeField] private string[] sellRoots;
+    [SerializeField] private int trustDecreaseAfterSell = 3;
 
+    protected StorylinePlayer StorylinePlayer => storylinePlayer;
+    
+    
     [System.Serializable]
     public class skins
     {
@@ -386,4 +414,40 @@ public class NPC : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, lookingForGroupRadius);
     }
+    
+    public void Speak()
+    {
+        if (storylinePlayer == null) return;
+        if (storylinePlayer.IsPlaying) return;
+        storylinePlayer.StartStorylineNow(taskManager.CanSell && canSell
+            ? sellRoots[Random.Range(0, sellRoots.Length)]
+            : smallTalkRoots[Random.Range(0, smallTalkRoots.Length)]
+        );
+    }
+    public void IncreaseTrust()
+    {
+        trust += trustGain;
+        onIncreaseThrust.Invoke();
+        if (trust == trustThreshold) 
+            onThrust.Invoke();
+    }
+
+    public void DecreaseTrust()
+    {
+        trust -= trustLoss;
+        onDecreaseThrust.Invoke();
+        if (!IsWalkerThrustYou) 
+            onNotThrust.Invoke();
+    }
+
+    public bool TrySell()
+    {
+        if (!canSell) return false;
+        if (IsWalkerThrustYou)
+            taskManager.Sell();
+        trust -= trustDecreaseAfterSell;
+        return IsWalkerThrustYou;
+    }
+
+    public bool IsWalkerThrustYou => trust >= trustThreshold;
 }
