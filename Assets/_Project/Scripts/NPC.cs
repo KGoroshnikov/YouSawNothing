@@ -39,7 +39,24 @@ public class NPC : MonoBehaviour
 
     [SerializeField] private Renderer renderer;
     
-    [FormerlySerializedAs("player")]
+    
+    [System.Serializable]
+    public class skins
+    {
+        public Material matDefault, matDead, matSpeak;
+    }
+    private int currentSkin;
+    [SerializeField] private skins[] randSkin;
+    [SerializeField] private Transform rootBone;
+
+    [SerializeField] private HP mHP;
+
+    protected enum State
+    {
+        idle, walk, none
+    }
+    [SerializeField] protected State mState;
+    
     [Header("Text Player")]
     [SerializeField] private StorylinePlayer storylinePlayer;
     [SerializeField] private string[] smallTalkRoots;
@@ -63,23 +80,6 @@ public class NPC : MonoBehaviour
 
     protected StorylinePlayer StorylinePlayer => storylinePlayer;
     
-    
-    [System.Serializable]
-    public class skins
-    {
-        public Material matDefault, matDead, matSpeak;
-    }
-    private int currentSkin;
-    [SerializeField] private skins[] randSkin;
-    [SerializeField] private Transform rootBone;
-
-    [SerializeField] private HP mHP;
-
-    protected enum State
-    {
-        idle, walk, none
-    }
-    [SerializeField] protected State mState;
     private Vector3 walkTarget;
     
     protected bool isGrouping;
