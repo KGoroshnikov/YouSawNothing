@@ -74,7 +74,6 @@ public class NPC : MonoBehaviour
     [SerializeField] private UnityEvent onDecreaseThrust;
     
     [Header("Sell Task")] 
-    [SerializeField] private bool canSell = true;
     [SerializeField] private string[] sellRoots;
     [SerializeField] private int trustDecreaseAfterSell = 3;
 
@@ -419,10 +418,16 @@ public class NPC : MonoBehaviour
     {
         if (storylinePlayer == null) return;
         if (storylinePlayer.IsPlaying) return;
-        storylinePlayer.StartStorylineNow(taskManager.CanSell && canSell
-            ? sellRoots[Random.Range(0, sellRoots.Length)]
-            : smallTalkRoots[Random.Range(0, smallTalkRoots.Length)]
-        );
+        if (taskManager.CanSell && sellRoots.Length > 0)
+            storylinePlayer.StartStorylineNow(
+                sellRoots[Random.Range(0, sellRoots.Length)]
+            );
+        
+        else if (smallTalkRoots.Length > 0)
+            storylinePlayer.StartStorylineNow(
+                smallTalkRoots[Random.Range(0, smallTalkRoots.Length)]
+                );
+        
     }
     public void IncreaseTrust()
     {
@@ -442,7 +447,7 @@ public class NPC : MonoBehaviour
 
     public bool TrySell()
     {
-        if (!canSell) return false;
+        if (sellRoots.Length == 0) return false;
         if (IsWalkerThrustYou)
             taskManager.Sell();
         trust -= trustDecreaseAfterSell;
