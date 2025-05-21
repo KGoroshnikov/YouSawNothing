@@ -38,6 +38,8 @@ public class Police : NPC
     [SerializeField] private StorylinePlayer player;
     [SerializeField] private string chaseRoot = "chase";
     [SerializeField] private string searchRoot = "search";
+    [SerializeField] private string didSussyRoot = "sussy";
+    [SerializeField] private string didIllegalRoot = "illegal";
 
     private PlayerController playerController;
 
@@ -84,6 +86,7 @@ public class Police : NPC
 
     void PlayerDidSussyThing()
     {
+        player?.QueueStoryline(didSussyRoot);
         if (!fov.isMeVisible(playerController.gameObject) || mState == State.none) return;
         chasingPlayer = true;
         CancelInvoke();
@@ -93,6 +96,7 @@ public class Police : NPC
 
     void PlayerDidIllegal()
     {
+        player?.QueueStoryline(didIllegalRoot);
         if (!fov.isMeVisible(playerController.gameObject) || mState == State.none) return;
         chasingPlayer = true;
         wantToKill = true;
