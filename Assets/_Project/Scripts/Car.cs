@@ -20,6 +20,8 @@ public class Car : MonoBehaviour
     [SerializeField] private float throwForce;
     [SerializeField] private Vector2 moneyPerTask;
 
+    [SerializeField] private PoliceSpawner policeSpawner;
+
     private bool waitingForPlayer;
     private bool dialogueWithPlayer;
 
@@ -28,7 +30,10 @@ public class Car : MonoBehaviour
     void Start()
     {
         player = Camera.main.transform;
-        amountOfTasks = taskManager.LoadNextTask();
+        //amountOfTasks = taskManager.LoadNextTask();
+
+        waitingForPlayer = true;
+        PlayerGetClose();
     }
 
     void Update()
@@ -52,13 +57,18 @@ public class Car : MonoBehaviour
         }
     }
 
-    void SpawnMoney(){
-        for(int i = 0; i < amountOfTasks; i++){
+    void SpawnMoney()
+    {
+        for (int i = 0; i < amountOfTasks; i++)
+        {
             Item item = Instantiate(moneyPref, moneySpawn.position, Quaternion.Euler(Vector3.zero)).GetComponent<Item>();
             item.SetMoney((int)Random.Range(moneyPerTask.x, moneyPerTask.y));
             item.ThrowMe(moneySpawn.forward * throwForce, moneySpawn.position);
         }
         animator.SetTrigger("ShowCase");
+
+        if (amountOfTasks == 0) return;
+        policeSpawner.SetTasks(amountOfTasks);
     }
 
     public Item SpawnObject(GameObject pref)
@@ -75,7 +85,7 @@ public class Car : MonoBehaviour
         if (dialogueWithPlayer)
         {
             List<Task> taskBack = new List<Task>() { getBackTask };
-            taskManager.SetNewTask(taskBack);
+            taskManager.SetNewTask(taskBack, 5);
             taskManager.SetTime(5);
         }
     }

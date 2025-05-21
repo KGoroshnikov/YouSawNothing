@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 public class PaintHolder : MonoBehaviour
 {
+    public static event Action OnPainted;
     private bool painted;
     private TaskManager taskManager;
 
@@ -14,6 +16,7 @@ public class PaintHolder : MonoBehaviour
     {
         painted = a;
         taskManager.UpdatePainted();
+        if (painted) OnPainted.Invoke();
     }
 
     public bool IsPainted(){

@@ -23,6 +23,10 @@ public class TaskManager : MonoBehaviour
 
     [SerializeField] private Car car;
 
+    [Header("Time")]
+    [SerializeField] private Vector2 maxMinTime;
+    [SerializeField] private int tasksToMinTime;
+
     [Header("Deliver")]
     [SerializeField] private DeliverTrigger[] possibleDelivers;
     private List<GameObject> objectsToDeliver = new List<GameObject>();
@@ -38,6 +42,7 @@ public class TaskManager : MonoBehaviour
 
     [Header("Paint")]
     [SerializeField] private PaintHolder[] paintHolders;
+    [SerializeField] private GameObject sprayPref;
     private int targetPainted;
     private int currentPainted;
     private List<int> taskIdPaint = new List<int>();
@@ -62,9 +67,34 @@ public class TaskManager : MonoBehaviour
     [SerializeField] private string startRoot = "start";
     [SerializeField] private string endRoot = "saw_nothing";
 
+    private int totalCompletedTasks;
+
     public int LoadNextTask()
     {
-        SetNewTask(defaultTasks);
+        int randAmount = Random.Range(1, 3);
+        List<Task> randTasks = new List<Task>();
+        for (int i = 0; i < randAmount; i++)
+        {
+            Task randTask = defaultTasks[Random.Range(0, defaultTasks.Count)];
+            for (int att = 0; att < 50; att++)
+            {
+                if (!randTasks.Contains(randTask))
+                    break;
+                randTask = defaultTasks[Random.Range(0, defaultTasks.Count)];
+            }
+            randTasks.Add(randTask);
+        }
+
+        float tt = totalCompletedTasks / tasksToMinTime;
+        tt = Mathf.Clamp01(tt);
+        float time = Mathf.Lerp(maxMinTime.x, maxMinTime.y, tt);
+
+        Debug.Log("tt " + tt + " time " + time + " totalCompletedTasks " + totalCompletedTasks);
+
+        SetNewTask(randTasks, time);
+
+        totalCompletedTasks++;
+
         return currentTasks.Count;
     }
 
@@ -73,12 +103,12 @@ public class TaskManager : MonoBehaviour
         tablet.ForceOpenTablet();
     }
 
-    public void SetNewTask(List<Task> newTasks)
+    public void SetNewTask(List<Task> newTasks, float time)
     {
         palyer?.QueueStoryline(startRoot);
         currentTasks = newTasks;
         taskCompleted = new bool[currentTasks.Count];
-        secondsLeft = timeToComplete;
+        secondsLeft = time;
         taskIsActive = true;
         timerText.gameObject.SetActive(true);
         UpdateMoney();
@@ -105,6 +135,8 @@ public class TaskManager : MonoBehaviour
         taskIdSteal.Clear();
         mDeliverTrigger.gameObject.SetActive(false);
 
+        bool taskToPaint = false;
+
         for (int i = 0; i < currentTasks.Count; i++)
         {
             if (currentTasks[i].mTaskType == Task.taskType.deliver)
@@ -119,10 +151,11 @@ public class TaskManager : MonoBehaviour
             {
                 ChooseTargetToKill(i);
             }
-            else if (currentTasks[i].mTaskType == Task.taskType.paint && currentTasks[i].targetPaint > targetPainted)
+            else if (currentTasks[i].mTaskType == Task.taskType.paint && currentTasks[i].targetPaint >= targetPainted)
             {
                 targetPainted = currentTasks[i].targetPaint;
                 taskIdPaint.Add(i);
+                taskToPaint = true;
             }
             else if (currentTasks[i].mTaskType == Task.taskType.steal)
             {
@@ -133,6 +166,9 @@ public class TaskManager : MonoBehaviour
                 taskIdSell.Add(i);
             }
         }
+
+        if (taskToPaint)
+            car.SpawnObject(sprayPref);
 
         SetDeliversTrigger();
 
@@ -149,7 +185,7 @@ public class TaskManager : MonoBehaviour
     public void UpdateStateTask(int id, bool completed)
     {
         if (!taskIsActive) return;
-
+        Debug.Log("id " + id + " taskCompleted.co " + taskCompleted.Length);
         taskCompleted[id] = completed;
         tablet.UpdateStateTask(id, completed);
         bool isAllCompleted = true;

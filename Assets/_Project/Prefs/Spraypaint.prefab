@@ -156,7 +156,7 @@ MonoBehaviour:
   lm:
     serializedVersion: 2
     m_Bits: 1
-  surfaceOffset: 0.5
+  surfaceOffset: 0.6
   spawnTime: 1
   paints:
   - {fileID: 2100000, guid: 82640185caaf7cc4fb3070a5813a3868, type: 2}

@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: Paint
   m_EditorClassIdentifier: 
   mTaskType: 4
-  taskName: "\u0420\u0430\u0441\u043A\u0440\u0430\u0441\u044C 5 \u043A\u0438\u043E\u0441\u043A\u043E\u0432"
+  taskName: "\u0420\u0430\u0441\u043A\u0440\u0430\u0441\u044C 3 \u043A\u0438\u043E\u0441\u043A\u043E\u0432"
   nameFontSize: 0.19
   taskDescription: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439 \u0431\u0430\u043B\u043B\u043E\u043D\u0447\u0438\u043A"
   descriptionFontSize: 0.1
+  dialogueRoot: 
   targetMoney: 0
   possibleObjectsToDeliver: []
   killTarget: {fileID: 0}
   justRandom: 0
   targetPaint: 3
+  stealIdItem: 0
