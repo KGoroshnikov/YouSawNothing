@@ -5,7 +5,7 @@ public class Task : ScriptableObject
 {
     public enum taskType
     {
-        deliver, kill, getMoney, getBack, paint, steal
+        deliver, kill, getMoney, getBack, paint, steal, sell
     }
     [Header("General")]
     public taskType mTaskType;
