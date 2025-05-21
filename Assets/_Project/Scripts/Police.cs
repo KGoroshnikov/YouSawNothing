@@ -34,11 +34,12 @@ public class Police : NPC
     [SerializeField] private VisualEffect bulletTrail;
     [SerializeField] private GameObject baseballObj, gunObj;
     
+    [FormerlySerializedAs("chaseRoot")]
     [Header("Text Player")]
-    [SerializeField] private string chaseRoot = "chase";
-    [SerializeField] private string searchRoot = "search";
-    [SerializeField] private string didSussyRoot = "sussy";
-    [SerializeField] private string didIllegalRoot = "illegal";
+    [SerializeField] private string[] chaseRoots = { "chase" };
+    [SerializeField] private string[] searchRoots = { "search" };
+    [SerializeField] private string[] didSussyRoots = { "sussy" };
+    [SerializeField] private string[] didIllegalRoots = { "illegal" };
 
     private PlayerController PlayerController;
 
@@ -88,7 +89,7 @@ public class Police : NPC
 
     void PlayerDidSussyThing()
     {
-        StorylinePlayer?.QueueStoryline(didSussyRoot);
+        StorylinePlayer?.QueueStoryline(didSussyRoots[Random.Range(0, didSussyRoots.Length)]);
         if (!fov.isMeVisible(PlayerController.gameObject) || mState == State.none) return;
         chasingPlayer = true;
         CancelInvoke();
@@ -98,7 +99,7 @@ public class Police : NPC
 
     void PlayerDidIllegal()
     {
-        StorylinePlayer?.QueueStoryline(didIllegalRoot);
+        StorylinePlayer?.QueueStoryline(didIllegalRoots[Random.Range(0, didIllegalRoots.Length)]);
         if (!fov.isMeVisible(PlayerController.gameObject) || mState == State.none) return;
         chasingPlayer = true;
         wantToKill = true;
@@ -267,7 +268,7 @@ public class Police : NPC
 
     void StartSearch()
     {
-        StorylinePlayer?.QueueStoryline(searchRoot);
+        StorylinePlayer?.QueueStoryline(searchRoots[Random.Range(0, searchRoots.Length)]);
         searchMinigame.StartMinigame(this);
         mState = State.none;
         CancelInvoke();
@@ -288,7 +289,7 @@ public class Police : NPC
 
     void WantToKillPlayer()
     {
-        StorylinePlayer?.QueueStoryline(chaseRoot);
+        StorylinePlayer?.QueueStoryline(chaseRoots[Random.Range(0, chaseRoots.Length)]);
         wantToKill = true;
         chasingPlayer = true;
         CancelInvoke();

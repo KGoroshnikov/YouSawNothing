@@ -422,7 +422,6 @@ public class NPC : MonoBehaviour
             storylinePlayer.StartStorylineNow(
                 sellRoots[Random.Range(0, sellRoots.Length)]
             );
-        
         else if (smallTalkRoots.Length > 0)
             storylinePlayer.StartStorylineNow(
                 smallTalkRoots[Random.Range(0, smallTalkRoots.Length)]
