@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Plugins.DialogueSystem.Scripts.DialogueGraph;
 using UnityEngine;
 
 public class Car : MonoBehaviour

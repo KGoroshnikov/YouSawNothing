@@ -59,7 +59,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
             GoToNext();
         }
 
-        public void StartDialogueNow(string rootName)
+        public void StartStorylineNow(string rootName)
         {
             var root = graph.roots.Find(r => r.RootName == rootName);
             if (!root) return;
@@ -72,13 +72,13 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
             else _current = StorylineGraph.Clone(root);
             currentName = rootName;
             SwitchUpdate();
-            PlayDialogue();
+            PlayStoryline();
         }
-        public void StartDialogue(string rootName) => _fastSwap.Enqueue(rootName);
+        public void StartStoryline(string rootName) => _fastSwap.Enqueue(rootName);
 
-        public void QueueDialogue(string rootName) => _queue.Enqueue(rootName);
+        public void QueueStoryline(string rootName) => _queue.Enqueue(rootName);
 
-        public void PlayDialogue()
+        public void PlayStoryline()
         {
             if (IsPlaying) return;
             IsPlaying = true;
@@ -86,7 +86,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
             _current.audioPlayer?.PlayAudio(this);
             IsTextPlaying = true;
         }
-        public void PauseDialogue()
+        public void PauseStoryline()
         {
             if (!IsPlaying) return;
             IsPlaying = false;
@@ -95,7 +95,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
             _current.audioPlayer?.StopAudio(this);
         }
 
-        public void StopDialogue()
+        public void StopStoryline()
         {
             IsTextPlaying = false;
             _current = null;
@@ -113,7 +113,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
         {
             ClearFastSwap();
             ClearQueue();
-            StopDialogue();
+            StopStoryline();
         }
         
         public void ToNext()
@@ -138,9 +138,9 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
             if (!_current)
             {
                 if (_fastSwap.TryDequeue(out var fastRoot))
-                    StartDialogueNow(fastRoot);
+                    StartStorylineNow(fastRoot);
                 else if (_queue.TryDequeue(out var root)) 
-                    StartDialogueNow(root);
+                    StartStorylineNow(root);
             }
             if (!IsPlaying) return;
             
@@ -164,7 +164,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
             _current.audioPlayer?.StopAudio(this);
             if (_fastSwap.TryDequeue(out var root))
             {
-                StartDialogueNow(root);
+                StartStorylineNow(root);
                 return;
             }
             _current = _current.GetNext();
@@ -226,9 +226,9 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
                 onStorylineEnd.Invoke(currentName);
 
                 if (_fastSwap.TryDequeue(out var fastRoot))
-                    StartDialogueNow(fastRoot);
+                    StartStorylineNow(fastRoot);
                 else if (_queue.TryDequeue(out var root))
-                    StartDialogueNow(root);
+                    StartStorylineNow(root);
                 else if (lazy) _cloneBuffer.Clear();
                 return;
             }

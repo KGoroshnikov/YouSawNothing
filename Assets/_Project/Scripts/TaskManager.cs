@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Plugins.DialogueSystem.Scripts.DialogueGraph;
 using TMPro;
 using UnityEngine;
 
@@ -54,6 +55,11 @@ public class TaskManager : MonoBehaviour
     private List<int> taskIdSteal = new List<int>();
 
     private bool[] taskCompleted;
+    
+    [Header("Storyline")]
+    [SerializeField] private StorylinePlayer palyer;
+    [SerializeField] private string startRoot = "start";
+    [SerializeField] private string endRoot = "saw_nothing";
 
     public int LoadNextTask()
     {
@@ -68,6 +74,7 @@ public class TaskManager : MonoBehaviour
 
     public void SetNewTask(List<Task> newTasks)
     {
+        palyer?.QueueStoryline(startRoot);
         currentTasks = newTasks;
         taskCompleted = new bool[currentTasks.Count];
         secondsLeft = timeToComplete;
@@ -157,6 +164,7 @@ public class TaskManager : MonoBehaviour
     {
         taskIsActive = false;
         timerText.text = "";
+        palyer?.QueueStoryline(endRoot);
     }
 
     public void TakeMoneyForTask()

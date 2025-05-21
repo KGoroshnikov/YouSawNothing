@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Plugins.DialogueSystem.Scripts.DialogueGraph;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 using UnityEngine.VFX;
 
 public class Police : NPC
@@ -31,6 +33,11 @@ public class Police : NPC
     [SerializeField] private VisualEffect muzzle;
     [SerializeField] private VisualEffect bulletTrail;
     [SerializeField] private GameObject baseballObj, gunObj;
+    
+    [Header("Text Player")]
+    [SerializeField] private StorylinePlayer player;
+    [SerializeField] private string chaseRoot = "chase";
+    [SerializeField] private string searchRoot = "search";
 
     private PlayerController playerController;
 
@@ -254,6 +261,7 @@ public class Police : NPC
 
     void StartSearch()
     {
+        player?.QueueStoryline(searchRoot);
         searchMinigame.StartMinigame(this);
         mState = State.none;
         CancelInvoke();
@@ -274,6 +282,7 @@ public class Police : NPC
 
     void WantToKillPlayer()
     {
+        player?.QueueStoryline(chaseRoot);
         wantToKill = true;
         chasingPlayer = true;
         CancelInvoke();
