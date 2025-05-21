@@ -45,6 +45,9 @@ public class SkateboardController : MonoBehaviour
 
     private bool doNotRegisterPlayer;
     private bool windIsOn;
+
+    private bool freezed;
+    
     void Start()
     {
         playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
@@ -70,15 +73,21 @@ public class SkateboardController : MonoBehaviour
 
     void Update()
     {
-        if (!imEnabled) return;
+        if (!imEnabled || freezed) return;
         moveInput = moveAction.ReadValue<Vector2>();
         HandleTilt();
         CheckGround();
     }
 
+    public void SetFreezed(bool a)
+    {
+        freezed = a;
+        rb.isKinematic = a;
+    }
+
     void HandleJump()
     {
-        if (!imEnabled || !isJumpActive) return;
+        if (!imEnabled || !isJumpActive || freezed) return;
         if (isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -88,6 +97,8 @@ public class SkateboardController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (freezed) return;
+        
         if (moveInput.y > 0f)
         {
             currentSpeed += accelerationRate * Time.fixedDeltaTime;

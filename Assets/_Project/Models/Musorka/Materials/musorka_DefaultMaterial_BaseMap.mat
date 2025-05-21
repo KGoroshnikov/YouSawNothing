@@ -120,7 +120,7 @@ Material:
     - _GlossyReflections: 0
     - _Interacted: 0
     - _IsItem: 0
-    - _JitterTime: 0.1
+    - _JitterTime: 0.5
     - _Metallic: 0.11
     - _NoiseScale: 5
     - _OcclusionStrength: 1
