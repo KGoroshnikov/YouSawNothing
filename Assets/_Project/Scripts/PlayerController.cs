@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Sprint")]
     [SerializeField] private float sprintSpeed;
-    [SerializeField] private float maxStamina;
+    private float maxStamina => playerStats.Stamina;
     [SerializeField] private float sprintRate;
     [SerializeField] private float staminaRegenRate;
     [SerializeField] private float sprintFOV;
@@ -93,6 +93,11 @@ public class PlayerController : MonoBehaviour
 
     private bool canAttack = true;
 
+    private bool freezed;
+    private SkateboardController skateboardController;
+
+    [SerializeField] private PauseManager pauseManager;
+
     void Awake()
     {
         moveAction = playerInput.actions["Move"];
@@ -113,16 +118,28 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
 
         currentStamina = maxStamina;
+
+        SetWehicle();
+        SetLockLook(true);
+        Invoke("StartGame", 3);
+    }
+
+    void StartGame()
+    {
+        LeaveWehicle();
+        SetLockLook(false);
+        pauseManager.SetAblePause(true);
     }
 
     void Start()
     {
+        GetSens();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     void OnLMB()
     {
-        if (!canAttack) return;
+        if (!canAttack || freezed) return;
         if (inventory.currentHoldingId() == 4)
             camAnim.SetTrigger("Baseball");
         else if (inventory.currentHoldingId() == 5)
@@ -145,7 +162,7 @@ public class PlayerController : MonoBehaviour
 
         canAttack = false;
         CancelInvoke("ResetAttackColldown");
-        Invoke("ResetAttackColldown", 5); // not a real cooldown
+        Invoke("ResetAttackColldown", 2); // not a real cooldown
     }
 
     public void ResetAttackColldown() // from anim
@@ -219,6 +236,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (freezed) return;
+
         moveInput = new Vector3(moveAction.ReadValue<Vector2>().x, 0, moveAction.ReadValue<Vector2>().y);
         lookInput = lookAction.ReadValue<Vector2>() * mouseSensitivity;
 
@@ -237,6 +256,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (freezed) return;
         HandleMovement();
     }
 
@@ -274,9 +294,27 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = vel;
     }
 
+    public void FreezePlayer()
+    {
+        if (skateboardController != null) skateboardController.SetFreezed(true);
+        rb.isKinematic = true;
+        freezed = true;
+    }
+    public void UnfreezePlayer()
+    {
+        if (skateboardController != null) skateboardController.SetFreezed(false);
+        rb.isKinematic = false;
+        freezed = false;
+    }
+
+    public void GetSens()
+    {
+        mouseSensitivity = PlayerPrefs.GetFloat("PlayerSens", 0.3f);
+    }
+
     void HandleJump()
     {
-        if (currentStamina < jumpStanima || mState == state.onWehicle) return;
+        if (currentStamina < jumpStanima || mState == state.onWehicle || freezed) return;
         currentStamina -= jumpStanima;
         if (isGrounded && !isCrouching)
         {
@@ -286,7 +324,7 @@ public class PlayerController : MonoBehaviour
 
     void SetCrouch(bool crouch)
     {
-        if (mState == state.onWehicle) return;
+        if (mState == state.onWehicle || freezed) return;
 
         isCrouching = crouch;
         if (isCrouching && mState == state.run) SetState(state.walk);
@@ -298,7 +336,7 @@ public class PlayerController : MonoBehaviour
 
     void SetSprint(bool sprint)
     {
-        if (mState == state.onWehicle) return;
+        if (mState == state.onWehicle || freezed) return;
 
         if (sprint && !isCrouching)
         {
@@ -308,6 +346,7 @@ public class PlayerController : MonoBehaviour
 
     void HandleStamina()
     {
+        Debug.Log(maxStamina);
         if (mState == state.run && moveInput.magnitude > 0 && currentStamina > 0)
         {
             currentStamina -= sprintRate * Time.deltaTime;
@@ -401,8 +440,9 @@ public class PlayerController : MonoBehaviour
         return mState == state.onWehicle;
     }
 
-    public void SetWehicle()
+    public void SetWehicle(SkateboardController skate = null)
     {
+        if (skate != null) skateboardController = skate;
         SetState(state.onWehicle);
     }
     public void LeaveWehicle()

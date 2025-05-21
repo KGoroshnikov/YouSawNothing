@@ -620,10 +620,10 @@ MonoBehaviour:
   agent: {fileID: 6149377906651143884}
   wanderRadius: 4.76
   idleTime: {x: 3, y: 7}
-  groupChance: 0.35
+  groupChance: 0.15
   groupRadius: 3.22
-  lookingForGroupRadius: 7.34
-  groupDuration: {x: 10, y: 15}
+  lookingForGroupRadius: 5
+  groupDuration: {x: 5, y: 10}
   pushVector: {x: 0, y: 0, z: 0}
   pushDamping: 0.8
   animator: {fileID: 4200666887105751456}

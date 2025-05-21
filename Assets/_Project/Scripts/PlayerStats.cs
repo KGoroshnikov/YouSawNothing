@@ -37,6 +37,7 @@ public class PlayerStats : MonoBehaviour
         switch (id)
         {
             case 0:
+                if (staminaLevel >= stamina.Length - 1) break;
                 staminaLevel++;
                 break;
             case 1:
