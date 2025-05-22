@@ -62,6 +62,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private VisualEffect windVFX;
     [SerializeField] private PlayerStats playerStats;
     [SerializeField] private Inventory inventory;
+    [SerializeField] private Animator fadeAnim;
     [SerializeField] private HP hp;
     private GameManager gameManager;
 
@@ -344,9 +345,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void SetFade(bool fadein)
+    {
+        if (fadein) fadeAnim.SetTrigger("FadeIn");
+        else fadeAnim.SetTrigger("FadeOut");
+    }
+
     void HandleStamina()
     {
-        Debug.Log(maxStamina);
         if (mState == state.run && moveInput.magnitude > 0 && currentStamina > 0)
         {
             currentStamina -= sprintRate * Time.deltaTime;
@@ -449,6 +455,13 @@ public class PlayerController : MonoBehaviour
     {
         rb.isKinematic = false;
         SetState(state.idle);
+        skateboardController = null;
+    }
+
+    public void ForceLeaveWehicle()
+    {
+        if (skateboardController == null) return;
+        skateboardController.PlayerExited();
     }
 
     public void Die()

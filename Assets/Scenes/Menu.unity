@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 039b8d5c139561a4c8a0a7901f9e0b2a, type: 2}
+  m_LightingDataAsset: {fileID: 112000000, guid: f386077a6b534af448e66604a0072625, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: c6b4956e020572c4bb964cf40906bf16, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -59118,7 +59118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a83d2f7ae04ab6f4f99b0d85377be998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serializedBakingSet: {fileID: 11400000, guid: ad92184a09bfca14eac91ca85687b876, type: 2}
+  serializedBakingSet: {fileID: 11400000, guid: f0e1eefdee5be1a478dff8a68c36c3c7, type: 2}
   sceneGUID: 3393fd662c589d94990f3f357f22b9fc
   obsoleteAsset: {fileID: 0}
   obsoleteCellSharedDataAsset: {fileID: 0}
@@ -90141,7 +90141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 1
-  size: {x: 124.71315, y: 56.75669, z: 159.56157}
+  size: {x: 124.71315, y: 56.756683, z: 159.56158}
   overrideRendererFilters: 0
   minRendererVolumeSize: 0.1
   objectLayerMask:
@@ -90159,7 +90159,7 @@ MonoBehaviour:
     e10: 0
     e11: 1
     e12: 0
-    e13: -14.505003
+    e13: -14.504999
     e20: 0
     e21: 0
     e22: 1
@@ -90168,7 +90168,7 @@ MonoBehaviour:
     e31: 0
     e32: 0
     e33: 1
-  cachedHashCode: -667651512
+  cachedHashCode: -1652411991
   fillEmptySpaces: 1
   version: 2
   globalVolume: 0
@@ -90181,7 +90181,7 @@ Transform:
   m_GameObject: {fileID: 2063113848}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.694206, y: 14.505003, z: 65.02}
+  m_LocalPosition: {x: 5.694206, y: 14.504999, z: 65.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

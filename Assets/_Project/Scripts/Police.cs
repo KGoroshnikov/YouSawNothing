@@ -129,6 +129,8 @@ public class Police : NPC
     public override void RagdollDamaged(Vector3 push, int damage)
     {
         base.RagdollDamaged(push, damage);
+        wantToKill = true;
+        chasingPlayer = true;
     }
 
     public override void StandupFinish()
