@@ -22,9 +22,9 @@ public class Task : ScriptableObject
     public GameObject[] possibleObjectsToDeliver;
 
     [Header("Kill")]
-    public GameObject killTarget; // not implemented
-    public bool justRandom; // implemented, but this variable doesnt do anything
-
+    public int killTarget = -1;
+    public int activateTeleport = -1;
+    
     [Header("Paint")]
     public int targetPaint;
 

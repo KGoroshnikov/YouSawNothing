@@ -41,6 +41,7 @@ public class Police : NPC
 
     protected override void Start()
     {
+        imWithGun = Random.value <= 0.5f;
         base.Start();
         InvokeRepeating("CheckPlayer", checkPlayerTime, checkPlayerTime);
         playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
@@ -64,6 +65,7 @@ public class Police : NPC
         Inventory.OnSussyInHand += PlayerDidSussyThing;
         SkateboardController.OnStolenWehicle += PlayerDidIllegal;
         NPC.OnDamaged += PlayerDidIllegal;
+        PaintHolder.OnPainted += PlayerDidIllegal;
     }
 
     protected override void OnDisable()
@@ -73,6 +75,7 @@ public class Police : NPC
         Inventory.OnSussyInHand -= PlayerDidSussyThing;
         SkateboardController.OnStolenWehicle -= PlayerDidIllegal;
         NPC.OnDamaged -= PlayerDidIllegal;
+        PaintHolder.OnPainted -= PlayerDidIllegal;
     }
 
     void PlayerDidSussyThing()
@@ -126,6 +129,8 @@ public class Police : NPC
     public override void RagdollDamaged(Vector3 push, int damage)
     {
         base.RagdollDamaged(push, damage);
+        wantToKill = true;
+        chasingPlayer = true;
     }
 
     public override void StandupFinish()
