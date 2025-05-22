@@ -11,6 +11,8 @@ public class Boat : MonoBehaviour
     private Vector3 defPose;
     private bool used;
 
+    [SerializeField] private AudioSource audioSource;
+
     void Start()
     {
         defPose = transform.position;
@@ -29,6 +31,7 @@ public class Boat : MonoBehaviour
             animator.SetTrigger(animName);
             used = true;
             otherBoat.ResetBoat();
+            audioSource.Play();
         }
     }
 
@@ -41,6 +44,7 @@ public class Boat : MonoBehaviour
 
     public void ReleasePlayer()
     {
+        audioSource.Stop();
         playerController.LeaveWehicle();
         playerController.transform.SetParent(null);
     }

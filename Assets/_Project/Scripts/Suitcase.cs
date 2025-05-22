@@ -19,6 +19,8 @@ public class Suitcase : MonoBehaviour
     [SerializeField] private GameObject[] itemsInCase;
     [SerializeField] private GameObject[] itemPrefs;
 
+    [SerializeField] private AudioSource buyButtonSound;
+
     void Start()
     {
         playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
@@ -55,12 +57,14 @@ public class Suitcase : MonoBehaviour
     }
 
     public void Upgrade(int id){
+        buyButtonSound.Play();
         playerController.GetInventory().RemoveMoney(playerStats.GetPriceOf(id));
         playerStats.Upgrade(id);
         UpdateUI();
     }
 
     public void BuyItem(int price, int id){
+        buyButtonSound.Play();
         playerController.GetInventory().RemoveMoney(price);
         Instantiate(itemPrefs[id], itemSpawn.position, itemSpawn.rotation);
         itemsInCase[id].SetActive(false);

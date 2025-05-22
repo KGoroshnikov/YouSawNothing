@@ -224,10 +224,11 @@ MonoBehaviour:
     id: 5
     obj: {fileID: 0}
     item: {fileID: 0}
-    uiSprite: {fileID: 21300000, guid: d3ca46ebcfcaa014aa70d6696e85eff8, type: 3}
+    spriteSize: {x: 100, y: 80}
+    uiSprite: {fileID: -68024988, guid: 4f5e88aba830a7f4db6894fa93ce184b, type: 3}
     stackable: 0
     offsetHand: {x: 0, y: 0}
-    isSussyItem: 0
+    isSussyItem: 1
   collider: {fileID: 3017852497441555428}
   rb: {fileID: 4684692000843140946}
   itemContainer: {fileID: 5015614609318460273}

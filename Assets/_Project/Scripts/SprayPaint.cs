@@ -12,11 +12,14 @@ public class SprayPaint : MonoBehaviour
 
     [SerializeField] private Material[] paints;
 
+    [SerializeField] private AudioSource audioSource;
+
     public void SpawnPaint()
     {
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, maxDist, lm))
         {
+            audioSource.Play();
             Vector3 surf = hit.normal;
             DecalProjector decalProjector = Instantiate(decalPref, hit.point + surf * surfaceOffset, Quaternion.Euler(Vector3.zero))
                         .GetComponent<DecalProjector>();

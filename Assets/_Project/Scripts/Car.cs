@@ -24,6 +24,10 @@ public class Car : MonoBehaviour
     private bool waitingForPlayer;
     private bool dialogueWithPlayer;
 
+    [SerializeField] private AudioSource windowSound;
+    [SerializeField] private AudioSource buttonSound;
+    [SerializeField] private AudioSource caseSound;
+
     private int amountOfTasks;
 
     void Start()
@@ -42,15 +46,18 @@ public class Car : MonoBehaviour
 
     public void PlayerGetClose(){
         animator.SetTrigger("WindowDown");
+        windowSound.Play();
 
-        if (waitingForPlayer && !dialogueWithPlayer){
+        if (waitingForPlayer && !dialogueWithPlayer)
+        {
             taskManager.RemoveTasks();
             taskManager.TakeMoneyForTask();
             dialogueWithPlayer = true;
             waitingForPlayer = false;
             Invoke("SpawnMoney", 2);
         }
-        else if (dialogueWithPlayer){
+        else if (dialogueWithPlayer)
+        {
             taskManager.UpdateStateTask(0, true);
             taskManager.RemoveTasks();
         }
@@ -80,19 +87,28 @@ public class Car : MonoBehaviour
     public void PlayerLeaved()
     {
         animator.SetTrigger("WindowUp");
+        windowSound.Play();
 
         if (dialogueWithPlayer)
         {
             List<Task> taskBack = new List<Task>() { getBackTask };
             taskManager.SetNewTask(taskBack, 5);
             taskManager.SetTime(5);
+            taskManager.ForceOpenTablet();
         }
     }
 
-    public void HideEverythingAndGetAJob(){
+    public void SuitcaseSound()
+    {
+        caseSound.Play();
+    }
+
+    public void HideEverythingAndGetAJob()
+    {
         dialogueWithPlayer = false;
         waitingForPlayer = false;
-        
+        buttonSound.Play();
+
         animator.SetTrigger("HideCase");
         taskManager.RemoveTasks();
         amountOfTasks = taskManager.LoadNextTask();

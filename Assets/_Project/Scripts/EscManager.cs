@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class EscManager : MonoBehaviour
 {
     [SerializeField] private InputActionReference escButton;
-    private Action<InputAction.CallbackContext> performedDelegate;
 
     public class escListener{
         public int weight;
@@ -15,18 +14,14 @@ public class EscManager : MonoBehaviour
     }
     private List<escListener> weightsList = new List<escListener>();
 
-    void Awake()
-    {
-        performedDelegate = _ => EscPressed();
-    }
 
     void OnEnable()
     {
-        escButton.action.performed += performedDelegate;
+        escButton.action.performed += EscPressed;
     }
     void OnDisable()
     {
-        escButton.action.performed -= performedDelegate;
+        escButton.action.performed -= EscPressed;
     }
 
     public void AddWeight(int newWeight, GameObject obj, Func.CallbackFunc callback){
@@ -53,7 +48,7 @@ public class EscManager : MonoBehaviour
         }
     }
 
-    void EscPressed(){
+    void EscPressed(InputAction.CallbackContext context){
         if (weightsList.Count == 0) return;
         escListener lowestWeight = weightsList[0];
         for(int i = 0; i < weightsList.Count; i++){

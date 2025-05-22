@@ -90,11 +90,20 @@ public class PlayerController : MonoBehaviour
     }
     [SerializeField] private state mState;
 
+    [SerializeField] private AudioSource gunShotAudio, baseballAudio;
+    
+    [SerializeField] private AudioSource jumpSound;
+    [SerializeField] private AudioSource stepSound;
+    [SerializeField] private AudioClip[] stepClips;
+    [SerializeField] private float speedStep;
+    private bool prevLeftStep;
+
     private bool died;
 
     private bool canAttack = true;
 
     private bool freezed;
+    private bool inGraple;
     private SkateboardController skateboardController;
 
     [SerializeField] private PauseManager pauseManager;
@@ -108,12 +117,12 @@ public class PlayerController : MonoBehaviour
         sprintAction = playerInput.actions["Sprint"];
         lmbAction = playerInput.actions["LMB"];
 
-        jumpAction.performed += _ => HandleJump();
-        crouchAction.performed += _ => SetCrouch(true);
-        crouchAction.canceled += _ => SetCrouch(false);
-        sprintAction.performed += _ => SetSprint(true);
-        sprintAction.canceled += _ => SetSprint(false);
-        lmbAction.performed += _ => OnLMB();
+        jumpAction.performed += HandleJump;
+        crouchAction.performed += Crouched;
+        crouchAction.canceled += Standup;
+        sprintAction.performed += Sprinted;
+        sprintAction.canceled += NotSprinted;
+        lmbAction.performed += OnLMB;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -138,13 +147,19 @@ public class PlayerController : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
-    void OnLMB()
+    void OnLMB(InputAction.CallbackContext context)
     {
         if (!canAttack || freezed) return;
         if (inventory.currentHoldingId() == 4)
+        {
             camAnim.SetTrigger("Baseball");
+            baseballAudio.Play();
+        }
         else if (inventory.currentHoldingId() == 5)
+        {
             camAnim.SetTrigger("Gun");
+            gunShotAudio.Play();
+        }
         else if (inventory.currentHoldingId() == 6)
         {
             inventory.GetGraple().Shoot();
@@ -227,6 +242,13 @@ public class PlayerController : MonoBehaviour
 
     void OnDisable()
     {
+        jumpAction.performed -= HandleJump;
+        crouchAction.performed -= Crouched;
+        crouchAction.canceled -= Standup;
+        sprintAction.performed -= Sprinted;
+        sprintAction.canceled -= NotSprinted;
+        lmbAction.performed -= OnLMB;
+
         moveAction.Disable();
         jumpAction.Disable();
         crouchAction.Disable();
@@ -259,6 +281,7 @@ public class PlayerController : MonoBehaviour
     {
         if (freezed) return;
         HandleMovement();
+        HandleStepSound();
     }
 
     void HandleFOV()
@@ -313,14 +336,37 @@ public class PlayerController : MonoBehaviour
         mouseSensitivity = PlayerPrefs.GetFloat("PlayerSens", 0.3f);
     }
 
-    void HandleJump()
+    void HandleJump(InputAction.CallbackContext context)
     {
         if (currentStamina < jumpStanima || mState == state.onWehicle || freezed) return;
-        currentStamina -= jumpStanima;
         if (isGrounded && !isCrouching)
         {
+            jumpSound.Play();
+            currentStamina -= jumpStanima;
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+    }
+
+    void HandleStepSound()
+    {
+        Vector3 vel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+        float val = Mathf.Sin(Time.time * speedStep * vel.magnitude);
+        if (val > 0 && prevLeftStep || val < 0 && !prevLeftStep)
+        {
+            //stepSound.clip = stepClips[Random.Range(0, stepClips.Length)];
+            stepSound.pitch = Random.Range(0.8f, 1.2f);
+            stepSound.PlayOneShot(stepClips[Random.Range(0, stepClips.Length)]);
+            prevLeftStep = !prevLeftStep;
+        }
+    }
+
+    void Crouched(InputAction.CallbackContext context)
+    {
+        SetCrouch(true);
+    }
+    void Standup(InputAction.CallbackContext context)
+    {
+        SetCrouch(false);
     }
 
     void SetCrouch(bool crouch)
@@ -333,6 +379,16 @@ public class PlayerController : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.y = targetY;
         transform.localScale = scale;
+    }
+
+    void Sprinted(InputAction.CallbackContext context)
+    {
+        SetSprint(true);
+    }
+
+    void NotSprinted(InputAction.CallbackContext context)
+    {
+        SetSprint(false);
     }
 
     void SetSprint(bool sprint)
@@ -446,8 +502,15 @@ public class PlayerController : MonoBehaviour
         return mState == state.onWehicle;
     }
 
+    public bool isPlayerGrapled()
+    {
+        return inGraple;
+    }
+
     public void SetWehicle(SkateboardController skate = null)
     {
+        if (skate != null && inGraple) return;
+
         if (skate != null) skateboardController = skate;
         SetState(state.onWehicle);
     }
@@ -456,6 +519,12 @@ public class PlayerController : MonoBehaviour
         rb.isKinematic = false;
         SetState(state.idle);
         skateboardController = null;
+    }
+
+    public void SetGraple(bool a)
+    {
+        Debug.Log("graple " + a);
+        inGraple = a;
     }
 
     public void ForceLeaveWehicle()
@@ -471,6 +540,11 @@ public class PlayerController : MonoBehaviour
         camAnim.SetTrigger("Death");
         SetWehicle();
         SetLockLook(true);
+    }
+
+    public void FastDie()
+    {
+        CloseEyes();
     }
 
     public void CloseEyes()

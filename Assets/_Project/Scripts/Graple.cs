@@ -12,6 +12,8 @@ public class Graple : MonoBehaviour
     [SerializeField] private Transform startRopePos;
     [SerializeField] private float ropeMul;
 
+    [SerializeField] private AudioSource audioSource;
+
     private PlayerController player;
     [SerializeField] private float suckTime;
     [SerializeField] private float endOffset;
@@ -41,6 +43,18 @@ public class Graple : MonoBehaviour
         player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
     }
 
+    void OnDisable()
+    {
+        if (mState == state.idle) return;
+        
+        mState = state.idle;
+        grapleHead.localPosition = defaultPos;
+        grapleHead.localEulerAngles = Vector3.zero;
+        ropeTransform.localScale = Vector3.zero;
+        player.SetGraple(false);
+        if (interestingObject == null) player.LeaveWehicle();
+    }
+
     public void Shoot()
     {
         if (mState != state.idle) return;
@@ -53,11 +67,18 @@ public class Graple : MonoBehaviour
             mState = state.forwarding;
             tlerp = 0;
 
+            audioSource.Play();
+
             if (hit.collider.GetComponent<Item>() || hit.collider.GetComponent<NPC>())
             {
                 interestingObject = hit.collider.transform;
             }
-            else interestingObject = null;
+            else
+            {
+                player.ForceLeaveWehicle();
+                player.SetGraple(true);
+                interestingObject = null;
+            }
         }
     }
 
@@ -73,10 +94,11 @@ public class Graple : MonoBehaviour
                 grapleHead.localPosition = defaultPos;
                 grapleHead.localEulerAngles = Vector3.zero;
                 ropeTransform.localScale = Vector3.zero;
+                player.SetGraple(false);
                 if (interestingObject == null) player.LeaveWehicle();
                 else
                 {
-                    
+
                 }
             }
             if (interestingObject == null)

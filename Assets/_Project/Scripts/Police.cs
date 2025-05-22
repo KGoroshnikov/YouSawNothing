@@ -32,6 +32,8 @@ public class Police : NPC
     [SerializeField] private VisualEffect bulletTrail;
     [SerializeField] private GameObject baseballObj, gunObj;
 
+    [SerializeField] private AudioSource gunshot, baseball;
+
     private PlayerController playerController;
 
     private SearchMinigame searchMinigame;
@@ -188,8 +190,8 @@ public class Police : NPC
 
     public void DoBaseballDamage()
     {
+        baseball.Play();
         if (Vector3.Distance(transform.position, playerController.transform.position) > damageRadius) return;
-
         playerController.TakeDamage(baseballDamage);
     }
 
@@ -197,6 +199,7 @@ public class Police : NPC
     {
         muzzle.Play();
         bulletTrail.Play();
+        gunshot.Play();
 
         float it = Mathf.InverseLerp(playerVel.x, playerVel.y, playerController.GetVelocity().magnitude);
         float acc = Mathf.Lerp(accuracy.x, accuracy.y, it);
@@ -295,7 +298,7 @@ public class Police : NPC
         CancelInvoke();
         agent.ResetPath();
         mState = State.none;
-        laying = false;
+        laying = true;
     }
 
     public void FinishCheck(bool isPlayerSussy)

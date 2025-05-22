@@ -21,10 +21,10 @@ public class Interaction : MonoBehaviour
     {
         interactionButton = playerInput.actions["Interact"];
 
-        interactionButton.performed += _ => InteractWithItem();
+        interactionButton.performed += InteractWithItem;
     }
 
-    void InteractWithItem(){
+    void InteractWithItem(InputAction.CallbackContext context){
         if (interaction != null && !interaction.CanInteractWithMe(this)) return; 
         if (interaction == null || !interactionActive) return;
         interaction.GetUsed(this);
@@ -37,6 +37,7 @@ public class Interaction : MonoBehaviour
 
     void OnDisable()
     {
+        interactionButton.performed -= InteractWithItem;
         interactionButton.Disable();
     }
 

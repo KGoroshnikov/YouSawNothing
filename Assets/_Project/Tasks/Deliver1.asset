@@ -15,11 +15,13 @@ MonoBehaviour:
   mTaskType: 0
   taskName: "\u0414\u043E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u043F\u0430\u043A\u0435\u0442\u0438\u043A"
   nameFontSize: 0.19
-  taskDescription: "\u041C\u0438\u0445\u0430\u043B\u044B\u0447\u0443"
+  taskDescription: "\u0422\u044B \u0443\u0432\u0438\u0434\u0438\u0448\u044C \u043C\u0435\u0442\u043A\u0443"
   descriptionFontSize: 0.1
+  dialogueRoot: 
   targetMoney: 0
   possibleObjectsToDeliver:
   - {fileID: 7123807928846711332, guid: 82317e685fbe2d04695cb6bccf590e25, type: 3}
-  killTarget: {fileID: 0}
-  justRandom: 0
+  killTarget: -1
+  activateTeleport: -1
   targetPaint: 0
+  stealIdItem: 0

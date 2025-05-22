@@ -20,6 +20,10 @@ public class Wheel : IInteractable
     [SerializeField] private GameObject moneyPref;
     [SerializeField] private float throwForce;
 
+    [SerializeField] private AudioSource audioSourceWheel;
+
+    [SerializeField] private AudioClip speenClip, looseClip, winClip;
+
     [SerializeField] private float[] payouts;
     private int sectionCount;
     private float sectionAngle;
@@ -41,10 +45,18 @@ public class Wheel : IInteractable
         StartCoroutine(SpinRoutine());
     }
 
-    public override void GetUsed(Interaction player){
+    public override void GetUsed(Interaction player)
+    {
         isSpinning = true;
         Spin();
         player.GetInventory().RemoveMoney(dep);
+        PlaySound(speenClip);
+    }
+
+    void PlaySound(AudioClip clip)
+    {
+        audioSourceWheel.clip = clip;
+        audioSourceWheel.Play();
     }
 
     public override bool CanInteractWithMe(Interaction player)
@@ -53,6 +65,7 @@ public class Wheel : IInteractable
     }
 
     void SpawnMoney(int mul){
+        PlaySound(winClip);
         Item item = Instantiate(moneyPref, moneySpawn.position, Quaternion.Euler(Vector3.zero)).GetComponent<Item>();
         item.SetMoney(dep * mul);
         item.ThrowMe(moneySpawn.forward * throwForce, moneySpawn.position);
@@ -101,8 +114,9 @@ public class Wheel : IInteractable
         float result = payouts[targetIndex];
         if (result >= 1)
             SpawnMoney((int)result);
+        else
+            PlaySound(looseClip);
         isSpinning = false;
-        Debug.Log("result " + result + " targetIndex " + targetIndex);
     }
 
     int ChooseSectionIndex()
