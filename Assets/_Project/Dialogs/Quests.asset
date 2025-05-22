@@ -13,11 +13,41 @@ MonoBehaviour:
   m_Name: Storyline
   m_EditorClassIdentifier: 
   guid: b641d18b74bf85d49a12a6415756e658
-  nodePos: {x: 1577.5999, y: 651.2}
-  textPlayer: {fileID: 7765770874704692884}
-  audioPlayer: {fileID: 0}
-  waitCondition: {fileID: 0}
+  nodePos: {x: 441.47205, y: 616}
+  textPlayer: {fileID: 3497589071673153791}
+  audioPlayer: {fileID: -2174579857356934253}
+  waitCondition: {fileID: 2821244769110789509}
   tag: 
+--- !u!114 &-8223106019259788182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad8df9118df4ce7a51893db9c574b61, type: 3}
+  m_Name: SimpleAudioContainer
+  m_EditorClassIdentifier: 
+  guid: 258c887a3d4203345b1fbfe650fdbafe
+  nodePos: {x: 915.1999, y: 817.60004}
+  audio: {fileID: 8300000, guid: b8f00111a6e8387429e049fb6fb213b4, type: 3}
+--- !u!114 &-8169884512409777837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad8df9118df4ce7a51893db9c574b61, type: 3}
+  m_Name: SimpleAudioContainer
+  m_EditorClassIdentifier: 
+  guid: 273ed6e9487f56f4587946b88d3ea9cf
+  nodePos: {x: 259.19986, y: 817.6}
+  audio: {fileID: 8300000, guid: b8f00111a6e8387429e049fb6fb213b4, type: 3}
 --- !u!114 &-8112140788791992575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31,12 +61,41 @@ MonoBehaviour:
   m_Name: StorylineStart
   m_EditorClassIdentifier: 
   guid: 6f525867a1311f64dbfe9d666c5422c5
-  nodePos: {x: 1376.9066, y: 651.2}
+  nodePos: {x: 240.672, y: 616}
   textPlayer: {fileID: -4807540383899069452}
-  audioPlayer: {fileID: 0}
-  waitCondition: {fileID: 0}
+  audioPlayer: {fileID: 357142293160148164}
+  waitCondition: {fileID: -6122336394904272986}
   tag: 
   rootName: start
+--- !u!114 &-6159020849213858493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b759acd545a14d3084a65fb3f471e35b, type: 3}
+  m_Name: Completion
+  m_EditorClassIdentifier: 
+  guid: 26be7127ba6527149b69b3d1fc7d9b65
+  nodePos: {x: 915.19995, y: 894.4}
+--- !u!114 &-6122336394904272986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d9179d3e70b44a3878a5f2b750a5135, type: 3}
+  m_Name: Delay
+  m_EditorClassIdentifier: 
+  guid: 8e5b12876a731df42b2ace0069727962
+  nodePos: {x: 261.6, y: 894.40015}
+  delay: 1
 --- !u!114 &-4807540383899069452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50,16 +109,49 @@ MonoBehaviour:
   m_Name: SmartSequentialTextPlayer
   m_EditorClassIdentifier: 
   guid: 53891523a87b8474c9c3ce17adc4c743
-  nodePos: {x: 1368.1066, y: 574.4}
+  nodePos: {x: 231.87207, y: 539.2}
   textContainer: {fileID: 5536029867500778595}
   symbolTime:
     keys:
     - .,
     - '?!;:'
     values:
+    - 0.3
     - 0.5
-    - 0.7
-  defaultSymbolTime: 0.2
+  defaultSymbolTime: 0.1
+--- !u!114 &-2174579857356934253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a9d43ac6c1245af939881e92f25151a, type: 3}
+  m_Name: UndertaleAudioPlayer
+  m_EditorClassIdentifier: 
+  guid: 18e05e7a8ad928f4bb5451aa69d1ee5e
+  nodePos: {x: 462.40018, y: 764.8}
+  audioContainer: {fileID: -633133119017358470}
+  minPitch: 0.3
+  maxPitch: 0.5
+  volume: 1
+--- !u!114 &-633133119017358470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad8df9118df4ce7a51893db9c574b61, type: 3}
+  m_Name: SimpleAudioContainer
+  m_EditorClassIdentifier: 
+  guid: 8ebd120a045f73440a12de9dd35bf04a
+  nodePos: {x: 460.0001, y: 841.6}
+  audio: {fileID: 8300000, guid: b8f00111a6e8387429e049fb6fb213b4, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,14 +169,96 @@ MonoBehaviour:
   - {fileID: -8112140788791992575}
   nodes:
   - {fileID: 4425769845206110607}
-  - {fileID: 5047209348346579060}
   - {fileID: 3576756931732740505}
   - {fileID: -4807540383899069452}
   - {fileID: -8112140788791992575}
   - {fileID: 5536029867500778595}
-  - {fileID: 7765770874704692884}
   - {fileID: 8497982913842914568}
   - {fileID: -8308281106227497302}
+  - {fileID: 2110683540328682715}
+  - {fileID: -8223106019259788182}
+  - {fileID: -2174579857356934253}
+  - {fileID: -633133119017358470}
+  - {fileID: 357142293160148164}
+  - {fileID: -8169884512409777837}
+  - {fileID: 3497589071673153791}
+  - {fileID: 9132791293886760054}
+  - {fileID: 2821244769110789509}
+  - {fileID: -6122336394904272986}
+  - {fileID: -6159020849213858493}
+--- !u!114 &357142293160148164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a9d43ac6c1245af939881e92f25151a, type: 3}
+  m_Name: UndertaleAudioPlayer
+  m_EditorClassIdentifier: 
+  guid: 33f2b15a2689d354aad25bb5856b8a2d
+  nodePos: {x: 261.59988, y: 740.8}
+  audioContainer: {fileID: -8169884512409777837}
+  minPitch: 0.3
+  maxPitch: 0.5
+  volume: 1
+--- !u!114 &2110683540328682715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a9d43ac6c1245af939881e92f25151a, type: 3}
+  m_Name: UndertaleAudioPlayer
+  m_EditorClassIdentifier: 
+  guid: ff328938fbfa9e1478999ef22dfb528a
+  nodePos: {x: 917.5998, y: 740.8}
+  audioContainer: {fileID: -8223106019259788182}
+  minPitch: 0.3
+  maxPitch: 0.5
+  volume: 1
+--- !u!114 &2821244769110789509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b759acd545a14d3084a65fb3f471e35b, type: 3}
+  m_Name: Completion
+  m_EditorClassIdentifier: 
+  guid: 7b406febd3779394fab116f691984a22
+  nodePos: {x: 460.00003, y: 918.3999}
+--- !u!114 &3497589071673153791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
+  m_Name: SmartSequentialTextPlayer
+  m_EditorClassIdentifier: 
+  guid: 7c807e5fc0efa4a48b733eda7de67445
+  nodePos: {x: 432.80002, y: 539.1999}
+  textContainer: {fileID: 8497982913842914568}
+  symbolTime:
+    keys:
+    - .,
+    - '?!;:'
+    values:
+    - 0.3
+    - 0.5
+  defaultSymbolTime: 0.1
 --- !u!114 &3576756931732740505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,10 +272,10 @@ MonoBehaviour:
   m_Name: StorylineStart
   m_EditorClassIdentifier: 
   guid: c8431edca22131b42beeac5ec9d91828
-  nodePos: {x: 2032.3832, y: 651.19995}
-  textPlayer: {fileID: 5047209348346579060}
-  audioPlayer: {fileID: 0}
-  waitCondition: {fileID: 0}
+  nodePos: {x: 896.672, y: 616}
+  textPlayer: {fileID: 9132791293886760054}
+  audioPlayer: {fileID: 2110683540328682715}
+  waitCondition: {fileID: -6159020849213858493}
   tag: 
   rootName: saw_nothing
 --- !u!114 &4425769845206110607
@@ -117,31 +291,8 @@ MonoBehaviour:
   m_Name: SimpleTextContainer
   m_EditorClassIdentifier: 
   guid: 623c9126a778a0c46b96a2f1a6f8a29b
-  nodePos: {x: 2059.1997, y: 497.60004}
+  nodePos: {x: 923.1997, y: 462.4}
   text: "\u0422\u044B \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0432\u0438\u0434\u0435\u043B..."
---- !u!114 &5047209348346579060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
-  m_Name: SmartSequentialTextPlayer
-  m_EditorClassIdentifier: 
-  guid: c768d09c951d1ef4ea4c5fc2a80c3c04
-  nodePos: {x: 2023.9998, y: 574.4}
-  textContainer: {fileID: 4425769845206110607}
-  symbolTime:
-    keys:
-    - .,
-    - '?!;:'
-    values:
-    - 0.5
-    - 0.7
-  defaultSymbolTime: 0.2
 --- !u!114 &5536029867500778595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,31 +306,8 @@ MonoBehaviour:
   m_Name: SimpleTextContainer
   m_EditorClassIdentifier: 
   guid: 2a4050c2bb67006448cb01a76b9b6ee2
-  nodePos: {x: 1403.3065, y: 497.60004}
+  nodePos: {x: 267.0719, y: 462.40002}
   text: "\u042D\u0439, \u043F\u0430\u0446\u0430\u043D! "
---- !u!114 &7765770874704692884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
-  m_Name: SmartSequentialTextPlayer
-  m_EditorClassIdentifier: 
-  guid: ebb650bba05924b449291e8c2bdb4366
-  nodePos: {x: 1568.7998, y: 574.4}
-  textContainer: {fileID: 8497982913842914568}
-  symbolTime:
-    keys:
-    - .,
-    - '?!;:'
-    values:
-    - 0.5
-    - 0.7
-  defaultSymbolTime: 0.2
 --- !u!114 &8497982913842914568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,7 +321,30 @@ MonoBehaviour:
   m_Name: SimpleTextContainer
   m_EditorClassIdentifier: 
   guid: d485c861eff5f4542b23aec3a5a7899b
-  nodePos: {x: 1603.9999, y: 497.60004}
+  nodePos: {x: 467.99985, y: 462.4}
   text: "\u0423 \u043C\u0435\u043D\u044F \u0434\u043B\u044F \u0442\u0435\u0431\u044F
     \u043D\u043E\u0432\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0435\u043D\u043A\u0430
     \u0435\u0441\u0442\u044C..."
+--- !u!114 &9132791293886760054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
+  m_Name: SmartSequentialTextPlayer
+  m_EditorClassIdentifier: 
+  guid: f2b2f5121e633944d9eba7b237dab574
+  nodePos: {x: 888.00006, y: 539.2}
+  textContainer: {fileID: 4425769845206110607}
+  symbolTime:
+    keys:
+    - .,
+    - '?!;:'
+    values:
+    - 0.3
+    - 0.5
+  defaultSymbolTime: 0.1

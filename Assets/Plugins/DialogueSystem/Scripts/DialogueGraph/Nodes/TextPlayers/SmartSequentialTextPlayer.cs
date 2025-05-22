@@ -47,6 +47,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.TextPlayers
 
         public override void Draw(StorylinePlayer storylinePlayer)
         {
+            if (IsCompleted()) return;
             PlayDraw(storylinePlayer);
             
             _time += Time.deltaTime;

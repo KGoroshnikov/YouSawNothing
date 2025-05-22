@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Plugins.DialogueSystem.Scripts;
 using Plugins.DialogueSystem.Scripts.DialogueGraph;
 using UnityEngine;
 
@@ -26,6 +27,10 @@ public class Car : MonoBehaviour
     private bool dialogueWithPlayer;
 
     private int amountOfTasks;
+    [Header("Storyline")]
+    [SerializeField] private StorylinePlayer palyer;
+    [SerializeField] private string startRoot = "start";
+    [SerializeField] private string endRoot = "saw_nothing";
 
     void Start()
     {
@@ -50,6 +55,7 @@ public class Car : MonoBehaviour
             dialogueWithPlayer = true;
             waitingForPlayer = false;
             Invoke("SpawnMoney", 2);
+            palyer?.QueueStoryline(startRoot);
         }
         else if (dialogueWithPlayer){
             taskManager.UpdateStateTask(0, true);
@@ -91,6 +97,7 @@ public class Car : MonoBehaviour
     }
 
     public void HideEverythingAndGetAJob(){
+        palyer?.QueueStoryline(endRoot);
         dialogueWithPlayer = false;
         waitingForPlayer = false;
         

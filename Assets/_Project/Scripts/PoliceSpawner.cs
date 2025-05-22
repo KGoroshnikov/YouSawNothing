@@ -1,3 +1,4 @@
+using Plugins.DialogueSystem.Scripts;
 using UnityEngine;
 
 public class PoliceSpawner : MonoBehaviour
@@ -8,6 +9,8 @@ public class PoliceSpawner : MonoBehaviour
     [SerializeField] private Transform spawnCar;
     [SerializeField] private float radius;
     private int tasksCompleted;
+
+    [SerializeField] private ConcurrentTextSelector textSelector;
 
     public void SetTasks(int amnt)
     {
@@ -23,7 +26,9 @@ public class PoliceSpawner : MonoBehaviour
         {
             Vector3 pos = new Vector3(Random.Range(-radius, radius), 0, Random.Range(-radius, radius));
             pos += spawnCar.position;
-            Instantiate(policePref, pos, Quaternion.identity);
+            var go = Instantiate(policePref, pos, Quaternion.identity);
+            if (go.TryGetComponent<StorylinePlayer>(out var player))
+                player.textSelector = textSelector;
         }
     }
 

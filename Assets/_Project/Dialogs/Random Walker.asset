@@ -1,5 +1,50 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8239805908729985259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad8df9118df4ce7a51893db9c574b61, type: 3}
+  m_Name: SimpleAudioContainer
+  m_EditorClassIdentifier: 
+  guid: e736c1442cb6a2f4a8ab979ecd75f007
+  nodePos: {x: 620.80005, y: 691.2}
+  audio: {fileID: 8300000, guid: b8f00111a6e8387429e049fb6fb213b4, type: 3}
+--- !u!114 &-7851534202580947915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad8df9118df4ce7a51893db9c574b61, type: 3}
+  m_Name: SimpleAudioContainer
+  m_EditorClassIdentifier: 
+  guid: 577e27aa0002a9b4eb75ebc6c02fa66c
+  nodePos: {x: 1278.3999, y: 691.2}
+  audio: {fileID: 8300000, guid: b8f00111a6e8387429e049fb6fb213b4, type: 3}
+--- !u!114 &-6134666182857012479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad8df9118df4ce7a51893db9c574b61, type: 3}
+  m_Name: SimpleAudioContainer
+  m_EditorClassIdentifier: 
+  guid: d0e1141e8aae94d42bc2b751c202dfb8
+  nodePos: {x: 962.4, y: 691.2}
+  audio: {fileID: 8300000, guid: b8f00111a6e8387429e049fb6fb213b4, type: 3}
 --- !u!114 &-5797605562153756009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13,8 +58,31 @@ MonoBehaviour:
   m_Name: SimpleTextContainer
   m_EditorClassIdentifier: 
   guid: d9f5dcb317f76aa4fbac2f9a0878d878
-  nodePos: {x: 628.80005, y: 675.07574}
+  nodePos: {x: 1286.0426, y: 336.0001}
   text: "\u041D\u0435 \u0434\u043E \u0442\u0435\u0431\u044F..."
+--- !u!114 &-5426411862013335421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
+  m_Name: SmartSequentialTextPlayer
+  m_EditorClassIdentifier: 
+  guid: 6aaa49ea8310f6b419df1da2ffdb9294
+  nodePos: {x: 593.6, y: 412.80002}
+  textContainer: {fileID: 7502162965312159086}
+  symbolTime:
+    keys:
+    - .,
+    - '?!;:'
+    values:
+    - 0.3
+    - 0.5
+  defaultSymbolTime: 0.1
 --- !u!114 &-5363849828602052315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29,11 +97,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guid: dae2b368f3d0d9e4fbabba88a3638f13
   nodePos: {x: 943.48346, y: 489.6001}
-  textPlayer: {fileID: -2449988713815300241}
-  audioPlayer: {fileID: 0}
+  textPlayer: {fileID: 3437706669125187141}
+  audioPlayer: {fileID: 561378569277397797}
   waitCondition: {fileID: 0}
   tag: 
   rootName: walker2
+--- !u!114 &-3872708255915913319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
+  m_Name: SmartSequentialTextPlayer
+  m_EditorClassIdentifier: 
+  guid: e18a49bdb542895459c56087bee9defa
+  nodePos: {x: 1504.5378, y: 364.13196}
+  textContainer: {fileID: 7502162965312159086}
+  symbolTime:
+    keys:
+    - .,
+    - '?!;:'
+    values:
+    - 0.3
+    - 0.5
+  defaultSymbolTime: 0.1
 --- !u!114 &-3640827236236290689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47,13 +138,13 @@ MonoBehaviour:
   m_Name: StorylineStart
   m_EditorClassIdentifier: 
   guid: 82071c2d32cf9a4459fbd33d7b075f62
-  nodePos: {x: 602.4, y: 828.6757}
-  textPlayer: {fileID: 1913991716542980558}
-  audioPlayer: {fileID: 0}
+  nodePos: {x: 1259.6426, y: 489.60013}
+  textPlayer: {fileID: 0}
+  audioPlayer: {fileID: -2955865996861766958}
   waitCondition: {fileID: 0}
   tag: 
   rootName: walker3
---- !u!114 &-2449988713815300241
+--- !u!114 &-2955865996861766958
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -62,21 +153,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
-  m_Name: SmartSequentialTextPlayer
+  m_Script: {fileID: 11500000, guid: 7a9d43ac6c1245af939881e92f25151a, type: 3}
+  m_Name: UndertaleAudioPlayer
   m_EditorClassIdentifier: 
-  guid: 4e6c7b92807ff624abb9c06b01a6b495
-  nodePos: {x: 934.68335, y: 412.8001}
-  textContainer: {fileID: 965079598725546714}
-  symbolTime:
-    keys:
-    - .,
-    - '?!;:'
-    values:
-    - 0.5
-    - 0.7
-  defaultSymbolTime: 0.2
---- !u!114 &-2240219418415601301
+  guid: 20800103d9150514794b575213133265
+  nodePos: {x: 1280.7999, y: 614.4}
+  audioContainer: {fileID: -7851534202580947915}
+  minPitch: 1
+  maxPitch: 1.3
+  volume: 1
+--- !u!114 &-1258537216482298147
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -85,20 +171,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
-  m_Name: SmartSequentialTextPlayer
+  m_Script: {fileID: 11500000, guid: 7a9d43ac6c1245af939881e92f25151a, type: 3}
+  m_Name: UndertaleAudioPlayer
   m_EditorClassIdentifier: 
-  guid: 5d8934d2b77388f4595b74c73e2704d8
-  nodePos: {x: 593.60004, y: 412.8}
-  textContainer: {fileID: 7502162965312159086}
-  symbolTime:
-    keys:
-    - .,
-    - '?!;:'
-    values:
-    - 0.5
-    - 0.7
-  defaultSymbolTime: 0.2
+  guid: a96e0c6e093811a469de47dc5d021dd5
+  nodePos: {x: 623.20013, y: 614.4}
+  audioContainer: {fileID: -8239805908729985259}
+  minPitch: 1
+  maxPitch: 1.3
+  volume: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,15 +197,39 @@ MonoBehaviour:
   - {fileID: -5363849828602052315}
   - {fileID: -3640827236236290689}
   nodes:
-  - {fileID: -2240219418415601301}
   - {fileID: 7502162965312159086}
   - {fileID: 4656324983314217789}
-  - {fileID: -2449988713815300241}
   - {fileID: 965079598725546714}
   - {fileID: -5363849828602052315}
-  - {fileID: 1913991716542980558}
   - {fileID: -3640827236236290689}
   - {fileID: -5797605562153756009}
+  - {fileID: -1258537216482298147}
+  - {fileID: -8239805908729985259}
+  - {fileID: 561378569277397797}
+  - {fileID: -6134666182857012479}
+  - {fileID: -2955865996861766958}
+  - {fileID: -7851534202580947915}
+  - {fileID: -5426411862013335421}
+  - {fileID: 3437706669125187141}
+  - {fileID: -3872708255915913319}
+--- !u!114 &561378569277397797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a9d43ac6c1245af939881e92f25151a, type: 3}
+  m_Name: UndertaleAudioPlayer
+  m_EditorClassIdentifier: 
+  guid: 86ff5307bd359c843a9b09092b9cf8e8
+  nodePos: {x: 964.80005, y: 614.4}
+  audioContainer: {fileID: -6134666182857012479}
+  minPitch: 1
+  maxPitch: 1.3
+  volume: 1
 --- !u!114 &965079598725546714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,7 +245,7 @@ MonoBehaviour:
   guid: d1f31e37763ee8647897db5662e499c0
   nodePos: {x: 969.8833, y: 336.00015}
   text: "\u041C\u0430\u043B\u043E\u0439, \u043E\u0442\u0432\u0430\u043B\u0438!"
---- !u!114 &1913991716542980558
+--- !u!114 &3437706669125187141
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,17 +257,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
   m_Name: SmartSequentialTextPlayer
   m_EditorClassIdentifier: 
-  guid: 73ed3280b926eff40bfb87fd5c11c3f4
-  nodePos: {x: 593.6, y: 751.8758}
-  textContainer: {fileID: -5797605562153756009}
+  guid: e79d450626141d0479cf9525fa628ba2
+  nodePos: {x: 935.2, y: 412.80002}
+  textContainer: {fileID: 965079598725546714}
   symbolTime:
     keys:
     - .,
     - '?!;:'
     values:
+    - 0.3
     - 0.5
-    - 0.7
-  defaultSymbolTime: 0.2
+  defaultSymbolTime: 0.1
 --- !u!114 &4656324983314217789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,8 +282,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guid: a054a538c6d9d94479422731f476d05a
   nodePos: {x: 602.4, y: 489.6001}
-  textPlayer: {fileID: -2240219418415601301}
-  audioPlayer: {fileID: 0}
+  textPlayer: {fileID: -5426411862013335421}
+  audioPlayer: {fileID: -1258537216482298147}
   waitCondition: {fileID: 0}
   tag: 
   rootName: walker1

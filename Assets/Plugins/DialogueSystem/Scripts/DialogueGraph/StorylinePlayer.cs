@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Plugins.DialogueSystem.Scripts.DialogueGraph;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Attributes;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes;
 using Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.Storyline;
@@ -11,12 +12,12 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-namespace Plugins.DialogueSystem.Scripts.DialogueGraph
+namespace Plugins.DialogueSystem.Scripts
 {
     public class StorylinePlayer : MonoBehaviour
     {
-        [Header("Sources")]
-        [SerializeField] private TMP_Text text;
+        [FormerlySerializedAs("text")] [Header("Sources")]
+        public ConcurrentTextSelector textSelector;
         [SerializeField] private AudioSource audioSource;
         
         [Header("Settings")]
@@ -39,6 +40,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
         private readonly Queue<string> _queue = new();
         private readonly Dictionary<AbstractNode, AbstractNode> _cloneBuffer = new();
         private readonly Queue<AbstractNode> _cloningQueue = new();
+        private TMP_Text _text;
 
         public bool IsStarted => _current != null;
         public bool IsPlaying { get; private set; }
@@ -118,7 +120,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
         
         public void ToNext()
         {
-            if (_current.waitCondition)
+            if (_current?.waitCondition)
             {
                 _current.waitCondition.StartWait(this, _current);
                 InvokeRepeating(nameof(CheckCompletionCondition), 0.1f, 0.1f);
@@ -141,24 +143,36 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
                     StartStorylineNow(fastRoot);
                 else if (_queue.TryDequeue(out var root)) 
                     StartStorylineNow(root);
+                else 
+                {
+                    if (!_text) return;
+                    textSelector?.ReleaseText(_text);
+                    _text = null;
+                    return;
+                }
             }
             if (!IsPlaying) return;
             
             if (_wait) return;
-            if (!_current.textPlayer) return;
-            _current.textPlayer.Draw(this);
+            _current.textPlayer?.Draw(this);
             _current.audioPlayer?.OnDraw(this);
 
-            if (_current.textPlayer.IsCompleted()) return;
+            if (_current.textPlayer?.IsCompleted() is false) return;
             IsTextPlaying = false;
             // _current.OnDrawEnd(this);
-            if (!manual) ToNext();
             _wait = true;
+            if (!manual) ToNext();
+            else if (_text)
+            {
+                textSelector?.ReleaseText(_text);
+                _text = null;
+            }
         }
 
         private void GoToNext()
         {
             // _current.OnDelayEnd(this);
+            if (!_current) return;
             onSentenceEnd.Invoke(_current.tag);
             _current.textPlayer?.PauseDraw(this);
             _current.audioPlayer?.StopAudio(this);
@@ -168,7 +182,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
                 return;
             }
             _current = _current.GetNext();
-            if (lazy)
+            if (lazy && _current)
             {
                 if (_cloneBuffer.TryGetValue(_current, out var c)) _current = c as Storyline;
                 else
@@ -215,7 +229,6 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
 
                     _current = _cloneBuffer[_current] as Storyline;
                 }
-
             }
             SwitchUpdate();
         }
@@ -232,25 +245,49 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
                 else if (lazy) _cloneBuffer.Clear();
                 return;
             }
-            // _current.OnDrawStart(this);
+            if (!_text)
+            {
+                _text = textSelector?.LockText();
+                if (!textSelector)
+                {
+                    Debug.LogError("No free text found!");
+                    return;
+                }
+            }
             _wait = false;
             IsTextPlaying = true;
+            _current.textPlayer?.OnDrawStart(this, _current);
+            _current.audioPlayer?.OnAudioStart(this, _current);
             onSentenceStart.Invoke(_current.tag);
         }
 
-        public void ShowText(string str) => text.text = str;
-        public void ClearText() => text.text = "";
+        public void ShowText(string str)
+        {
+            if (_text) _text.text = str;
+        }
+
+        public void ClearText()
+        {
+            if (_text) _text.text = "";
+        }
+
         public bool IsTextPlaying { get; private set; }
+
+        private float prevPitch = 1, prevVolume = 1;
 
         public void PlayAudio(AudioClip clip, float pitch, float volume = 1)
         {
             audioSource.clip = clip;
-            audioSource.pitch = pitch;
-            audioSource.volume = volume;
+            audioSource.pitch *= pitch / prevPitch;
+            audioSource.volume *= volume / prevVolume;
+            prevPitch = pitch;
+            prevVolume = volume;
             audioSource.Play();
         }
         public void StopAudio() => audioSource.Stop();
+
         public void PauseAudio() => audioSource.Pause();
+
         public void UnPauseAudio() => audioSource.UnPause();
         public bool IsAudioPlaying => audioSource.isPlaying;
     }

@@ -3,6 +3,7 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using Plugins.DialogueSystem.Scripts;
 using Plugins.DialogueSystem.Scripts.DialogueGraph;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -126,6 +127,7 @@ public class NPC : MonoBehaviour
         relativeRotation = Quaternion.Inverse(rootBone.rotation) * transform.rotation;
 
         Invoke("MakeDecision", Random.Range(idleTime.x, idleTime.y));
+        taskManager = GameObject.Find("TaskManager").GetComponent<TaskManager>();
     }
 
     protected virtual void OnEnable()
