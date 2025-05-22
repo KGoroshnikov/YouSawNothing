@@ -41,9 +41,11 @@ public class PlayerStats : MonoBehaviour
                 staminaLevel++;
                 break;
             case 1:
+                if (convictionLevel >= conviction.Length - 1) break;
                 convictionLevel++;
                 break;
             case 2:
+                if (timeLevel >= time.Length - 1) break;
                 timeLevel++;
                 break;
         }
