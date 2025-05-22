@@ -3,6 +3,10 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using Plugins.DialogueSystem.Scripts;
+using Plugins.DialogueSystem.Scripts.DialogueGraph;
+using UnityEngine.Events;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class NPC : MonoBehaviour
@@ -35,7 +39,8 @@ public class NPC : MonoBehaviour
     [SerializeField] private GameObject targetArrow;
 
     [SerializeField] private Renderer renderer;
-
+    
+    
     [System.Serializable]
     public class skins
     {
@@ -52,6 +57,29 @@ public class NPC : MonoBehaviour
         idle, walk, none
     }
     [SerializeField] protected State mState;
+    
+    [Header("Text Player")]
+    [SerializeField] private StorylinePlayer storylinePlayer;
+    [SerializeField] private string[] smallTalkRoots;
+    [SerializeField] private TaskManager taskManager;
+    
+    [Header("Trust")] 
+    [SerializeField] private int trustThreshold = 10;
+    [SerializeField] private int trust;
+    [SerializeField] private int trustGain = 2;
+    [SerializeField] private int trustLoss = 1;
+    
+    [SerializeField] private UnityEvent onThrust;
+    [SerializeField] private UnityEvent onNotThrust;
+    [SerializeField] private UnityEvent onIncreaseThrust;
+    [SerializeField] private UnityEvent onDecreaseThrust;
+    
+    [Header("Sell Task")] 
+    [SerializeField] private string[] sellRoots;
+    [SerializeField] private int trustDecreaseAfterSell = 3;
+
+    protected StorylinePlayer StorylinePlayer => storylinePlayer;
+    
     private Vector3 walkTarget;
     
     protected bool isGrouping;
@@ -99,6 +127,7 @@ public class NPC : MonoBehaviour
         relativeRotation = Quaternion.Inverse(rootBone.rotation) * transform.rotation;
 
         Invoke("MakeDecision", Random.Range(idleTime.x, idleTime.y));
+        taskManager = GameObject.Find("TaskManager").GetComponent<TaskManager>();
     }
 
     protected virtual void OnEnable()
@@ -386,4 +415,46 @@ public class NPC : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, lookingForGroupRadius);
     }
+    
+    public void Speak()
+    {
+        mState = State.idle;
+        if (storylinePlayer == null) return;
+        if (storylinePlayer.IsPlaying) return;
+        if (taskManager.CanSell && sellRoots.Length > 0)
+            storylinePlayer.StartStorylineNow(
+                sellRoots[Random.Range(0, sellRoots.Length)]
+            );
+        else if (smallTalkRoots.Length > 0)
+            storylinePlayer.StartStorylineNow(
+                smallTalkRoots[Random.Range(0, smallTalkRoots.Length)]
+                );
+        
+    }
+    public void IncreaseTrust()
+    {
+        trust += trustGain;
+        onIncreaseThrust.Invoke();
+        if (trust == trustThreshold) 
+            onThrust.Invoke();
+    }
+
+    public void DecreaseTrust()
+    {
+        trust -= trustLoss;
+        onDecreaseThrust.Invoke();
+        if (!IsWalkerThrustYou) 
+            onNotThrust.Invoke();
+    }
+
+    public bool TrySell()
+    {
+        if (sellRoots.Length == 0) return false;
+        if (IsWalkerThrustYou)
+            taskManager.Sell();
+        trust -= trustDecreaseAfterSell;
+        return IsWalkerThrustYou;
+    }
+
+    public bool IsWalkerThrustYou => trust >= trustThreshold;
 }

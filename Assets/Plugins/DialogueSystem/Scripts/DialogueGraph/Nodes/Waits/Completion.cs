@@ -8,7 +8,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.Waits
     {
         public override AbstractNode Clone()
         {
-            var clone = base.Clone() as Delay;
+            var clone = Instantiate(this);
             return clone;
         }
         

@@ -9,7 +9,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.Waits
         public float delay = 1;
         public override AbstractNode Clone()
         {
-            var clone = base.Clone() as Delay;
+            var clone = Instantiate(this);
             clone.delay = delay;
             return clone;
         }

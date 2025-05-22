@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Plugins.DialogueSystem.Scripts.DialogueGraph;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 using UnityEngine.VFX;
 
 public class Police : NPC
@@ -17,7 +19,7 @@ public class Police : NPC
     [Header("Gun")]
     [SerializeField] private float gunAttackRadius;
     [SerializeField] private Vector2 accuracy;
-    [SerializeField] private Vector2 playerVel;
+    [SerializeField] private Vector2 PlayerVel;
     [SerializeField] private int gunDamage;
 
     [Header("Baseball")]
@@ -31,8 +33,15 @@ public class Police : NPC
     [SerializeField] private VisualEffect muzzle;
     [SerializeField] private VisualEffect bulletTrail;
     [SerializeField] private GameObject baseballObj, gunObj;
+    
+    [FormerlySerializedAs("chaseRoot")]
+    [Header("Text Player")]
+    [SerializeField] private string[] chaseRoots = { "chase" };
+    [SerializeField] private string[] searchRoots = { "search" };
+    [SerializeField] private string[] didSussyRoots = { "sussy" };
+    [SerializeField] private string[] didIllegalRoots = { "illegal" };
 
-    private PlayerController playerController;
+    private PlayerController PlayerController;
 
     private SearchMinigame searchMinigame;
 
@@ -44,7 +53,7 @@ public class Police : NPC
         imWithGun = Random.value <= 0.5f;
         base.Start();
         InvokeRepeating("CheckPlayer", checkPlayerTime, checkPlayerTime);
-        playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        PlayerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         searchMinigame = GameObject.Find("SearchMinigame").GetComponent<SearchMinigame>();
 
         baseballObj.SetActive(!imWithGun);
@@ -80,7 +89,8 @@ public class Police : NPC
 
     void PlayerDidSussyThing()
     {
-        if (!fov.isMeVisible(playerController.gameObject) || mState == State.none) return;
+        StorylinePlayer?.QueueStoryline(didSussyRoots[Random.Range(0, didSussyRoots.Length)]);
+        if (!fov.isMeVisible(PlayerController.gameObject) || mState == State.none) return;
         chasingPlayer = true;
         CancelInvoke();
         mState = State.walk;
@@ -89,7 +99,8 @@ public class Police : NPC
 
     void PlayerDidIllegal()
     {
-        if (!fov.isMeVisible(playerController.gameObject) || mState == State.none) return;
+        StorylinePlayer?.QueueStoryline(didIllegalRoots[Random.Range(0, didIllegalRoots.Length)]);
+        if (!fov.isMeVisible(PlayerController.gameObject) || mState == State.none) return;
         chasingPlayer = true;
         wantToKill = true;
         CancelInvoke();
@@ -104,7 +115,7 @@ public class Police : NPC
         {
             if (wantToKill)
             {
-                bulletTrail.transform.forward = playerController.transform.position - bulletTrail.transform.position;
+                bulletTrail.transform.forward = PlayerController.transform.position - bulletTrail.transform.position;
             }
             return;
         }
@@ -116,7 +127,7 @@ public class Police : NPC
         {
             if (wantToKill)
             {
-                Vector3 dir = playerController.transform.position - transform.position;
+                Vector3 dir = PlayerController.transform.position - transform.position;
                 dir.y = 0;
                 transform.forward = dir;
             }
@@ -153,7 +164,7 @@ public class Police : NPC
 
     void CheckPlayerDuringChase()
     {
-        agent.SetDestination(GetPos(playerController.transform.position));
+        agent.SetDestination(GetPos(PlayerController.transform.position));
         if (!wantToKill && !agent.pathPending && agent.remainingDistance <= radiusPossibleSearch / 1.5f)
         {
             chasingPlayer = false;
@@ -174,12 +185,12 @@ public class Police : NPC
             animator.SetTrigger("HandAttack");
         }
 
-        if (!lostPlayer && !fov.isMeVisible(playerController.gameObject))
+        if (!lostPlayer && !fov.isMeVisible(PlayerController.gameObject))
         {
             lostPlayer = true;
             Invoke("ForgetPlayer", 5);
         }
-        else if (lostPlayer && fov.isMeVisible(playerController.gameObject))
+        else if (lostPlayer && fov.isMeVisible(PlayerController.gameObject))
         {
             lostPlayer = false;
             CancelInvoke("ForgetPlayer");
@@ -188,9 +199,9 @@ public class Police : NPC
 
     public void DoBaseballDamage()
     {
-        if (Vector3.Distance(transform.position, playerController.transform.position) > damageRadius) return;
+        if (Vector3.Distance(transform.position, PlayerController.transform.position) > damageRadius) return;
 
-        playerController.TakeDamage(baseballDamage);
+        PlayerController.TakeDamage(baseballDamage);
     }
 
     public void Shoot()
@@ -198,17 +209,17 @@ public class Police : NPC
         muzzle.Play();
         bulletTrail.Play();
 
-        float it = Mathf.InverseLerp(playerVel.x, playerVel.y, playerController.GetVelocity().magnitude);
+        float it = Mathf.InverseLerp(PlayerVel.x, PlayerVel.y, PlayerController.GetVelocity().magnitude);
         float acc = Mathf.Lerp(accuracy.x, accuracy.y, it);
         if (Random.value <= acc)
         {
             RaycastHit hit;
             Vector3 startPos = transform.position + transform.forward + new Vector3(0, 0.5f, 0);
-            Vector3 toPlayer = playerController.transform.position - startPos;
+            Vector3 toPlayer = PlayerController.transform.position - startPos;
             if (Physics.Raycast(startPos, toPlayer, out hit)){
-                if (hit.collider.gameObject == playerController.gameObject)
+                if (hit.collider.gameObject == PlayerController.gameObject)
                 {
-                    playerController.TakeDamage(gunDamage);
+                    PlayerController.TakeDamage(gunDamage);
                 }
             }
         }
@@ -220,7 +231,7 @@ public class Police : NPC
 
     public void ShootEnded()
     {
-        if (Vector3.Distance(transform.position, playerController.transform.position) > gunAttackRadius)
+        if (Vector3.Distance(transform.position, PlayerController.transform.position) > gunAttackRadius)
         {
             animator.ResetTrigger("Shoot");
             animator.SetTrigger("Walk");
@@ -230,7 +241,7 @@ public class Police : NPC
 
     public void AttackAnimEnd()
     {
-        if (Vector3.Distance(transform.position, playerController.transform.position) > damageRadius)
+        if (Vector3.Distance(transform.position, PlayerController.transform.position) > damageRadius)
         {
             animator.ResetTrigger("HandAttack");
             animator.SetTrigger("Walk");
@@ -259,6 +270,7 @@ public class Police : NPC
 
     void StartSearch()
     {
+        StorylinePlayer?.QueueStoryline(searchRoots[Random.Range(0, searchRoots.Length)]);
         searchMinigame.StartMinigame(this);
         mState = State.none;
         CancelInvoke();
@@ -270,7 +282,7 @@ public class Police : NPC
     {
         if (mState == State.none) return;
 
-        if (Vector3.Distance(transform.position, playerController.transform.position) > radiusPossibleSearch) return;
+        if (Vector3.Distance(transform.position, PlayerController.transform.position) > radiusPossibleSearch) return;
 
         if (Random.value > chanceSearch) return;
 
@@ -279,6 +291,7 @@ public class Police : NPC
 
     void WantToKillPlayer()
     {
+        StorylinePlayer?.QueueStoryline(chaseRoots[Random.Range(0, chaseRoots.Length)]);
         wantToKill = true;
         chasingPlayer = true;
         CancelInvoke();
