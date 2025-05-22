@@ -21,6 +21,8 @@ public class TaskManager : MonoBehaviour
 
     [SerializeField] private Inventory inventory;
 
+    [SerializeField] private PlayerStats playerStats;
+
     [SerializeField] private Car car;
 
     [Header("Time")]
@@ -35,6 +37,7 @@ public class TaskManager : MonoBehaviour
 
     [Header("Kill")]
     [SerializeField] private SpawnNPC spawnNPC;
+    [SerializeField] private List<NPC> specificNPCToKill;
     private List<NPC> targetsToKill = new List<NPC>();
     private List<int> taskIdKill = new List<int>();
     public delegate void DeathCallback(NPC npc);
@@ -59,6 +62,14 @@ public class TaskManager : MonoBehaviour
     private List<targetToSteal> currentTargetsToSteal = new List<targetToSteal>();
     private List<int> taskIdSteal = new List<int>();
     private List<int> taskIdSell = new List<int>();
+
+    [Header("Teleports")]
+    [SerializeField] private List<TeleportPair> teleportPairs;
+    [System.Serializable]
+    public class TeleportPair
+    {
+        public GameObject tp1, tp2;
+    }
 
     private bool[] taskCompleted;
     
@@ -85,11 +96,11 @@ public class TaskManager : MonoBehaviour
             randTasks.Add(randTask);
         }
 
-        float tt = totalCompletedTasks / tasksToMinTime;
+        float tt = (float)totalCompletedTasks / (float)tasksToMinTime;
         tt = Mathf.Clamp01(tt);
         float time = Mathf.Lerp(maxMinTime.x, maxMinTime.y, tt);
 
-        Debug.Log("tt " + tt + " time " + time + " totalCompletedTasks " + totalCompletedTasks);
+        time += playerStats.Time;
 
         SetNewTask(randTasks, time);
 
@@ -137,35 +148,41 @@ public class TaskManager : MonoBehaviour
 
         bool taskToPaint = false;
 
-        for (int i = 0; i < currentTasks.Count; i++)
+        for (int i = 0; i < teleportPairs.Count; i++)
         {
-            if (currentTasks[i].mTaskType == Task.taskType.deliver)
-            {
-                int rnd = Random.Range(0, currentTasks[i].possibleObjectsToDeliver.Length);
-                GameObject obj = car.SpawnObject(currentTasks[i].possibleObjectsToDeliver[rnd]).gameObject;
-                objectsToDeliver.Add(obj);
-                delivered.Add(false);
-                taskIdDeliver.Add(i);
-            }
-            else if (currentTasks[i].mTaskType == Task.taskType.kill)
-            {
-                ChooseTargetToKill(i);
-            }
-            else if (currentTasks[i].mTaskType == Task.taskType.paint && currentTasks[i].targetPaint >= targetPainted)
-            {
-                targetPainted = currentTasks[i].targetPaint;
-                taskIdPaint.Add(i);
-                taskToPaint = true;
-            }
-            else if (currentTasks[i].mTaskType == Task.taskType.steal)
-            {
-                ChooseTargetToSteal(i, currentTasks[i].stealIdItem);
-            }
-            else if (currentTasks[i].mTaskType == Task.taskType.steal)
-            {
-                taskIdSell.Add(i);
-            }
+            teleportPairs[i].tp1.SetActive(false);
+            teleportPairs[i].tp2.SetActive(false);
         }
+
+        for (int i = 0; i < currentTasks.Count; i++)
+            {
+                if (currentTasks[i].mTaskType == Task.taskType.deliver)
+                {
+                    int rnd = Random.Range(0, currentTasks[i].possibleObjectsToDeliver.Length);
+                    GameObject obj = car.SpawnObject(currentTasks[i].possibleObjectsToDeliver[rnd]).gameObject;
+                    objectsToDeliver.Add(obj);
+                    delivered.Add(false);
+                    taskIdDeliver.Add(i);
+                }
+                else if (currentTasks[i].mTaskType == Task.taskType.kill)
+                {
+                    ChooseTargetToKill(i, currentTasks[i]);
+                }
+                else if (currentTasks[i].mTaskType == Task.taskType.paint && currentTasks[i].targetPaint >= targetPainted)
+                {
+                    targetPainted = currentTasks[i].targetPaint;
+                    taskIdPaint.Add(i);
+                    taskToPaint = true;
+                }
+                else if (currentTasks[i].mTaskType == Task.taskType.steal)
+                {
+                    ChooseTargetToSteal(i, currentTasks[i].stealIdItem);
+                }
+                else if (currentTasks[i].mTaskType == Task.taskType.steal)
+                {
+                    taskIdSell.Add(i);
+                }
+            }
 
         if (taskToPaint)
             car.SpawnObject(sprayPref);
@@ -174,7 +191,7 @@ public class TaskManager : MonoBehaviour
 
         tablet.SetTasks(currentTasks);
 
-        CheckStealTasks();
+        CheckTasks();
     }
 
     public void SetTime(float newTime)
@@ -317,8 +334,30 @@ public class TaskManager : MonoBehaviour
         }
     }
 
-    void ChooseTargetToKill(int taskId)
+    void ChooseTargetToKill(int taskId, Task task)
     {
+        if (task.killTarget != -1)
+        {
+            if (task.killTarget >= specificNPCToKill.Count || specificNPCToKill[task.killTarget].GetIsDead())
+            {
+                // complete task
+                return;
+            }
+
+            if (task.activateTeleport != -1)
+            {
+                teleportPairs[task.activateTeleport].tp1.SetActive(true);
+                teleportPairs[task.activateTeleport].tp2.SetActive(true);
+            }
+
+            onDeathNPC = NPCKilled;
+            specificNPCToKill[task.killTarget].SetTragetArrow(true);
+            specificNPCToKill[task.killTarget].SubscribeToDeath(onDeathNPC);
+            targetsToKill.Add(specificNPCToKill[task.killTarget]);
+            taskIdKill.Add(taskId);
+            return;
+        }
+
         NPC rand = null;
         for (int i = 0; i < 100; i++)
         {
@@ -343,7 +382,6 @@ public class TaskManager : MonoBehaviour
             {
                 npc.SetTragetArrow(false);
                 UpdateStateTask(taskIdKill[i], true);
-                break;
             }
         }
     }
@@ -361,11 +399,15 @@ public class TaskManager : MonoBehaviour
         }
     }
 
-    void CheckStealTasks()
+    void CheckTasks()
     {
         for (int i = 0; i < currentTasks.Count; i++)
         {
             if (currentTasks[i].mTaskType == Task.taskType.steal && !taskIdSteal.Contains(i))
+            {
+                UpdateStateTask(i, true);
+            }
+            else if (currentTasks[i].mTaskType == Task.taskType.kill && !taskIdKill.Contains(i))
             {
                 UpdateStateTask(i, true);
             }

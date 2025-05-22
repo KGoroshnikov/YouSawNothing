@@ -178,7 +178,7 @@ public class SkateboardController : MonoBehaviour
         escManager.AddWeight(0, gameObject, PlayerExited);
     }
 
-    void PlayerExited(){
+    public void PlayerExited(){
         doNotRegisterPlayer = true;
         escManager.RemoveWeight(0, gameObject);
         playerController.GetTips().SetWehicleTip(false);
