@@ -416,6 +416,7 @@ public class NPC : MonoBehaviour
     
     public void Speak()
     {
+        mState = State.idle;
         if (storylinePlayer == null) return;
         if (storylinePlayer.IsPlaying) return;
         if (taskManager.CanSell && sellRoots.Length > 0)

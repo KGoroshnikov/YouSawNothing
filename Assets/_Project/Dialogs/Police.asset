@@ -1,5 +1,43 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8713362756013549120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed4ea27954cd4d6689d3c0583d229408, type: 3}
+  m_Name: SimpleTextContainer
+  m_EditorClassIdentifier: 
+  guid: 5ef6080a055855a4d9c163990c12b093
+  nodePos: {x: 13.599987, y: 547.2}
+  text: "\u0425\u043C\u043C..."
+--- !u!114 &-6575416354152041848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
+  m_Name: SmartSequentialTextPlayer
+  m_EditorClassIdentifier: 
+  guid: 7f02c7abbd086384ea739436dbd391d4
+  nodePos: {x: 531.9998, y: 85.59993}
+  textContainer: {fileID: 6590048340920331103}
+  symbolTime:
+    keys:
+    - .,
+    - '?!;:'
+    values:
+    - 0.5
+    - 0.7
+  defaultSymbolTime: 0.2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,5 +50,211 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dc910af0e3446b0bda39e5ae3bb19ca, type: 3}
   m_Name: Police
   m_EditorClassIdentifier: 
-  roots: []
-  nodes: []
+  roots:
+  - {fileID: 7288757617850857546}
+  - {fileID: 3416875306094876543}
+  - {fileID: 5864578367858200441}
+  - {fileID: 5039136468007834631}
+  nodes:
+  - {fileID: 7288757617850857546}
+  - {fileID: 3416875306094876543}
+  - {fileID: 5864578367858200441}
+  - {fileID: 5039136468007834631}
+  - {fileID: 8056257261257827617}
+  - {fileID: 7913373034010074888}
+  - {fileID: -6575416354152041848}
+  - {fileID: 6590048340920331103}
+  - {fileID: 4850908625460846986}
+  - {fileID: 6112175693619269632}
+  - {fileID: 389294812729959201}
+  - {fileID: -8713362756013549120}
+--- !u!114 &389294812729959201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
+  m_Name: SmartSequentialTextPlayer
+  m_EditorClassIdentifier: 
+  guid: 8b25c399dfb246e459d187adc14f1e6e
+  nodePos: {x: -21.600037, y: 624}
+  textContainer: {fileID: -8713362756013549120}
+  symbolTime:
+    keys:
+    - .,
+    - '?!;:'
+    values:
+    - 0.5
+    - 0.7
+  defaultSymbolTime: 0.2
+--- !u!114 &3416875306094876543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad84465e128f45c9a2b8120b5d4d3fa3, type: 3}
+  m_Name: StorylineStart
+  m_EditorClassIdentifier: 
+  guid: 2d67e354554c5eb43992288deffe3c20
+  nodePos: {x: 540.3996, y: 162.4}
+  textPlayer: {fileID: -6575416354152041848}
+  audioPlayer: {fileID: 0}
+  waitCondition: {fileID: 0}
+  tag: 
+  rootName: search
+--- !u!114 &4850908625460846986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
+  m_Name: SmartSequentialTextPlayer
+  m_EditorClassIdentifier: 
+  guid: c4f1dc173fe71fc488290fbb08a5904c
+  nodePos: {x: 532.00006, y: 623.99994}
+  textContainer: {fileID: 6112175693619269632}
+  symbolTime:
+    keys:
+    - .,
+    - '?!;:'
+    values:
+    - 0.5
+    - 0.7
+  defaultSymbolTime: 0.2
+--- !u!114 &5039136468007834631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad84465e128f45c9a2b8120b5d4d3fa3, type: 3}
+  m_Name: StorylineStart
+  m_EditorClassIdentifier: 
+  guid: 79e5997f7a124fb488cad2713d875963
+  nodePos: {x: 540.8001, y: 700.80005}
+  textPlayer: {fileID: 4850908625460846986}
+  audioPlayer: {fileID: 0}
+  waitCondition: {fileID: 0}
+  tag: 
+  rootName: illegal
+--- !u!114 &5864578367858200441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad84465e128f45c9a2b8120b5d4d3fa3, type: 3}
+  m_Name: StorylineStart
+  m_EditorClassIdentifier: 
+  guid: c664b070a4b581f43888b487b0b863fd
+  nodePos: {x: -12.799835, y: 700.29895}
+  textPlayer: {fileID: 389294812729959201}
+  audioPlayer: {fileID: 0}
+  waitCondition: {fileID: 0}
+  tag: 
+  rootName: sussy
+--- !u!114 &6112175693619269632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed4ea27954cd4d6689d3c0583d229408, type: 3}
+  m_Name: SimpleTextContainer
+  m_EditorClassIdentifier: 
+  guid: 611c63b9f7130c1408f12587a67d2c39
+  nodePos: {x: 567.2, y: 547.19995}
+  text: "\u0421\u0442\u043E\u044F\u0442\u044C!"
+--- !u!114 &6590048340920331103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed4ea27954cd4d6689d3c0583d229408, type: 3}
+  m_Name: SimpleTextContainer
+  m_EditorClassIdentifier: 
+  guid: 1c385ed4e1b56a34fb726d048e58535c
+  nodePos: {x: 567.19977, y: 8.79995}
+  text: "\u0412\u044B\u0432\u043E\u0440\u0430\u0447\u0438\u0432\u0430\u0439 \u043A\u0430\u0440\u043C\u0430\u043D\u044B!"
+--- !u!114 &7288757617850857546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad84465e128f45c9a2b8120b5d4d3fa3, type: 3}
+  m_Name: StorylineStart
+  m_EditorClassIdentifier: 
+  guid: edc159ce8d44f4e4c8516e4fd84c3bb2
+  nodePos: {x: -12.799863, y: 162.39996}
+  textPlayer: {fileID: 8056257261257827617}
+  audioPlayer: {fileID: 0}
+  waitCondition: {fileID: 0}
+  tag: 
+  rootName: chase
+--- !u!114 &7913373034010074888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed4ea27954cd4d6689d3c0583d229408, type: 3}
+  m_Name: SimpleTextContainer
+  m_EditorClassIdentifier: 
+  guid: 13d7f4d51e9bb164aa705e96fd4a913a
+  nodePos: {x: 13.599981, y: 8.79995}
+  text: "\u0410 \u043D\u0443 \u0441\u0442\u043E\u0439!"
+--- !u!114 &8056257261257827617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a1cbaed40a4bed949609d423f3e720, type: 3}
+  m_Name: SmartSequentialTextPlayer
+  m_EditorClassIdentifier: 
+  guid: 7c733180a170ce1418963ee8579e27a4
+  nodePos: {x: -21.600012, y: 85.59995}
+  textContainer: {fileID: 7913373034010074888}
+  symbolTime:
+    keys:
+    - .,
+    - '?!;:'
+    values:
+    - 0.5
+    - 0.7
+  defaultSymbolTime: 0.2
