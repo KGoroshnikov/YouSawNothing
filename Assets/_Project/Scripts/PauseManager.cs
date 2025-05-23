@@ -14,6 +14,8 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private EscManager escManager;
     [SerializeField] private Settings settings;
 
+    [SerializeField] private TaskManager taskManager;
+
     [SerializeField] private AudioSource buttonSound;
     private bool paused;
 
@@ -35,6 +37,8 @@ public class PauseManager : MonoBehaviour
         
         paused = !paused;
         pauseUI.SetActive(paused);
+
+        taskManager.SetGamePaused(paused);
 
         if (paused)
         {

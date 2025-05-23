@@ -199,7 +199,6 @@ public class PlayerController : MonoBehaviour
                 dir.y = 0;
                 npc.RagdollDamaged(dir.normalized * baseballPush, baseballDamage);
             }
-            else if (hit[i].collider.gameObject != gameObject) break;
         }
     }
 
