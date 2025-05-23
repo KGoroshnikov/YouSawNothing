@@ -8,14 +8,12 @@ public class VariantContainer : MonoBehaviour
 {
     [SerializeField] private Variant[] variants;
     
-    public void ShowVariant(int index, string text, 
-        UnityEvent onSelected, UnityAction hide)
+    public void ShowVariant(int index, string text, UnityAction onClick)
     {
         variants[index].Button.gameObject.SetActive(true);
         variants[index].Button.interactable = true;
         variants[index].Button.onClick.RemoveAllListeners();
-        variants[index].Button.onClick.AddListener(hide);
-        variants[index].Button.onClick.AddListener(onSelected.Invoke);
+        variants[index].Button.onClick.AddListener(onClick);
         variants[index].Field.text = text;
     }
 
@@ -24,6 +22,7 @@ public class VariantContainer : MonoBehaviour
         variants[index].Button.interactable = false;
         variants[index].Button.gameObject.SetActive(false);
     }
+    public int VariantCount => variants.Length;
     
     public class Variant
     {
