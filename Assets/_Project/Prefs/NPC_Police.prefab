@@ -274,7 +274,7 @@ GameObject:
   - component: {fileID: 6809038376990725243}
   - component: {fileID: 8674104577966622029}
   - component: {fileID: 4842604726037015892}
-  - component: {fileID: -4979193887667404470}
+  - component: {fileID: 1660808473139820088}
   m_Layer: 0
   m_Name: NPC_Police
   m_TagString: NPC
@@ -299,6 +299,7 @@ Transform:
   - {fileID: 6990961413385393441}
   - {fileID: 6647053625349421674}
   - {fileID: 1194574368104464539}
+  - {fileID: 7084510681893263887}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 113.25, z: 0}
 --- !u!195 &851451434166481186
@@ -414,7 +415,7 @@ MonoBehaviour:
   rootBone: {fileID: 7472190062957550965}
   mHP: {fileID: 4842604726037015892}
   mState: 0
-  storylinePlayer: {fileID: -4979193887667404470}
+  storylinePlayer: {fileID: 1660808473139820088}
   smallTalkRoots: []
   taskManager: {fileID: 0}
   trustThreshold: 10
@@ -452,6 +453,14 @@ MonoBehaviour:
   bulletTrail: {fileID: 6893727441321235135}
   baseballObj: {fileID: 5840183590507734924}
   gunObj: {fileID: 7719439990877804404}
+  chaseRoots:
+  - chase
+  searchRoots:
+  - search
+  didSussyRoots:
+  - sussy
+  didIllegalRoots:
+  - illegal
   gunshot: {fileID: 8071315278249822525}
   baseball: {fileID: 7070951328486203363}
 --- !u!114 &8674104577966622029
@@ -491,6 +500,35 @@ MonoBehaviour:
   mHP: 100
   playerController: {fileID: 0}
   hittedSource: {fileID: 1121828446879845457}
+--- !u!114 &1660808473139820088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025548461148613773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f9692116ab543e0b64376ca3d8c2d64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textSelector: {fileID: 0}
+  audioSource: {fileID: 162745663272249097}
+  graph: {fileID: 11400000, guid: 79dbc55293ae333408a51ee3ee80876d, type: 2}
+  manual: 0
+  canSkip: 0
+  skipAction: {fileID: 0}
+  continueAction: {fileID: 0}
+  onSentenceStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onSentenceEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  onStorylineEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  lazy: 1
 --- !u!1 &1083037611379233592
 GameObject:
   m_ObjectHideFlags: 0
@@ -2396,8 +2434,8 @@ MonoBehaviour:
   renderer: {fileID: 0}
   animator: {fileID: 0}
   vfxTip: {fileID: 0}
-  I_Name: Start Speak
-  I_Action: Speak
+  I_Name: "\u041D\u0430\u0447\u0430\u0442\u044C \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440"
+  I_Action: "\u041F\u043E\u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C"
   NeedTip: 1
   onClick:
     m_PersistentCalls:
