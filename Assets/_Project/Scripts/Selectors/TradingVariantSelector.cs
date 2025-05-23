@@ -8,7 +8,7 @@ public class TradingVariantSelector : MonoBehaviour
     public VariantContainer container;
     public PlayerStats stats;
     public StorylinePlayer storylinePlayer;
-    [SerializeField] private float decisionTime = 10;
+    [SerializeField] private float decisionTime = 5;
     [SerializeField] private NPC npc;
     [SerializeField] private Variant[] variants;
     public ResultType failedResult;
@@ -73,6 +73,9 @@ public class TradingVariantSelector : MonoBehaviour
             case ResultType.IncreaseThrust2:
                 npc.IncreaseTrust(2);
                 break;
+            case ResultType.Sold:
+                npc.TrySell();
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(id), id, null);
         }
@@ -95,6 +98,7 @@ public class TradingVariantSelector : MonoBehaviour
         DecreaseThrust1,
         DecreaseThrust2,
         IncreaseThrust1,
-        IncreaseThrust2
+        IncreaseThrust2,
+        Sold
     }
 }
