@@ -62,12 +62,15 @@ public class NPC : MonoBehaviour
     [SerializeField] private StorylinePlayer storylinePlayer;
     [SerializeField] private string[] smallTalkRoots;
     [SerializeField] private TaskManager taskManager;
+    [SerializeField] private ButtonInteractable interactable;
     
+    [FormerlySerializedAs("trustThreshold")]
     [Header("Trust")] 
-    [SerializeField] private int trustThreshold = 10;
     [SerializeField] private int trust;
     [SerializeField] private int trustGain = 2;
     [SerializeField] private int trustLoss = 1;
+    [SerializeField] private int trustThresholdSell = 10;
+    [SerializeField] private int trustThresholdHate = 10;
     
     [SerializeField] private UnityEvent onThrust;
     [SerializeField] private UnityEvent onNotThrust;
@@ -128,6 +131,15 @@ public class NPC : MonoBehaviour
 
         Invoke("MakeDecision", Random.Range(idleTime.x, idleTime.y));
         taskManager = GameObject.Find("TaskManager").GetComponent<TaskManager>();
+        
+        storylinePlayer?.onSentenceStart.AddListener(_ =>
+        {
+            renderer.material = randSkin[currentSkin].matDefault;
+        });
+        storylinePlayer?.onStorylineEnd.AddListener(_ =>
+        {
+            renderer.material = randSkin[currentSkin].matSpeak;
+        });
     }
 
     protected virtual void OnEnable()
@@ -369,6 +381,8 @@ public class NPC : MonoBehaviour
     protected virtual void OnDie()
     {
         renderer.material = randSkin[currentSkin].matDead;
+        storylinePlayer?.onSentenceStart.RemoveAllListeners();
+        storylinePlayer?.onStorylineEnd.RemoveAllListeners();
         if (onDeath != null) onDeath(this);
         isDead = true;
     }
@@ -418,7 +432,6 @@ public class NPC : MonoBehaviour
     
     public void Speak()
     {
-        mState = State.idle;
         if (storylinePlayer == null) return;
         if (storylinePlayer.IsPlaying) return;
         if (taskManager.CanSell && sellRoots.Length > 0)
@@ -429,19 +442,21 @@ public class NPC : MonoBehaviour
             storylinePlayer.StartStorylineNow(
                 smallTalkRoots[Random.Range(0, smallTalkRoots.Length)]
                 );
-        
     }
-    public void IncreaseTrust()
+
+    public void DisableSpeech() => interactable.gameObject.SetActive(false);
+
+    public void IncreaseTrust(int factor)
     {
-        trust += trustGain;
+        trust += trustGain * factor;
         onIncreaseThrust.Invoke();
-        if (trust == trustThreshold) 
+        if (trust == trustThresholdSell) 
             onThrust.Invoke();
     }
 
-    public void DecreaseTrust()
+    public void DecreaseTrust(int factor)
     {
-        trust -= trustLoss;
+        trust -= trustLoss * factor;
         onDecreaseThrust.Invoke();
         if (!IsWalkerThrustYou) 
             onNotThrust.Invoke();
@@ -456,5 +471,13 @@ public class NPC : MonoBehaviour
         return IsWalkerThrustYou;
     }
 
-    public bool IsWalkerThrustYou => trust >= trustThreshold;
+    public bool IsWalkerThrustYou => trust >= trustThresholdSell;
+    public bool IsWalkerHatesYou => trust < trustThresholdHate;
+
+    public void CallPolice()
+    {
+        foreach (var npc in findNearest())
+            if (npc is Police police)
+                police.PlayerDidIllegal();
+    }
 }

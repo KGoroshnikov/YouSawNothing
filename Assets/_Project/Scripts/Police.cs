@@ -89,7 +89,7 @@ public class Police : NPC
         PaintHolder.OnPainted -= PlayerDidIllegal;
     }
 
-    void PlayerDidSussyThing()
+    public void PlayerDidSussyThing()
     {
         StorylinePlayer?.QueueStoryline(didSussyRoots[Random.Range(0, didSussyRoots.Length)]);
         if (!fov.isMeVisible(playerController.gameObject) || mState == State.none) return;
@@ -99,7 +99,7 @@ public class Police : NPC
         animator.SetTrigger("Walk");
     }
 
-    void PlayerDidIllegal()
+    public void PlayerDidIllegal()
     {
         StorylinePlayer?.QueueStoryline(didIllegalRoots[Random.Range(0, didIllegalRoots.Length)]);
         if (!fov.isMeVisible(playerController.gameObject) || mState == State.none) return;

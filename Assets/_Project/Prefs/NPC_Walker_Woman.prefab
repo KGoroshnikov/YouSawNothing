@@ -3138,8 +3138,8 @@ MonoBehaviour:
   taskManager: {fileID: 0}
   trustThreshold: 10
   trust: 0
-  trustGain: 2
-  trustLoss: 1
+  trustGain: 3
+  trustLoss: 2
   onThrust:
     m_PersistentCalls:
       m_Calls: []
