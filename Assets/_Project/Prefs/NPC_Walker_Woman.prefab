@@ -2289,8 +2289,8 @@ MonoBehaviour:
   renderer: {fileID: 0}
   animator: {fileID: 0}
   vfxTip: {fileID: 0}
-  I_Name: Start Speak
-  I_Action: Speak
+  I_Name: "\u041D\u0430\u0447\u0430\u0442\u044C \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440"
+  I_Action: "\u041F\u043E\u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C"
   NeedTip: 1
   onClick:
     m_PersistentCalls:
@@ -3037,7 +3037,7 @@ GameObject:
   - component: {fileID: 7972012982672187269}
   - component: {fileID: 4339809387095817817}
   - component: {fileID: 1342691573217771897}
-  - component: {fileID: 2078301248868501439}
+  - component: {fileID: 3105597087400186394}
   m_Layer: 0
   m_Name: NPC_Walker_Woman
   m_TagString: NPC
@@ -3133,7 +3133,7 @@ MonoBehaviour:
   rootBone: {fileID: 7245620328638458860}
   mHP: {fileID: 1342691573217771897}
   mState: 0
-  storylinePlayer: {fileID: 2078301248868501439}
+  storylinePlayer: {fileID: 3105597087400186394}
   smallTalkRoots: []
   taskManager: {fileID: 0}
   trustThreshold: 10
@@ -3214,6 +3214,35 @@ MonoBehaviour:
   mHP: 100
   playerController: {fileID: 0}
   hittedSource: {fileID: 4705558364283492865}
+--- !u!114 &3105597087400186394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9071367800753267091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f9692116ab543e0b64376ca3d8c2d64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textSelector: {fileID: 0}
+  audioSource: {fileID: 9219963047477930676}
+  graph: {fileID: 11400000, guid: 79dbc55293ae333408a51ee3ee80876d, type: 2}
+  manual: 0
+  canSkip: 0
+  skipAction: {fileID: 0}
+  continueAction: {fileID: 0}
+  onSentenceStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onSentenceEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  onStorylineEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  lazy: 1
 --- !u!1 &9207888482179192652
 GameObject:
   m_ObjectHideFlags: 0
