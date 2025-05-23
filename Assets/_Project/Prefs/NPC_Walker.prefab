@@ -1698,7 +1698,7 @@ GameObject:
   - component: {fileID: 27719093817783707}
   - component: {fileID: 2860497169954427229}
   - component: {fileID: 5983000827639839131}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Interactable
   m_TagString: Interactable
   m_Icon: {fileID: 0}

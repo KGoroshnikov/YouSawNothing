@@ -2229,7 +2229,7 @@ GameObject:
   - component: {fileID: 7178578722481506981}
   - component: {fileID: 9207409091457947686}
   - component: {fileID: 4499261333642692113}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Interactable
   m_TagString: Interactable
   m_Icon: {fileID: 0}
