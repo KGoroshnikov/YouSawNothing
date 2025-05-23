@@ -12,6 +12,7 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes
         [HideInInspector]
         public AudioContainer audioContainer;
 
+        public abstract void OnAudioStart(StorylinePlayer storylinePlayer, Storyline.Storyline storyline);
         public abstract void OnDraw(StorylinePlayer storylinePlayer);
         public abstract bool IsCompleted(StorylinePlayer storylinePlayer);
         public abstract void StopAudio(StorylinePlayer storylinePlayer);

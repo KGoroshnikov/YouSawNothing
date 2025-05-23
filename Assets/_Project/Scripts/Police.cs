@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Plugins.DialogueSystem.Scripts.DialogueGraph;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 using UnityEngine.VFX;
 
 public class Police : NPC
@@ -17,7 +19,7 @@ public class Police : NPC
     [Header("Gun")]
     [SerializeField] private float gunAttackRadius;
     [SerializeField] private Vector2 accuracy;
-    [SerializeField] private Vector2 playerVel;
+    [SerializeField] private Vector2 PlayerVel;
     [SerializeField] private int gunDamage;
 
     [Header("Baseball")]
@@ -31,6 +33,13 @@ public class Police : NPC
     [SerializeField] private VisualEffect muzzle;
     [SerializeField] private VisualEffect bulletTrail;
     [SerializeField] private GameObject baseballObj, gunObj;
+    
+    [FormerlySerializedAs("chaseRoot")]
+    [Header("Text Player")]
+    [SerializeField] private string[] chaseRoots = { "chase" };
+    [SerializeField] private string[] searchRoots = { "search" };
+    [SerializeField] private string[] didSussyRoots = { "sussy" };
+    [SerializeField] private string[] didIllegalRoots = { "illegal" };
 
     [SerializeField] private AudioSource gunshot, baseball;
 
@@ -82,6 +91,7 @@ public class Police : NPC
 
     void PlayerDidSussyThing()
     {
+        StorylinePlayer?.QueueStoryline(didSussyRoots[Random.Range(0, didSussyRoots.Length)]);
         if (!fov.isMeVisible(playerController.gameObject) || mState == State.none) return;
         chasingPlayer = true;
         CancelInvoke();
@@ -91,6 +101,7 @@ public class Police : NPC
 
     void PlayerDidIllegal()
     {
+        StorylinePlayer?.QueueStoryline(didIllegalRoots[Random.Range(0, didIllegalRoots.Length)]);
         if (!fov.isMeVisible(playerController.gameObject) || mState == State.none) return;
         chasingPlayer = true;
         wantToKill = true;
@@ -192,6 +203,7 @@ public class Police : NPC
     {
         baseball.Play();
         if (Vector3.Distance(transform.position, playerController.transform.position) > damageRadius) return;
+
         playerController.TakeDamage(baseballDamage);
     }
 
@@ -201,7 +213,7 @@ public class Police : NPC
         bulletTrail.Play();
         gunshot.Play();
 
-        float it = Mathf.InverseLerp(playerVel.x, playerVel.y, playerController.GetVelocity().magnitude);
+        float it = Mathf.InverseLerp(PlayerVel.x, PlayerVel.y, playerController.GetVelocity().magnitude);
         float acc = Mathf.Lerp(accuracy.x, accuracy.y, it);
         if (Random.value <= acc)
         {
@@ -262,6 +274,7 @@ public class Police : NPC
 
     void StartSearch()
     {
+        StorylinePlayer?.QueueStoryline(searchRoots[Random.Range(0, searchRoots.Length)]);
         searchMinigame.StartMinigame(this);
         mState = State.none;
         CancelInvoke();
@@ -282,6 +295,7 @@ public class Police : NPC
 
     void WantToKillPlayer()
     {
+        StorylinePlayer?.QueueStoryline(chaseRoots[Random.Range(0, chaseRoots.Length)]);
         wantToKill = true;
         chasingPlayer = true;
         CancelInvoke();

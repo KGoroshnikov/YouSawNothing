@@ -5,7 +5,7 @@ public class Task : ScriptableObject
 {
     public enum taskType
     {
-        deliver, kill, getMoney, getBack, paint, steal
+        deliver, kill, getMoney, getBack, paint, steal, sell
     }
     [Header("General")]
     public taskType mTaskType;
@@ -13,7 +13,6 @@ public class Task : ScriptableObject
     public float nameFontSize = 0.19f;
     public string taskDescription;
     public float descriptionFontSize = 0.1f;
-    public string dialogueRoot;
     
     [Header("Earn Money")]
     public int targetMoney;

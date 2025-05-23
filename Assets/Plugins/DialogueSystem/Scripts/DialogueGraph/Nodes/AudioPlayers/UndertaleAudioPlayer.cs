@@ -20,6 +20,9 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph.Nodes.AudioPlayers
             clone.volume = volume;
             return clone;
         }
+
+        public override void OnAudioStart(StorylinePlayer storylinePlayer, Storyline.Storyline storyline) { }
+
         public override void OnDraw(StorylinePlayer storylinePlayer)
         {
             if (!storylinePlayer.IsAudioPlaying)

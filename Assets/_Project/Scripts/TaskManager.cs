@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Plugins.DialogueSystem.Scripts;
+using Plugins.DialogueSystem.Scripts.DialogueGraph;
 using TMPro;
 using UnityEngine;
 
@@ -60,6 +62,7 @@ public class TaskManager : MonoBehaviour
     [SerializeField] private List<targetToSteal> stealTargets;
     private List<targetToSteal> currentTargetsToSteal = new List<targetToSteal>();
     private List<int> taskIdSteal = new List<int>();
+    private List<int> taskIdSell = new List<int>();
 
     [Header("Teleports")]
     [SerializeField] private List<TeleportPair> teleportPairs;
@@ -70,6 +73,7 @@ public class TaskManager : MonoBehaviour
     }
 
     private bool[] taskCompleted;
+    
 
     private int totalCompletedTasks;
 
@@ -170,7 +174,10 @@ public class TaskManager : MonoBehaviour
                 {
                     ChooseTargetToSteal(i, currentTasks[i].stealIdItem);
                 }
-
+                else if (currentTasks[i].mTaskType == Task.taskType.steal)
+                {
+                    taskIdSell.Add(i);
+                }
             }
 
         if (taskToPaint)
@@ -423,5 +430,12 @@ public class TaskManager : MonoBehaviour
             mDeliverTrigger.InitMe(currentTargetsToSteal[currentTargetsToSteal.Count - 1].target, this);
         }
         else mDeliverTrigger.AddNewTarget(currentTargetsToSteal[currentTargetsToSteal.Count - 1].target);
+    }
+
+    public bool CanSell => taskIdSell.Count > 0;
+    public void Sell()
+    {
+        if (!CanSell) return;
+        UpdateStateTask(taskIdSell[0], true);
     }
 }
