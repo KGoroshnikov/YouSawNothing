@@ -90018,7 +90018,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 1
-  size: {x: 124.71315, y: 56.756683, z: 159.56158}
+  size: {x: 124.71315, y: 56.756683, z: 159.56157}
   overrideRendererFilters: 0
   minRendererVolumeSize: 0.1
   objectLayerMask:

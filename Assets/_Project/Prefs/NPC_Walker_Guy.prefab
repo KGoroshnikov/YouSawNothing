@@ -729,23 +729,25 @@ MonoBehaviour:
   randSkin:
   - matDefault: {fileID: 2100000, guid: 6d5181de16b2d8a42856f7b9f319d92e, type: 2}
     matDead: {fileID: 2100000, guid: 5901aecab098b8f4da1765525d674c83, type: 2}
-    matSpeak: {fileID: 0}
+    matSpeak: {fileID: 2100000, guid: 6d5181de16b2d8a42856f7b9f319d92e, type: 2}
   - matDefault: {fileID: 2100000, guid: fc2b6069c2c9de64d9c8ffc720d6dd2d, type: 2}
     matDead: {fileID: 2100000, guid: 75ce351b2adcec243924c51e4d7334b6, type: 2}
-    matSpeak: {fileID: 0}
+    matSpeak: {fileID: 2100000, guid: fc2b6069c2c9de64d9c8ffc720d6dd2d, type: 2}
   - matDefault: {fileID: 2100000, guid: 883750c7a0a6654478fe35ada6718715, type: 2}
     matDead: {fileID: 2100000, guid: 91daa95f888181b4483f039177e2a7da, type: 2}
-    matSpeak: {fileID: 0}
+    matSpeak: {fileID: 2100000, guid: 883750c7a0a6654478fe35ada6718715, type: 2}
   rootBone: {fileID: 3946376871412893878}
   mHP: {fileID: 5807225566890288405}
   mState: 0
   storylinePlayer: {fileID: 0}
   smallTalkRoots: []
   taskManager: {fileID: 0}
-  trustThreshold: 10
+  interactable: {fileID: 0}
   trust: 0
   trustGain: 2
   trustLoss: 1
+  trustThresholdSell: 10
+  trustThresholdHate: 10
   onThrust:
     m_PersistentCalls:
       m_Calls: []

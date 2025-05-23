@@ -19,9 +19,13 @@ namespace Plugins.DialogueSystem.Scripts.DialogueGraph
         {
             for (var i = 0; i < variants.Length; i++)
                 if (variants[i].active)
-                    container.ShowVariant(i, variants[i].text, 
-                        variants[i].onSelected, Hide);
+                    container.ShowVariant(i, variants[i].text, () =>
+                    {
+                        variants[i].onSelected.Invoke();
+                        Hide();
+                    });
         }
+
 
         public virtual void Hide()
         {

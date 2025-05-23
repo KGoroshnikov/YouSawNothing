@@ -18,8 +18,7 @@ MonoBehaviour:
   taskDescription: "\u0421\u0430\u043C \u043F\u0440\u0438\u0434\u0443\u043C\u0430\u0439
     \u043A\u0430\u043A"
   descriptionFontSize: 0.1
-  dialogueRoot: 
-  targetMoney: 1
+  targetMoney: 50
   possibleObjectsToDeliver: []
   killTarget: -1
   activateTeleport: -1

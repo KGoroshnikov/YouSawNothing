@@ -953,13 +953,13 @@ MonoBehaviour:
   randSkin:
   - matDefault: {fileID: 2100000, guid: 066a166a43dab05489826a36e2c08949, type: 2}
     matDead: {fileID: 2100000, guid: 68d6b4a765c8ea444b9a1abd115aabd7, type: 2}
-    matSpeak: {fileID: 0}
+    matSpeak: {fileID: 2100000, guid: c550ee6b4758fbc4d997b80ad39a2d57, type: 2}
   - matDefault: {fileID: 2100000, guid: 20248b27e5b553248935863f5106d591, type: 2}
     matDead: {fileID: 2100000, guid: 2d566e98dcfe1d343a4d93951cd8488a, type: 2}
-    matSpeak: {fileID: 0}
+    matSpeak: {fileID: 2100000, guid: 20248b27e5b553248935863f5106d591, type: 2}
   - matDefault: {fileID: 2100000, guid: ebd855b5847341b4191db64fb6d1f01a, type: 2}
     matDead: {fileID: 2100000, guid: 139fa7a02d0aa414c9b1b64351e93bef, type: 2}
-    matSpeak: {fileID: 0}
+    matSpeak: {fileID: 2100000, guid: ebd855b5847341b4191db64fb6d1f01a, type: 2}
   rootBone: {fileID: 2198992282411061475}
   mHP: {fileID: 5984984933904414697}
   mState: 0
@@ -969,10 +969,12 @@ MonoBehaviour:
   - walker2
   - walker3
   taskManager: {fileID: 0}
-  trustThreshold: 10
+  interactable: {fileID: 0}
   trust: 0
   trustGain: 2
   trustLoss: 1
+  trustThresholdSell: 10
+  trustThresholdHate: 10
   onThrust:
     m_PersistentCalls:
       m_Calls: []

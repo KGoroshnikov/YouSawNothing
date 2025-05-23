@@ -411,17 +411,19 @@ MonoBehaviour:
   randSkin:
   - matDefault: {fileID: 2100000, guid: abaed82cae6e03d48be73a8cd5e5894e, type: 2}
     matDead: {fileID: 2100000, guid: dc5f3101edddbfd4e820fca8f0d67f94, type: 2}
-    matSpeak: {fileID: 0}
+    matSpeak: {fileID: 2100000, guid: abaed82cae6e03d48be73a8cd5e5894e, type: 2}
   rootBone: {fileID: 7472190062957550965}
   mHP: {fileID: 4842604726037015892}
   mState: 0
   storylinePlayer: {fileID: 1660808473139820088}
   smallTalkRoots: []
   taskManager: {fileID: 0}
-  trustThreshold: 10
+  interactable: {fileID: 0}
   trust: 0
   trustGain: 2
   trustLoss: 1
+  trustThresholdSell: 10
+  trustThresholdHate: 10
   onThrust:
     m_PersistentCalls:
       m_Calls: []
