@@ -24,7 +24,7 @@ public class Tablet : MonoBehaviour
     void Awake()
     {
         openAction = playerInput.actions["Tab"];
-        openAction.performed += _ => TabPressed();
+        openAction.performed += TabPressed;
     }
 
     void OnEnable()
@@ -34,17 +34,24 @@ public class Tablet : MonoBehaviour
 
     void OnDisable()
     {
+        openAction.performed -= TabPressed;
         openAction.Disable();
     }
 
-    void TabPressed(){
+    void TabPressed(InputAction.CallbackContext context){
+        ShowHideTablet();
+    }
+
+    void ShowHideTablet()
+    {
         isOpened = !isOpened;
         animator.SetTrigger(isOpened ? "OpenTablet" : "CloseTablet");
     }
 
-    public void ForceOpenTablet(){
+    public void ForceOpenTablet()
+    {
         if (isOpened) return;
-        TabPressed();
+        ShowHideTablet();
     }
 
     public void SetTasks(List<Task> newTasks){

@@ -21,7 +21,7 @@ public class TaskManager : MonoBehaviour
     private bool taskIsActive;
 
     [SerializeField] private Inventory inventory;
-
+    [SerializeField] private HP playerHP;
     [SerializeField] private PlayerStats playerStats;
 
     [SerializeField] private Car car;
@@ -276,7 +276,12 @@ public class TaskManager : MonoBehaviour
         if (!taskIsActive) return;
 
         secondsLeft -= Time.deltaTime;
-        if (secondsLeft < 0f) secondsLeft = 0f;
+        if (secondsLeft <= 0f)
+        {
+            playerHP.WaterDeath();
+            taskIsActive = false;
+            secondsLeft = 0f;
+        }
 
         int minutes = Mathf.FloorToInt(secondsLeft / 60f);
         int seconds = Mathf.FloorToInt(secondsLeft % 60f);
@@ -411,7 +416,7 @@ public class TaskManager : MonoBehaviour
 
     void ChooseTargetToSteal(int taskId, int idSteal)
     {
-        if (idSteal >= stealTargets.Count || stealTargets[idSteal].destroyThis == null)
+        if (idSteal >= stealTargets.Count || stealTargets[idSteal] == null ||stealTargets[idSteal].destroyThis == null)
         {
             return;
         }

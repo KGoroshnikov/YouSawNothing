@@ -35,6 +35,10 @@ public class SkateboardController : MonoBehaviour
 
     [SerializeField] private bool isBicycle;
 
+    [SerializeField] private AudioSource rollingSound;
+    [SerializeField] private AudioSource jumpSound;
+    private bool isSoundPlaying;
+
     private Vector2 moveInput;
     private float currentSpeed;
     private float currentTilt;
@@ -58,7 +62,7 @@ public class SkateboardController : MonoBehaviour
         moveAction = playerInput.actions["Move"];
         jumpAction = playerInput.actions["Jump"];
 
-        jumpAction.performed += _ => HandleJump();
+        jumpAction.performed += HandleJump;
 
         moveAction.Enable();
         jumpAction.Enable();
@@ -68,6 +72,7 @@ public class SkateboardController : MonoBehaviour
 
     void OnDisable()
     {
+        jumpAction.performed -= HandleJump;
         PlayerExited();
     }
 
@@ -85,11 +90,12 @@ public class SkateboardController : MonoBehaviour
         rb.isKinematic = a;
     }
 
-    void HandleJump()
+    void HandleJump(InputAction.CallbackContext context)
     {
         if (!imEnabled || !isJumpActive || freezed) return;
         if (isGrounded)
         {
+            if (jumpSound != null) jumpSound.Play();
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             animator.SetTrigger("Jump");
         }
@@ -98,6 +104,17 @@ public class SkateboardController : MonoBehaviour
     void FixedUpdate()
     {
         if (freezed) return;
+
+        if (rollingSound != null && !isSoundPlaying && rb.linearVelocity.magnitude > 0.2f)
+        {
+            isSoundPlaying = true;
+            rollingSound.Play();
+        }
+        else if (rollingSound != null && isSoundPlaying && rb.linearVelocity.magnitude <= 0.2f)
+        {
+            isSoundPlaying = false;
+            rollingSound.Stop();
+        }
         
         if (moveInput.y > 0f)
         {
@@ -160,15 +177,15 @@ public class SkateboardController : MonoBehaviour
 
     void CheckGround()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, 0.5f);
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1f);
     }
 
     public void PlayerEntered(){
-        if (doNotRegisterPlayer || playerController.isPlayerOnWehicle()) return;
+        if (doNotRegisterPlayer || playerController.isPlayerOnWehicle() || playerController.isPlayerGrapled()) return;
         if (isIllegalToRide)
             OnStolenWehicle.Invoke();
         imEnabled = true;
-        playerController.SetWehicle();
+        playerController.SetWehicle(this);
         playerController.transform.SetParent(playerPos);
         playerController.transform.localEulerAngles = Vector3.zero;
         playerController.transform.localPosition = Vector3.zero;
@@ -179,6 +196,7 @@ public class SkateboardController : MonoBehaviour
     }
 
     public void PlayerExited(){
+        if (playerController == null) return;
         doNotRegisterPlayer = true;
         escManager.RemoveWeight(0, gameObject);
         playerController.GetTips().SetWehicleTip(false);

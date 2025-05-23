@@ -7,6 +7,14 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Animator camAnim;
     [SerializeField] private Animator fadeAnim;
 
+    [SerializeField] private AudioSource buttonAudio;
+
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
     public void HoverButton(int id)
     {
         animators[id].SetBool("Hovered", true);
@@ -21,6 +29,7 @@ public class MainMenu : MonoBehaviour
 
     public void ClickButton(int id)
     {
+        buttonAudio.Play();
         animators[id].SetTrigger("Click");
 
         if (id == 0) LoadGame();

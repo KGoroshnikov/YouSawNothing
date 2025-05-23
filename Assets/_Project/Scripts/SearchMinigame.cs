@@ -51,7 +51,7 @@ public class SearchMinigame : MonoBehaviour
     void Awake()
     {
         spaceAction = playerInput.actions["Jump"];
-        spaceAction.performed += ctx => SpacePessed();   
+        spaceAction.performed += SpacePessed;   
     }
 
     void OnEnable()
@@ -61,6 +61,7 @@ public class SearchMinigame : MonoBehaviour
 
     void OnDisable()
     {
+        spaceAction.performed -= SpacePessed;
         spaceAction.Disable();
     }
 
@@ -69,7 +70,7 @@ public class SearchMinigame : MonoBehaviour
         //StartMinigame();
     }
 
-    void SpacePessed()
+    void SpacePessed(InputAction.CallbackContext context)
     {
         if (!isActive) return;
 
@@ -91,6 +92,7 @@ public class SearchMinigame : MonoBehaviour
             {
                 slotsImages[i].sprite.gameObject.SetActive(true);
                 slotsImages[i].sprite.sprite = currentItems[i].uiSprite;
+                slotsImages[i].sprite.rectTransform.sizeDelta = currentItems[i].spriteSize;
             }
             else slotsImages[i].sprite.gameObject.SetActive(false);
 

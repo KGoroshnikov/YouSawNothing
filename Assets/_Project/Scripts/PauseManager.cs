@@ -13,6 +13,8 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private PlayerController playerContoller;
     [SerializeField] private EscManager escManager;
     [SerializeField] private Settings settings;
+
+    [SerializeField] private AudioSource buttonSound;
     private bool paused;
 
     private bool ableToPause;
@@ -67,6 +69,7 @@ public class PauseManager : MonoBehaviour
 
     public void ClickButton(int id)
     {
+        buttonSound.Play();
         animators[id].SetTrigger("Click");
 
         if (id == 0) EscPressed();

@@ -22,6 +22,7 @@ public class Tips : MonoBehaviour
     private bool active;
 
     public void SetWehicleTip(bool a){
+        if (wehicleTip == null) return;
         wehicleTip.SetActive(a);
     }
 
@@ -59,6 +60,7 @@ public class Tips : MonoBehaviour
     }
 
     public void DisableMainHand(){
+        if (mainHand == null) return;
         mainHand.gameObject.SetActive(false);
     }
 

@@ -26,12 +26,15 @@ public class Inventory : MonoBehaviour
     [SerializeField] private float throwForce;
     [SerializeField] private Transform[] itemPoses;
 
+    [SerializeField] private AudioSource pickupAudio, itemChangeAudio;
+
     [System.Serializable]
     public class itemData
     {
         public int id;
         [HideInInspector] public GameObject obj;
         [HideInInspector] public Item item;
+        public Vector2 spriteSize = new Vector2(100, 100);
         public Sprite uiSprite;
         [HideInInspector] public bool stackable;
         public Vector2 offsetHand = Vector2.zero;
@@ -56,9 +59,9 @@ public class Inventory : MonoBehaviour
     void Awake()
     {
         scrollAction = playerInput.actions["Scroll"];
-        scrollAction.performed += ctx => OnScroll(ctx);
+        scrollAction.performed += OnScroll;
         dropAction = playerInput.actions["Drop"];
-        dropAction.performed += _ => OnDrop();
+        dropAction.performed += OnDrop;
     }
 
     void Start()
@@ -80,6 +83,8 @@ public class Inventory : MonoBehaviour
 
     void OnDisable()
     {
+        scrollAction.performed -= OnScroll;
+        dropAction.performed -= OnDrop;
         scrollAction.Disable();
         dropAction.Disable();
     }
@@ -89,7 +94,7 @@ public class Inventory : MonoBehaviour
         return currentItems;
     }
 
-    void OnDrop()
+    void OnDrop(InputAction.CallbackContext context)
     {
         if (currentItems[currentSelected].id == 0) return;
 
@@ -203,12 +208,14 @@ public class Inventory : MonoBehaviour
                 Destroy(currentItems[freeSlot].obj);
         }
 
+        pickupAudio.Play();
 
         currentItems[freeSlot].id = item.id;
         currentItems[freeSlot].obj = item.obj;
         currentItems[freeSlot].item = item.item;
         currentItems[freeSlot].isSussyItem = item.isSussyItem;
         currentItems[freeSlot].uiSprite = item.uiSprite;
+        currentItems[freeSlot].spriteSize = item.spriteSize;
         currentItems[freeSlot].offsetHand = item.offsetHand;
 
         if (item.isSussyItem)
@@ -223,6 +230,7 @@ public class Inventory : MonoBehaviour
 
         spriteSlots[freeSlot].gameObject.SetActive(true);
         spriteSlots[freeSlot].sprite = item.uiSprite;
+        spriteSlots[freeSlot].rectTransform.sizeDelta = item.spriteSize;
 
         item.obj.transform.SetParent(itemPoses[item.id]);
 
@@ -246,6 +254,8 @@ public class Inventory : MonoBehaviour
         if (Time.time - lastScrollTime < scrollCooldown)
             return;
         lastScrollTime = Time.time;
+
+        itemChangeAudio.Play();
 
         slotAnims[currentSelected].SetTrigger("Leave");
         if (currentItems[currentSelected].id != 0)
