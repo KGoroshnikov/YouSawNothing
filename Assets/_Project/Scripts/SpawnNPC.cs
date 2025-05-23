@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Plugins.DialogueSystem.Scripts;
+using Plugins.DialogueSystem.Scripts.DialogueGraph;
 using UnityEngine;
 
 public class SpawnNPC : MonoBehaviour
@@ -13,6 +14,8 @@ public class SpawnNPC : MonoBehaviour
     [SerializeField] private List<NPC> npcs = new List<NPC>();
 
     [SerializeField] private ConcurrentTextSelector textSelector;
+    [SerializeField] private VariantContainer variantContainer;
+    [SerializeField] private PlayerStats stats;
 
     void Start()
     {
@@ -22,6 +25,13 @@ public class SpawnNPC : MonoBehaviour
             var go = Instantiate(npcPref, pos, Quaternion.identity);
             if (go.TryGetComponent<StorylinePlayer>(out var player))
                 player.textSelector = textSelector;
+            foreach (var selector in go.GetComponents<VariantSelector>())
+            {
+                selector.container = variantContainer;
+                if (selector is QTEVariantSelector qte)
+                    qte.stats = stats;
+            }
+
             NPC npc = go.GetComponent<NPC>();
             
             npcs.Add(npc);

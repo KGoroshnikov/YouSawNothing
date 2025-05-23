@@ -1,10 +1,10 @@
-﻿using Plugins.DialogueSystem.Scripts.Selectors;
+﻿using Plugins.DialogueSystem.Scripts.DialogueGraph;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class QTEVariantSelector : VariantSelector
 {
-    [SerializeField] private PlayerStats stats;
+    public PlayerStats stats;
     [SerializeField] private float decisionTime = 10;
     [SerializeField] private UnityEvent onQteFailure;
 

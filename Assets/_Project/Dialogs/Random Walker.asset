@@ -30,6 +30,20 @@ MonoBehaviour:
   guid: 577e27aa0002a9b4eb75ebc6c02fa66c
   nodePos: {x: 1278.3999, y: 691.2}
   audio: {fileID: 8300000, guid: b8f00111a6e8387429e049fb6fb213b4, type: 3}
+--- !u!114 &-7040230199394567099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b759acd545a14d3084a65fb3f471e35b, type: 3}
+  m_Name: Completion
+  m_EditorClassIdentifier: 
+  guid: a9ca7c00cdb85c0478b0e8da80e22950
+  nodePos: {x: 623.19995, y: 767.9999}
 --- !u!114 &-6134666182857012479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,7 +113,7 @@ MonoBehaviour:
   nodePos: {x: 943.48346, y: 489.6001}
   textPlayer: {fileID: 3437706669125187141}
   audioPlayer: {fileID: 561378569277397797}
-  waitCondition: {fileID: 0}
+  waitCondition: {fileID: 1295273736663505916}
   tag: 
   rootName: walker2
 --- !u!114 &-3872708255915913319
@@ -115,8 +129,8 @@ MonoBehaviour:
   m_Name: SmartSequentialTextPlayer
   m_EditorClassIdentifier: 
   guid: e18a49bdb542895459c56087bee9defa
-  nodePos: {x: 1504.5378, y: 364.13196}
-  textContainer: {fileID: 7502162965312159086}
+  nodePos: {x: 1251.2001, y: 412.80008}
+  textContainer: {fileID: -5797605562153756009}
   symbolTime:
     keys:
     - .,
@@ -212,6 +226,9 @@ MonoBehaviour:
   - {fileID: -5426411862013335421}
   - {fileID: 3437706669125187141}
   - {fileID: -3872708255915913319}
+  - {fileID: 2729611819117092266}
+  - {fileID: 1295273736663505916}
+  - {fileID: -7040230199394567099}
 --- !u!114 &561378569277397797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,6 +262,34 @@ MonoBehaviour:
   guid: d1f31e37763ee8647897db5662e499c0
   nodePos: {x: 969.8833, y: 336.00015}
   text: "\u041C\u0430\u043B\u043E\u0439, \u043E\u0442\u0432\u0430\u043B\u0438!"
+--- !u!114 &1295273736663505916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b759acd545a14d3084a65fb3f471e35b, type: 3}
+  m_Name: Completion
+  m_EditorClassIdentifier: 
+  guid: fd2cfaa0dbdaefe4d85a153e121db162
+  nodePos: {x: 970.4, y: 767.99994}
+--- !u!114 &2729611819117092266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b759acd545a14d3084a65fb3f471e35b, type: 3}
+  m_Name: Completion
+  m_EditorClassIdentifier: 
+  guid: 81717be7468cbbb4e947a4a8d7bb4403
+  nodePos: {x: 623.19995, y: 767.9999}
 --- !u!114 &3437706669125187141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,7 +329,7 @@ MonoBehaviour:
   nodePos: {x: 602.4, y: 489.6001}
   textPlayer: {fileID: -5426411862013335421}
   audioPlayer: {fileID: -1258537216482298147}
-  waitCondition: {fileID: 0}
+  waitCondition: {fileID: 2729611819117092266}
   tag: 
   rootName: walker1
 --- !u!114 &7502162965312159086

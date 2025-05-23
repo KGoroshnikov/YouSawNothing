@@ -3038,6 +3038,8 @@ GameObject:
   - component: {fileID: 4339809387095817817}
   - component: {fileID: 1342691573217771897}
   - component: {fileID: 3105597087400186394}
+  - component: {fileID: 1165411830414041070}
+  - component: {fileID: 6355623368448200694}
   m_Layer: 0
   m_Name: NPC_Walker_Woman
   m_TagString: NPC
@@ -3138,8 +3140,8 @@ MonoBehaviour:
   taskManager: {fileID: 0}
   trustThreshold: 10
   trust: 0
-  trustGain: 2
-  trustLoss: 1
+  trustGain: 3
+  trustLoss: 2
   onThrust:
     m_PersistentCalls:
       m_Calls: []
@@ -3243,6 +3245,143 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   lazy: 1
+--- !u!114 &1165411830414041070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9071367800753267091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 853fe9af11c84830b75f418c5a9fb01a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invokeTag: qte1
+  container: {fileID: 0}
+  variants:
+  - active: 1
+    text: "\u041D\u0435 \u0445\u043E\u0447\u0435\u0448\u044C \u043B\u0438 \u0442\u044B
+      \u043A\u0443\u043F\u0438\u0442\u044C \u044D\u0442\u043E?"
+    onSelected:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4480876448393582642}
+          m_TargetAssemblyTypeName: NPC, Assembly-CSharp
+          m_MethodName: IncreaseTrust
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - active: 1
+    text: "\u0423 \u043C\u0435\u043D\u044F \u0435\u0441\u0442\u044C \u0442\u043E\u0432\u0430\u0440\u044B
+      \u0447\u0435\u043B\u043E\u0432\u0435\u043A\u0430 \u0438\u0437 \u0447\u0435\u0440\u043D\u043E\u0439
+      \u043C\u0430\u0448\u0438\u043D\u044B"
+    onSelected:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4480876448393582642}
+          m_TargetAssemblyTypeName: NPC, Assembly-CSharp
+          m_MethodName: DecreaseTrust
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  stats: {fileID: 0}
+  decisionTime: 5
+  onQteFailure:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4480876448393582642}
+        m_TargetAssemblyTypeName: NPC, Assembly-CSharp
+        m_MethodName: DecreaseTrust
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &6355623368448200694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9071367800753267091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 853fe9af11c84830b75f418c5a9fb01a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invokeTag: qte2
+  container: {fileID: 0}
+  variants:
+  - active: 1
+    text: 
+    onSelected:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4480876448393582642}
+          m_TargetAssemblyTypeName: NPC, Assembly-CSharp
+          m_MethodName: IncreaseTrust
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - active: 1
+    text: "\u0423 \u043C\u0435\u043D\u044F \u0435\u0441\u0442\u044C \u0442\u043E\u0432\u0430\u0440\u044B
+      \u0447\u0435\u043B\u043E\u0432\u0435\u043A\u0430 \u0438\u0437 \u0447\u0435\u0440\u043D\u043E\u0439
+      \u043C\u0430\u0448\u0438\u043D\u044B"
+    onSelected:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4480876448393582642}
+          m_TargetAssemblyTypeName: NPC, Assembly-CSharp
+          m_MethodName: DecreaseTrust
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  stats: {fileID: 0}
+  decisionTime: 5
+  onQteFailure:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4480876448393582642}
+        m_TargetAssemblyTypeName: NPC, Assembly-CSharp
+        m_MethodName: DecreaseTrust
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &9207888482179192652
 GameObject:
   m_ObjectHideFlags: 0
