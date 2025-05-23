@@ -161,7 +161,7 @@ MonoBehaviour:
   surfaceOffset: 0.6
   spawnTime: 1
   paints:
-  - {fileID: 2100000, guid: 82640185caaf7cc4fb3070a5813a3868, type: 2}
+  - {fileID: 2100000, guid: 18ed6658b3d0c7b4da76d61b90a30fe5, type: 2}
   audioSource: {fileID: 1312960185644204134}
 --- !u!1 &4030016005526264779
 GameObject:

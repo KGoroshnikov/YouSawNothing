@@ -73,7 +73,8 @@ public class TaskManager : MonoBehaviour
     }
 
     private bool[] taskCompleted;
-    
+
+    private bool gamePaused;
 
     private int totalCompletedTasks;
 
@@ -271,9 +272,14 @@ public class TaskManager : MonoBehaviour
         }
     }
 
+    public void SetGamePaused(bool a)
+    {
+        gamePaused = a;
+    }
+
     void Update()
     {
-        if (!taskIsActive) return;
+        if (!taskIsActive || gamePaused) return;
 
         secondsLeft -= Time.deltaTime;
         if (secondsLeft <= 0f)
